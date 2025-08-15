@@ -1,6 +1,6 @@
 package com.spring.boot.social.services;
 
-import com.spring.boot.resturantbackend.models.BundleMessage;
+import com.spring.boot.social.models.BundleMessage;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
 
