@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface AccountMapper {
     AccountMapper ACCOUNT_MAPPER = Mappers.getMapper(AccountMapper.class);
 
-    @Mapping(source = "password", target = "password", ignore = true)
+    @Mapping(target = "password", ignore = true)
     AccountDto toAccountDto(Account account);
 
     Account toAccount(AccountDto accountDto);

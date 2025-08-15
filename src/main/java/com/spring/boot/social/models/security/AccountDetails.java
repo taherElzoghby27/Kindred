@@ -12,7 +12,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(schema = "hr")
+@Table(schema = "kindred")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter

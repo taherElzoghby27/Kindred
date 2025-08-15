@@ -27,6 +27,24 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDto createAccount(AccountDto accountDto) {
+        validateCreateAccount(accountDto);
+        //map accountDto to account
+        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
+        //hash password
+        String hashPassword = passwordEncoder.encode(account.getPassword());
+        account.setPassword(hashPassword);
+        //init auditor
+        account.setCreatedBy(accountDto.getUsername());
+        account.setUpdatedBy(accountDto.getUsername());
+        //enable account
+        account.setEnabled(1L);
+        //save in db
+        account = accountRepo.save(account);
+        accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
+        return accountDto;
+    }
+
+    private void validateCreateAccount(AccountDto accountDto) {
         if (Objects.nonNull(accountDto.getId())) {
             throw new BadRequestException("empty.account_id_must_null");
         }
@@ -37,28 +55,11 @@ public class AccountServiceImpl implements AccountService {
         if (Objects.isNull(accountDto.getUsername())) {
             throw new BadRequestException("empty.username");
         }
-        //map accountDto to account
-        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
-        //hash password
-        String hashPassword = passwordEncoder.encode(account.getPassword());
-        account.setPassword(hashPassword);
-        //init auditor
-        account.setCreatedBy(accountDto.getUsername());
-        account.setUpdatedBy(accountDto.getUsername());
-        //save in db
-        account = accountRepo.save(account);
-        accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
-        return accountDto;
     }
 
     @Override
     public AccountDto updateAccount(AccountDto accountDto) {//todo : add update account details for this
-        if (Objects.isNull(accountDto.getId())) {
-            throw new BadRequestException("empty.account_id");
-        }
-        if (Objects.isNull(accountDto.getUsername())) {
-            throw new BadRequestException("empty.username");
-        }
+        validateUpdateAccount(accountDto);
         //check account if exist
         AccountDto oldAccount = getAccountById(accountDto.getId());
         if (!Objects.equals(accountDto.getUsername(), oldAccount.getUsername())) {
@@ -73,6 +74,15 @@ public class AccountServiceImpl implements AccountService {
         account = accountRepo.save(account);
         accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
         return accountDto;
+    }
+
+    private static void validateUpdateAccount(AccountDto accountDto) {
+        if (Objects.isNull(accountDto.getId())) {
+            throw new BadRequestException("empty.account_id");
+        }
+        if (Objects.isNull(accountDto.getUsername())) {
+            throw new BadRequestException("empty.username");
+        }
     }
 
     @Override

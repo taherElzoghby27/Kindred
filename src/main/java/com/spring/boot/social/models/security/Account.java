@@ -37,6 +37,8 @@ public class Account extends BaseEntity<String> {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
+    //0 or 1
+    private Long enabled;
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private AccountDetails accountDetails;
     @OneToMany(mappedBy = "account")

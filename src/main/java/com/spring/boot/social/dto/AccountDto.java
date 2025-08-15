@@ -19,6 +19,7 @@ public class AccountDto {
     private String email;
     @NotEmpty(message = "empty.password")
     private String password;
+    private Long enabled;
     private String firstName;
     private String lastName;
 }
