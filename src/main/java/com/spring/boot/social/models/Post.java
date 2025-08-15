@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(schema = "hr")
+@Table(schema = "kindred")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
