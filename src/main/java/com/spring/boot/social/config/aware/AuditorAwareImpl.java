@@ -1,6 +1,6 @@
 package com.spring.boot.social.config.aware;
 
-import com.spring.boot.resturantbackend.dto.security.AccountDto;
+import com.spring.boot.social.dto.AccountDto;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +16,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
 
         // Check if user is authenticated and principal is AccountDto
         if (authentication != null && authentication.isAuthenticated() &&
-                authentication.getPrincipal() instanceof AccountDto) {
+            authentication.getPrincipal() instanceof AccountDto) {
 
             AccountDto acc = (AccountDto) authentication.getPrincipal();
             return Optional.ofNullable(acc.getUsername());

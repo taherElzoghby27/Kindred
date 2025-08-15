@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "DineEasy Endpoints",
+                title = "Kindred Endpoints",
                 description = "all apis for DineEasy",
                 contact = @Contact(
                         name = "Taher Elzoghby",
@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
                         url = "https://www.linkedin.com/in/taher-elzoghby-99499b231/"
                 ),
                 license = @License(
-                        name = "DineEasy license",
+                        name = "Kindred license",
                         url = "http://localhost:4200"
                 ),
                 version = "1"

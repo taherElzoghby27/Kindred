@@ -1,14 +1,12 @@
 package com.spring.boot.social.config.security;
 
-import com.spring.boot.resturantbackend.dto.security.AccountDto;
-import com.spring.boot.resturantbackend.exceptions.ExpiredTokenException;
-import com.spring.boot.resturantbackend.services.security.AccountService;
-import com.spring.boot.resturantbackend.setting.JWTToken;
+import com.spring.boot.social.dto.AccountDto;
+import com.spring.boot.social.exceptions.ExpiredTokenException;
+import com.spring.boot.social.services.AccountService;
+import com.spring.boot.social.setting.JWTToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import jakarta.transaction.SystemException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;

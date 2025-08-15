@@ -1,8 +1,8 @@
 package com.spring.boot.social.exceptions;
 
-import com.spring.boot.resturantbackend.dto.ExceptionDto;
-import com.spring.boot.resturantbackend.models.BundleMessage;
-import com.spring.boot.resturantbackend.services.BundleTranslationService;
+import com.spring.boot.social.dto.ExceptionDto;
+import com.spring.boot.social.models.BundleMessage;
+import com.spring.boot.social.services.BundleTranslationService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
