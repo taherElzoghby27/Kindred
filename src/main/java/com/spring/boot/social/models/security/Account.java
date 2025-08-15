@@ -13,7 +13,15 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(schema = "hr")
+@Table(
+        schema = "kindred",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {
+                        "username",
+                        "email"
+                }
+        )
+)
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -35,6 +43,6 @@ public class Account extends BaseEntity<String> {
     private List<Post> posts;
     @OneToMany(mappedBy = "account")
     private List<Comment> comments;
-    @OneToMany
+    @OneToMany(mappedBy = "account")
     private List<Activity> activities;
 }
