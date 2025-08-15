@@ -1,26 +1,23 @@
 package com.spring.boot.social.config.security.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.boot.resturantbackend.config.security.TokenHandler;
-import com.spring.boot.resturantbackend.dto.ExceptionDto;
-import com.spring.boot.resturantbackend.dto.security.AccountDto;
-import com.spring.boot.resturantbackend.exceptions.ExpiredTokenException;
-import com.spring.boot.resturantbackend.models.BundleMessage;
+import com.spring.boot.social.config.security.TokenHandler;
+import com.spring.boot.social.dto.AccountDto;
+import com.spring.boot.social.dto.ExceptionDto;
+import com.spring.boot.social.exceptions.ExpiredTokenException;
+import com.spring.boot.social.models.BundleMessage;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -30,7 +27,7 @@ public class AuthFilter extends OncePerRequestFilter {
     private TokenHandler tokenHandler;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         try {
             //1- get token from headers
             String token = request.getHeader("Authorization");
@@ -44,21 +41,21 @@ public class AuthFilter extends OncePerRequestFilter {
             //3- validate token
             AccountDto userValidated = null;
             userValidated = tokenHandler.validateToken(token);
-            if (Objects.isNull(userValidated) || userValidated.getEnabled().equals("0")) {
+            if (Objects.isNull(userValidated) || userValidated.getEnabled() == 0) {
                 response.reset();
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
             //4- get roles
-            List<SimpleGrantedAuthority> roles = userValidated.getRoles().stream().map(
-                    role -> new SimpleGrantedAuthority("ROLE_" + role.getRole())
-            ).toList();
+//            List<SimpleGrantedAuthority> roles = userValidated.getRoles().stream().map(
+//                    role -> new SimpleGrantedAuthority("ROLE_" + role.getRole())
+//            ).toList();
             //5- encapsulate user data , used to store details about an authenticated user after authentication is complete.
             //Stored in the SecurityContextHolder to represent the authenticated user for the duration of the request.
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                     userValidated,
-                    userValidated.getPassword(),
-                    roles
+                    userValidated.getPassword()
+                    //,roles
             );
             //6- The SecurityContextHolder stores UsernamePasswordAuthenticationToken to make the authenticated user’s details available throughout the request.
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
@@ -107,7 +104,7 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return request.getRequestURI().contains("auth/login")
                || request.getRequestURI().contains("auth/sign-up")
                || request.getRequestURI().contains("/v3/api-docs")

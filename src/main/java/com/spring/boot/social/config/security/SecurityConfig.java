@@ -1,6 +1,5 @@
 package com.spring.boot.social.config.security;
-
-import com.spring.boot.resturantbackend.config.security.filters.AuthFilter;
+import com.spring.boot.social.config.security.filters.AuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
