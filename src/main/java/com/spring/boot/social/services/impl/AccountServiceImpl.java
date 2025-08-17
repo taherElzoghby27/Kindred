@@ -49,7 +49,7 @@ public class AccountServiceImpl implements AccountService {
             throw new BadRequestException("empty.account_id_must_null");
         }
         //check account if exist
-        if (Objects.nonNull(getAccountByUsername(accountDto.getUsername()))) {
+        if (checkAccountByUsername(accountDto.getUsername())) {
             throw new BadRequestException("account_already_exist");
         }
         if (Objects.isNull(accountDto.getUsername())) {
@@ -107,5 +107,25 @@ public class AccountServiceImpl implements AccountService {
             throw new BadRequestException("account.not_found");
         }
         return AccountMapper.ACCOUNT_MAPPER.toAccountDto(result.get());
+    }
+
+    @Override
+    public AccountDto getAccountByEmail(String email) {
+        if (Objects.isNull(email)) {
+            throw new BadRequestException("empty.email");
+        }
+        Optional<Account> result = accountRepo.findByEmail(email);
+        if (result.isEmpty()) {
+            throw new BadRequestException("account.not_found");
+        }
+        return AccountMapper.ACCOUNT_MAPPER.toAccountDto(result.get());
+    }
+
+    private boolean checkAccountByUsername(String username) {
+        if (Objects.isNull(username)) {
+            throw new BadRequestException("empty.username");
+        }
+        Optional<Account> result = accountRepo.findByUsername(username);
+        return result.isPresent();
     }
 }

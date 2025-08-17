@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
         if (Objects.isNull(accountDto.getPassword())) {
             throw new BadRequestException("empty.password");
         }
-        AccountDto accountExist = accountService.getAccountByUsername(accountDto.getUsername());
+        AccountDto accountExist = accountService.getAccountByEmail(accountDto.getEmail());
         if (!passwordEncoder.matches(accountDto.getPassword(), accountExist.getPassword())) {
             throw new BadRequestException("wrong.password");
         }
@@ -45,10 +45,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AccountResponseVm signup(AccountDto accountDto) {
-        if (Objects.isNull(accountDto.getUsername())) {
+        if (Objects.isNull(accountDto.getUsername()) || accountDto.getUsername().isEmpty()) {
             throw new BadRequestException("empty.username");
         }
-        if (Objects.isNull(accountDto.getPassword())) {
+        int lengthUsername = accountDto.getUsername().length();
+        if (!(lengthUsername >= 12 && lengthUsername <= 50)) {
+            throw new BadRequestException("length.username");
+        }
+        if (Objects.isNull(accountDto.getPassword()) || accountDto.getPassword().isEmpty()) {
             throw new BadRequestException("empty.password");
         }
         accountDto = accountService.createAccount(accountDto);

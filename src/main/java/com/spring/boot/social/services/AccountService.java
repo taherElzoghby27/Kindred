@@ -10,4 +10,6 @@ public interface AccountService {
     AccountDto getAccountById(Long id);
 
     AccountDto getAccountByUsername(String username);
+
+    AccountDto getAccountByEmail(String email);
 }
