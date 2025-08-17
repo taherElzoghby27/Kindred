@@ -5,6 +5,8 @@ import com.spring.boot.social.models.BaseEntity;
 import com.spring.boot.social.models.Comment;
 import com.spring.boot.social.models.Post;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,15 +29,18 @@ import java.util.List;
 @Setter
 @Getter
 public class Account extends BaseEntity<String> {
-    @Column(nullable = false, unique = true)
+    @Size(min = 12, max = 50, message = "length.username")
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
     @Column(nullable = false, unique = true)
     private String email;
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{7,}$",
+            message = "error.password"
+    )
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false)
     private String lastName;
     //0 or 1
     private Long enabled;
