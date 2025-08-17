@@ -45,6 +45,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AccountResponseVm signup(AccountDto accountDto) {
+        validationForSignUp(accountDto);
+        accountDto = accountService.createAccount(accountDto);
+        return getAccountResponseVm(accountDto);
+    }
+
+    private static void validationForSignUp(AccountDto accountDto) {
         if (Objects.isNull(accountDto.getUsername()) || accountDto.getUsername().isEmpty()) {
             throw new BadRequestException("empty.username");
         }
@@ -55,7 +61,5 @@ public class AuthServiceImpl implements AuthService {
         if (Objects.isNull(accountDto.getPassword()) || accountDto.getPassword().isEmpty()) {
             throw new BadRequestException("empty.password");
         }
-        accountDto = accountService.createAccount(accountDto);
-        return getAccountResponseVm(accountDto);
     }
 }
