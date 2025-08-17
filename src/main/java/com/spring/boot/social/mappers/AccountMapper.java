@@ -2,6 +2,7 @@ package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.models.security.Account;
+import com.spring.boot.social.vm.AccountResponseVm;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -12,4 +13,6 @@ public interface AccountMapper {
     AccountDto toAccountDto(Account account);
 
     Account toAccount(AccountDto accountDto);
+
+    AccountResponseVm toAccountResponseVm(AccountDto accountDto);
 }
