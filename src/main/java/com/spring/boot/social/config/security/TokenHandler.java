@@ -34,7 +34,7 @@ public class TokenHandler {
 
     //generate token method
     public String generateToken(AccountDto accountDto) {
-        this.jwtBuilder.setSubject(accountDto.getUsername());
+        this.jwtBuilder.setSubject(accountDto.getEmail());
         Date now = new Date();
         this.jwtBuilder.setIssuedAt(now);
         this.jwtBuilder.setExpiration(createExpirationDate(now));
@@ -47,10 +47,10 @@ public class TokenHandler {
         try {
             if (this.jwtParser.isSigned(token)) {
                 Claims claims = this.jwtParser.parseClaimsJws(token).getBody();
-                String username = claims.getSubject();
+                String email = claims.getSubject();
                 Date expirationDate = claims.getExpiration();
                 Date issuedDate = claims.getIssuedAt();
-                AccountDto accountDto = accountService.getAccountByUsername(username);
+                AccountDto accountDto = accountService.getAccountByEmail(email);
                 boolean valid = expirationDate.after(new Date()) && issuedDate.before(expirationDate) && Objects.nonNull(accountDto);
                 return valid ? accountDto : null;
             }

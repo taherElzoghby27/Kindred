@@ -45,7 +45,14 @@ public class ExceptionHandling {
     @ExceptionHandler(exception = {BadCredentialsException.class, AccountExpiredException.class, InsufficientAuthenticationException.class, AuthenticationException.class, UsernameNotFoundException.class, CredentialsExpiredException.class, DisabledException.class, LockedException.class, AuthenticationCredentialsNotFoundException.class, InvalidCredentialsException.class, ExpiredTokenException.class,})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ResponseEntity<ExceptionDto> handleBadCredentialsException(Exception exception) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ExceptionDto(HttpStatus.UNAUTHORIZED.value(), BundleTranslationService.getBundleMessageWithArAndEn(exception.getMessage()), HttpStatus.UNAUTHORIZED.getReasonPhrase()));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        new ExceptionDto(
+                                HttpStatus.UNAUTHORIZED.value(),
+                                BundleTranslationService.getBundleMessageWithArAndEn(exception.getMessage()),
+                                HttpStatus.UNAUTHORIZED.getReasonPhrase()
+                        )
+                );
     }
 
     @ExceptionHandler(BadRequestException.class)

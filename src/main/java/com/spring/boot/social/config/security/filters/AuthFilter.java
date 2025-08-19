@@ -13,11 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -55,21 +57,21 @@ public class AuthFilter extends OncePerRequestFilter {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                     userValidated,
                     userValidated.getPassword()
-                    //,roles
+                    , List.of(new SimpleGrantedAuthority("ROLE_USER"))
             );
             //6- The SecurityContextHolder stores UsernamePasswordAuthenticationToken to make the authenticated user’s details available throughout the request.
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             //7- Continue with the filter chain
             filterChain.doFilter(request, response);
         } catch (ExpiredTokenException ex) {
+            System.out.println("1 " + ex.getMessage());
             // Handle expired token in filter
             handleExpiredToken(response);
-            return; // Don't continue filter chain
 
         } catch (Exception ex) {
+            System.out.println("2 " + ex.getMessage());
             // Handle other auth exceptions
             handleAuthException(response, ex);
-            return;
         }
     }
 

@@ -1,11 +1,14 @@
 package com.spring.boot.social.services.impl;
 
+import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.models.security.Account;
+import com.spring.boot.social.models.security.AccountDetails;
 import com.spring.boot.social.repositories.AccountRepo;
 import com.spring.boot.social.services.AccountService;
+import com.spring.boot.social.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,6 +74,25 @@ public class AccountServiceImpl implements AccountService {
         //map accountDto to account
         Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
         //save in db
+        account = accountRepo.save(account);
+        accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
+        return accountDto;
+    }
+
+    @Override
+    public AccountDto addAccountDetails(AccountDetailsDto accountDetailsDto) {
+        //get account from context
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        //get account by id
+        accountDto = getAccountById(accountDto.getId());
+        if (Objects.nonNull(accountDetailsDto.getId())) {
+            throw new BadRequestException("empty.account_details_id_must_null");
+        }
+        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
+        AccountDetails accountDetails = AccountMapper.ACCOUNT_MAPPER.toAccountDetails(accountDetailsDto);
+        //add account details to account
+        account.setAccountDetails(accountDetails);
+        accountDetails.setAccount(account);
         account = accountRepo.save(account);
         accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
         return accountDto;

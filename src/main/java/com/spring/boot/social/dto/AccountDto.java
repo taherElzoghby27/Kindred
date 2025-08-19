@@ -1,5 +1,4 @@
 package com.spring.boot.social.dto;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
@@ -30,4 +29,5 @@ public class AccountDto {
     private Long enabled;
     private String firstName;
     private String lastName;
+    private AccountDetailsDto accountDetails;
 }

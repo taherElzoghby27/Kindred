@@ -1,7 +1,7 @@
-package com.spring.boot.social.models.security;
+package com.spring.boot.social.dto;
 
-import com.spring.boot.social.models.BaseEntity;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -11,22 +11,21 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Entity
-@Table(schema = "kindred")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-public class AccountDetails extends BaseEntity<String> {
+public class AccountDetailsDto {
+    private Long id;
     @Min(value = 16, message = "error.age")
     private Long age;
     private String phoneNumber;
     private String address;
     private String fullName;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime birthday;
     private String bio;
     private String profilePictureUrl;
-    @OneToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+    @JsonProperty(value = "account_id")
+    private Long accountId;
 }
