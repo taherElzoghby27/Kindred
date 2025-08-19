@@ -9,10 +9,7 @@ import com.spring.boot.social.vm.AccountResponseVm;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -41,5 +38,10 @@ public class AuthController {
         ).body(
                 accountService.addAccountDetails(accountDetailsDto)
         );
+    }
+
+    @PutMapping("/update-account")
+    public ResponseEntity<AccountDto> updateAccount(@RequestBody AccountDto accountDto) {
+        return ResponseEntity.ok(accountService.updateAccount(accountDto));
     }
 }

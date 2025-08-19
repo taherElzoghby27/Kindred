@@ -61,22 +61,58 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto updateAccount(AccountDto accountDto) {//todo : add update account details for this
-        validateUpdateAccount(accountDto);
-        //check account if exist
-        AccountDto oldAccount = getAccountById(accountDto.getId());
-        if (!Objects.equals(accountDto.getUsername(), oldAccount.getUsername())) {
-            throw new BadRequestException("username.diff");
-        }
-        if (!Objects.equals(accountDto.getEmail(), oldAccount.getEmail())) {
-            throw new BadRequestException("email.diff");
-        }
+    public AccountDto updateAccount(AccountDto accountDto) {
+        AccountDto oldAccountDto = updateAccountModel(accountDto);
         //map accountDto to account
-        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
+        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(oldAccountDto);
+        account.getAccountDetails().setAccount(account);
         //save in db
         account = accountRepo.save(account);
-        accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
-        return accountDto;
+        oldAccountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
+        return oldAccountDto;
+    }
+
+    private AccountDto updateAccountModel(AccountDto accountDto) {
+        AccountDto currentAccountDto = SecurityUtils.getCurrentAccount();
+        //check account if exist
+        AccountDto oldAccountDto = getAccountById(currentAccountDto.getId());
+        if (Objects.nonNull(accountDto.getFirstName())) {
+            oldAccountDto.setFirstName(accountDto.getFirstName());
+        }
+        if (Objects.nonNull(accountDto.getLastName())) {
+            oldAccountDto.setLastName(accountDto.getLastName());
+        }
+        if (Objects.nonNull(accountDto.getAccountDetails())) {
+            updateAccountDetails(accountDto, oldAccountDto);
+        }
+        return oldAccountDto;
+    }
+
+    private static void updateAccountDetails(AccountDto accountDto, AccountDto oldAccountDto) {
+        AccountDetailsDto oldAccountDetailsDto = oldAccountDto.getAccountDetails();
+        AccountDetailsDto accountDetailsDto = accountDto.getAccountDetails();
+        if (Objects.nonNull(accountDetailsDto.getAge())) {
+            oldAccountDetailsDto.setAge(accountDetailsDto.getAge());
+        }
+        if (Objects.nonNull(accountDetailsDto.getAddress())) {
+            oldAccountDetailsDto.setAddress(accountDetailsDto.getAddress());
+        }
+        if (Objects.nonNull(accountDetailsDto.getBio())) {
+            oldAccountDetailsDto.setBio(accountDetailsDto.getBio());
+        }
+        if (Objects.nonNull(accountDetailsDto.getBirthday())) {
+            oldAccountDetailsDto.setBirthday(accountDetailsDto.getBirthday());
+        }
+        if (Objects.nonNull(accountDetailsDto.getFullName())) {
+            oldAccountDetailsDto.setFullName(accountDetailsDto.getFullName());
+        }
+        if (Objects.nonNull(accountDetailsDto.getPhoneNumber())) {
+            oldAccountDetailsDto.setPhoneNumber(accountDetailsDto.getPhoneNumber());
+        }
+        if (Objects.nonNull(accountDetailsDto.getProfilePictureUrl())) {
+            oldAccountDetailsDto.setProfilePictureUrl(accountDetailsDto.getProfilePictureUrl());
+        }
+        oldAccountDto.setAccountDetails(oldAccountDetailsDto);
     }
 
     @Override
@@ -96,15 +132,6 @@ public class AccountServiceImpl implements AccountService {
         account = accountRepo.save(account);
         accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
         return accountDto;
-    }
-
-    private static void validateUpdateAccount(AccountDto accountDto) {
-        if (Objects.isNull(accountDto.getId())) {
-            throw new BadRequestException("empty.account_id");
-        }
-        if (Objects.isNull(accountDto.getUsername())) {
-            throw new BadRequestException("empty.username");
-        }
     }
 
     @Override
