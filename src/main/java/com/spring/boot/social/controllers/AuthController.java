@@ -1,6 +1,4 @@
 package com.spring.boot.social.controllers;
-
-
 import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.services.AccountService;
