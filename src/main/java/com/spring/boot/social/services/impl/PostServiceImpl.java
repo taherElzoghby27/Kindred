@@ -11,7 +11,11 @@ import com.spring.boot.social.repositories.PostRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.utils.SecurityUtils;
+import com.spring.boot.social.vm.PostsVmResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,14 +40,29 @@ public class PostServiceImpl implements PostService {
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
         //set account to post
         post.setAccount(account);
+        //save post in db
         post = postRepo.save(post);
         postDto = PostMapper.POST_INSTANCE.toPostDto(post);
         return postDto;
     }
 
     @Override
-    public List<PostDto> getPosts() {
-        return List.of();
+    public PostsVmResponse getPosts(int page, int size) {
+        Pageable pageable = getPageable(page, size);
+        Page<Post> posts = postRepo.findAllOrderByCreatedBy(pageable);
+        List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
+        return new PostsVmResponse(
+               postsDto,
+               posts.getTotalPages(),
+               posts.getSize()
+        );
+    }
+
+    private Pageable getPageable(int page, int size) {
+        if (page < 1) {
+            throw new BadRequestException("error.min.one.page");
+        }
+        return PageRequest.of(page - 1, size);
     }
 
     @Override

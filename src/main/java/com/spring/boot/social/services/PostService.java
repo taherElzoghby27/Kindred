@@ -1,13 +1,12 @@
 package com.spring.boot.social.services;
 
 import com.spring.boot.social.dto.PostDto;
-
-import java.util.List;
+import com.spring.boot.social.vm.PostsVmResponse;
 
 public interface PostService {
     PostDto createPost(PostDto postDto);
 
-    List<PostDto> getPosts();
+    PostsVmResponse getPosts(int page, int size);
 
     void deletePost(Long id);
 

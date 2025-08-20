@@ -2,13 +2,11 @@ package com.spring.boot.social.controllers;
 
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.services.PostService;
+import com.spring.boot.social.vm.PostsVmResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -22,5 +20,10 @@ public class PostController {
     @PostMapping("/create-post")
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         return ResponseEntity.created(URI.create("/create-post")).body(postService.createPost(postDto));
+    }
+
+    @GetMapping("/get-posts")
+    public ResponseEntity<PostsVmResponse> getPosts(int page, int pageSize) {
+        return ResponseEntity.ok(postService.getPosts(page, pageSize));
     }
 }
