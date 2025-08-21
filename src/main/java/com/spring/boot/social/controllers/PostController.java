@@ -6,6 +6,7 @@ import com.spring.boot.social.vm.PostsVmResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -17,13 +18,15 @@ public class PostController {
     private final PostService postService;
 
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create-post")
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         return ResponseEntity.created(URI.create("/create-post")).body(postService.createPost(postDto));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/get-posts")
-    public ResponseEntity<PostsVmResponse> getPosts(int page, int pageSize) {
+    public ResponseEntity<PostsVmResponse> getPosts(@RequestParam int page,@RequestParam int pageSize) {
         return ResponseEntity.ok(postService.getPosts(page, pageSize));
     }
 }

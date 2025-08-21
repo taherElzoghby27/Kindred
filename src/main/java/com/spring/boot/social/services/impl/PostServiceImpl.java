@@ -49,12 +49,12 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostsVmResponse getPosts(int page, int size) {
         Pageable pageable = getPageable(page, size);
-        Page<Post> posts = postRepo.findAllOrderByCreatedBy(pageable);
+        Page<Post> posts = postRepo.findAllByOrderByCreatedByAsc(pageable);
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
         return new PostsVmResponse(
-               postsDto,
-               posts.getTotalPages(),
-               posts.getSize()
+                postsDto,
+                posts.getNumber() + 1,
+                posts.getSize()
         );
     }
 
