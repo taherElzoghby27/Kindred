@@ -44,4 +44,10 @@ public class PostController {
     public ResponseEntity<PostDto> getPost(@RequestParam Long id) {
         return ResponseEntity.ok(postService.getPost(id));
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/update-post")
+    public ResponseEntity<PostDto> updatePost(@RequestBody PostDto postDto) {
+        return ResponseEntity.ok(postService.updatePost(postDto));
+    }
 }
