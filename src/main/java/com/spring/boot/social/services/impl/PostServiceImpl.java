@@ -73,7 +73,7 @@ public class PostServiceImpl implements PostService {
         //get current account
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
         Post post = postRepo.findPostsByIdAndAccountId(id, accountDto.getId());
-        if(Objects.isNull(post)) {
+        if (Objects.isNull(post)) {
             throw new BadRequestException("post.not.found");
         }
         postRepo.deleteById(id);
@@ -84,6 +84,7 @@ public class PostServiceImpl implements PostService {
         if (Objects.isNull(id)) {
             throw new BadRequestException("required.id");
         }
+        return null;
     }
 
     @Override

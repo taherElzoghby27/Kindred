@@ -36,6 +36,6 @@ public class PostController {
     @DeleteMapping("/delete-post")
     public ResponseEntity<SuccessDto> deletePost(@RequestParam Long id) {
         postService.deletePost(id);
-        return ResponseEntity.ok(new SuccessDto(HttpStatus.OK.value(), "success.deleted"));
+        return ResponseEntity.ok(new SuccessDto(HttpStatus.OK.value(), "Successfully Deleted"));
     }
 }

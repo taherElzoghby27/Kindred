@@ -39,7 +39,15 @@ public class ExceptionHandling {
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<ExceptionDto> handleForbidden(AccessDeniedException exception) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionDto(HttpStatus.FORBIDDEN.value(), new BundleMessage(exception.getMessage()), HttpStatus.FORBIDDEN.getReasonPhrase()));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(
+                        new ExceptionDto(
+                                HttpStatus.FORBIDDEN.value(),
+                                new BundleMessage(exception.getMessage()
+                                ),
+                                HttpStatus.FORBIDDEN.getReasonPhrase()
+                        )
+                );
     }
 
     @ExceptionHandler(exception = {BadCredentialsException.class, AccountExpiredException.class, InsufficientAuthenticationException.class, AuthenticationException.class, UsernameNotFoundException.class, CredentialsExpiredException.class, DisabledException.class, LockedException.class, AuthenticationCredentialsNotFoundException.class, InvalidCredentialsException.class, ExpiredTokenException.class,})
