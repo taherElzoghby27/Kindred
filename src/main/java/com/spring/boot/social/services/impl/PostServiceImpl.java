@@ -47,6 +47,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostsVmResponse getPostsByAccount(int page, int size) {
+        //get current account
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        Pageable pageable = getPageable(page, size);
+        Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedByAsc(pageable, accountDto.getId());
+        List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
+        return new PostsVmResponse(
+                postsDto,
+                posts.getNumber() + 1,
+                posts.getSize()
+        );
+    }
+
+    @Override
     public PostsVmResponse getPosts(int page, int size) {
         Pageable pageable = getPageable(page, size);
         Page<Post> posts = postRepo.findAllByOrderByCreatedByAsc(pageable);

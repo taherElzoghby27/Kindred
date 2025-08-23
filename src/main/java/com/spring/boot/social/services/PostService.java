@@ -6,6 +6,8 @@ import com.spring.boot.social.vm.PostsVmResponse;
 public interface PostService {
     PostDto createPost(PostDto postDto);
 
+    PostsVmResponse getPostsByAccount(int page, int size);
+
     PostsVmResponse getPosts(int page, int size);
 
     void deletePost(Long id);

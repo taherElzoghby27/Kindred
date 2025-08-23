@@ -27,8 +27,14 @@ public class PostController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/get-posts")
-    public ResponseEntity<PostsVmResponse> getPosts(@RequestParam int page, @RequestParam int pageSize) {
+    @GetMapping("/get-my-posts")
+    public ResponseEntity<PostsVmResponse> getMyPosts(@RequestParam int page, @RequestParam int pageSize) {
+        return ResponseEntity.ok(postService.getPostsByAccount(page, pageSize));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/get-all-posts")
+    public ResponseEntity<PostsVmResponse> getAllPosts(@RequestParam int page, @RequestParam int pageSize) {
         return ResponseEntity.ok(postService.getPosts(page, pageSize));
     }
 
