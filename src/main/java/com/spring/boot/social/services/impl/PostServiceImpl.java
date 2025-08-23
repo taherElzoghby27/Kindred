@@ -70,13 +70,21 @@ public class PostServiceImpl implements PostService {
         if (Objects.isNull(id)) {
             throw new BadRequestException("required.id");
         }
-        //get current account
-        AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        Post post = postRepo.findPostsByIdAndAccountId(id, accountDto.getId());
+        Post post = getPostBasedOnCurrentAccount(id);
         if (Objects.isNull(post)) {
             throw new BadRequestException("post.not.found");
         }
         postRepo.deleteById(id);
+    }
+
+    private Post getPostBasedOnCurrentAccount(Long id) {
+        //get current account
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        return getPostByIdAndAccountId(id, accountDto.getId());
+    }
+
+    private Post getPostByIdAndAccountId(Long id, Long AccountId) {
+        return postRepo.findPostsByIdAndAccountId(id, AccountId);
     }
 
     @Override
@@ -84,7 +92,11 @@ public class PostServiceImpl implements PostService {
         if (Objects.isNull(id)) {
             throw new BadRequestException("required.id");
         }
-        return null;
+        Post post = getPostBasedOnCurrentAccount(id);
+        if (Objects.isNull(post)) {
+            throw new BadRequestException("post.not.found");
+        }
+        return PostMapper.POST_INSTANCE.toPostDto(post);
     }
 
     @Override

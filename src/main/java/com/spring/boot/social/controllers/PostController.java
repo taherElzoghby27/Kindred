@@ -38,4 +38,10 @@ public class PostController {
         postService.deletePost(id);
         return ResponseEntity.ok(new SuccessDto(HttpStatus.OK.value(), "Successfully Deleted"));
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/get-post")
+    public ResponseEntity<PostDto> getPost(@RequestParam Long id) {
+        return ResponseEntity.ok(postService.getPost(id));
+    }
 }
