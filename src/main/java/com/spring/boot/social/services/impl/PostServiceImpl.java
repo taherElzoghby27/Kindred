@@ -67,12 +67,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(Long id) {
-
+        if (Objects.isNull(id)) {
+            throw new BadRequestException("required.id");
+        }
+        //get current account
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        Post post = postRepo.findPostsByIdAndAccountId(id, accountDto.getId());
+        if(Objects.isNull(post)) {
+            throw new BadRequestException("post.not.found");
+        }
+        postRepo.deleteById(id);
     }
 
     @Override
     public PostDto getPost(Long id) {
-        return null;
+        if (Objects.isNull(id)) {
+            throw new BadRequestException("required.id");
+        }
     }
 
     @Override
