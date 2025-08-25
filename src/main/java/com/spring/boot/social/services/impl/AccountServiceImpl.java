@@ -3,6 +3,7 @@ package com.spring.boot.social.services.impl;
 import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.exceptions.BadRequestException;
+import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.models.security.AccountDetails;
@@ -53,10 +54,10 @@ public class AccountServiceImpl implements AccountService {
         }
         //check account if exist
         if (checkAccountByUsername(accountDto.getUsername())) {
-            throw new BadRequestException("account_already_exist");
+            throw new NotFoundResourceException("account_already_exist");
         }
         if (Objects.isNull(accountDto.getUsername())) {
-            throw new BadRequestException("empty.username");
+            throw new NotFoundResourceException("empty.username");
         }
     }
 
@@ -141,7 +142,7 @@ public class AccountServiceImpl implements AccountService {
         }
         Optional<Account> result = accountRepo.findById(id);
         if (result.isEmpty()) {
-            throw new BadRequestException("account.not_found");
+            throw new NotFoundResourceException("account.not_found");
         }
         return AccountMapper.ACCOUNT_MAPPER.toAccountDto(result.get());
     }
@@ -153,7 +154,7 @@ public class AccountServiceImpl implements AccountService {
         }
         Optional<Account> result = accountRepo.findByUsername(username);
         if (result.isEmpty()) {
-            throw new BadRequestException("account.not_found");
+            throw new NotFoundResourceException("account.not_found");
         }
         return AccountMapper.ACCOUNT_MAPPER.toAccountDto(result.get());
     }
@@ -165,7 +166,7 @@ public class AccountServiceImpl implements AccountService {
         }
         Optional<Account> result = accountRepo.findByEmail(email);
         if (result.isEmpty()) {
-            throw new BadRequestException("account.not_found");
+            throw new NotFoundResourceException("account.not_found");
         }
         return AccountMapper.ACCOUNT_MAPPER.toAccountDto(result.get());
     }

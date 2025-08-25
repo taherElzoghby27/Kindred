@@ -3,6 +3,7 @@ package com.spring.boot.social.services.impl;
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.exceptions.BadRequestException;
+import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.mappers.PostMapper;
 import com.spring.boot.social.models.Post;
@@ -86,7 +87,7 @@ public class PostServiceImpl implements PostService {
         }
         Post post = getPostBasedOnCurrentAccount(id);
         if (Objects.isNull(post)) {
-            throw new BadRequestException("post.not.found");
+            throw new NotFoundResourceException("post.not.found");
         }
         postRepo.deleteById(id);
     }
@@ -108,7 +109,7 @@ public class PostServiceImpl implements PostService {
         }
         Post post = getPostBasedOnCurrentAccount(id);
         if (Objects.isNull(post)) {
-            throw new BadRequestException("post.not.found");
+            throw new NotFoundResourceException("post.not.found");
         }
         return PostMapper.POST_INSTANCE.toPostDto(post);
     }
