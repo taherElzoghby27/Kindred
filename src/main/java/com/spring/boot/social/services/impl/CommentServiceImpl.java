@@ -12,8 +12,10 @@ import com.spring.boot.social.repositories.CommentRepo;
 import com.spring.boot.social.services.CommentService;
 import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.vm.CommentRequestVm;
+import com.spring.boot.social.vm.CommentResponseVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +29,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostService postService;
 
     @Override
-    public CommentDto createComment(CommentRequestVm commentRequestVm) {
+    public CommentResponseVm createComment(CommentRequestVm commentRequestVm) {
         if (Objects.nonNull(commentRequestVm.getId())) {
             throw new BadRequestException("id.comment.null");
         }
@@ -36,11 +38,11 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
         comment.setPost(post);
         comment = commentRepo.save(comment);
-        return CommentMapper.COMMENT_MAPPER.toCommentDto(comment);
+        return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
     }
 
     @Override
-    public CommentDto updateComment(CommentRequestVm commentRequestVm) {
+    public CommentResponseVm updateComment(CommentRequestVm commentRequestVm) {
         if (Objects.isNull(commentRequestVm.getId())) {
             throw new BadRequestException("id.comment.not_null");
         }
@@ -53,20 +55,21 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
         comment.setPost(post);
         comment = commentRepo.save(comment);
-        return CommentMapper.COMMENT_MAPPER.toCommentDto(comment);
+        return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
     }
 
+    @Transactional
     @Override
     public void deleteComment(Long commentId) {
         if (Objects.isNull(commentId)) {
             throw new BadRequestException("id.comment.not_null");
         }
         getCommentById(commentId);
-        commentRepo.deleteById(commentId);
+        commentRepo.deleteByCommentId(commentId);
     }
 
     @Override
-    public List<CommentDto> getCommentsByPostId(Long postId) {
+    public List<CommentResponseVm> getCommentsByPostId(Long postId) {
         if (Objects.isNull(postId)) {
             throw new BadRequestException("post_id.comment.not_null");
         }
@@ -74,7 +77,7 @@ public class CommentServiceImpl implements CommentService {
         if (result.isEmpty()) {
             throw new NotFoundResourceException("comments.not.found");
         }
-        return result.get().stream().map(CommentMapper.COMMENT_MAPPER::toCommentDto).toList();
+        return result.get().stream().map(CommentMapper.COMMENT_MAPPER::toCommentResponseVm).toList();
     }
 
     @Override
@@ -93,7 +96,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getCommentById(Long commentId) {
+    public CommentResponseVm getCommentById(Long commentId) {
         if (Objects.isNull(commentId)) {
             throw new BadRequestException("id.comment.not_null");
         }
@@ -101,6 +104,6 @@ public class CommentServiceImpl implements CommentService {
         if (result.isEmpty()) {
             throw new NotFoundResourceException("comment.not.found");
         }
-        return CommentMapper.COMMENT_MAPPER.toCommentDto(result.get());
+        return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(result.get());
     }
 }

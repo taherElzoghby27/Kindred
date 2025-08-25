@@ -15,7 +15,6 @@ import lombok.Setter;
 public class Comment extends BaseEntity<String> {
     @NotEmpty
     private String content;
-    @JoinColumn(unique = true)
     @ManyToOne
     private Post post;
 }

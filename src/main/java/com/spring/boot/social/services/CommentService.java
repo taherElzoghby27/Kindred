@@ -2,19 +2,20 @@ package com.spring.boot.social.services;
 
 import com.spring.boot.social.dto.CommentDto;
 import com.spring.boot.social.vm.CommentRequestVm;
+import com.spring.boot.social.vm.CommentResponseVm;
 
 import java.util.List;
 
 public interface CommentService {
-    CommentDto createComment(CommentRequestVm commentRequestVm);
+    CommentResponseVm createComment(CommentRequestVm commentRequestVm);
 
-    CommentDto updateComment(CommentRequestVm commentRequestVm);
+    CommentResponseVm updateComment(CommentRequestVm commentRequestVm);
 
     void deleteComment(Long commentId);
 
-    List<CommentDto> getCommentsByPostId(Long postId);
+    List<CommentResponseVm> getCommentsByPostId(Long postId);
 
     CommentDto getCommentById(Long commentId, Long postId);
 
-    CommentDto getCommentById(Long commentId);
+    CommentResponseVm getCommentById(Long commentId);
 }
