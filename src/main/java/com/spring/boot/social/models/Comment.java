@@ -1,6 +1,4 @@
 package com.spring.boot.social.models;
-
-import com.spring.boot.social.models.security.Account;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -20,6 +18,4 @@ public class Comment extends BaseEntity<String> {
     @JoinColumn(unique = true)
     @ManyToOne
     private Post post;
-    @ManyToOne
-    private Account account;
 }
