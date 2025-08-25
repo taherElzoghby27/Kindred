@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SuccessDto {
-    private int status;
-    private String message;
+public class SuccessDto<T> {
+    private T data;
 }

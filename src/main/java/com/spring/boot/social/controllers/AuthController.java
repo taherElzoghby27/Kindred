@@ -1,6 +1,8 @@
 package com.spring.boot.social.controllers;
+
 import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
+import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.AuthService;
 import com.spring.boot.social.vm.AccountResponseVm;
@@ -20,26 +22,28 @@ public class AuthController {
     private AccountService accountService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<AccountResponseVm> signUp(@Valid @RequestBody AccountDto accountDto) {
-        return ResponseEntity.created(URI.create("/sign-up")).body(authService.signup(accountDto));
+    public SuccessDto<ResponseEntity<AccountResponseVm>> signUp(@Valid @RequestBody AccountDto accountDto) {
+        return new SuccessDto<>(
+                ResponseEntity.created(URI.create("/sign-up")).body(authService.signup(accountDto))
+        );
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AccountResponseVm> login(@Valid @RequestBody AccountDto accountDto) {
-        return ResponseEntity.ok(authService.login(accountDto));
+    public SuccessDto<ResponseEntity<AccountResponseVm>> login(@Valid @RequestBody AccountDto accountDto) {
+        return new SuccessDto<>(
+                ResponseEntity.ok(authService.login(accountDto))
+        );
     }
 
     @PostMapping("/add-account-details")
-    public ResponseEntity<AccountDto> addAccountDetails(@Valid @RequestBody AccountDetailsDto accountDetailsDto) {
-        return ResponseEntity.created(
-                URI.create("/add-account-details")
-        ).body(
-                accountService.addAccountDetails(accountDetailsDto)
+    public SuccessDto<ResponseEntity<AccountDto>> addAccountDetails(@Valid @RequestBody AccountDetailsDto accountDetailsDto) {
+        return new SuccessDto<>(
+                ResponseEntity.created(URI.create("/add-account-details")).body(accountService.addAccountDetails(accountDetailsDto))
         );
     }
 
     @PutMapping("/update-account")
-    public ResponseEntity<AccountDto> updateAccount(@RequestBody AccountDto accountDto) {
-        return ResponseEntity.ok(accountService.updateAccount(accountDto));
+    public SuccessDto<ResponseEntity<AccountDto>> updateAccount(@RequestBody AccountDto accountDto) {
+        return new SuccessDto<>(ResponseEntity.ok(accountService.updateAccount(accountDto)));
     }
 }
