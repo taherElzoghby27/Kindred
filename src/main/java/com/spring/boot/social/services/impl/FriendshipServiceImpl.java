@@ -47,7 +47,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         friendship = new Friendship();
         friendship.setAccount(account);
         friendship.setFriend(friend);
-        friendship.setStatus(status);
+        //friendship.setStatus(status);
         friendship = friendShipRepo.save(friendship);
         return FriendShipMapper.INSTANCE.toFriendShipDto(friendship);
     }

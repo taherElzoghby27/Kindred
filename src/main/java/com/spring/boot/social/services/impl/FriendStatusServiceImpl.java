@@ -1,0 +1,31 @@
+package com.spring.boot.social.services.impl;
+
+import com.spring.boot.social.dto.FriendStatusDto;
+import com.spring.boot.social.exceptions.BadRequestException;
+import com.spring.boot.social.mappers.FriendStatusMapper;
+import com.spring.boot.social.models.friendship.FriendStatus;
+import com.spring.boot.social.repositories.FriendStatusRepo;
+import com.spring.boot.social.services.FriendStatusService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class FriendStatusServiceImpl implements FriendStatusService {
+    private final FriendStatusRepo friendStatusRepo;
+
+    @Override
+    public FriendStatusDto getStatus(String status) {
+        if (Objects.isNull(status)) {
+            throw new BadRequestException("status.must.be.not_null");
+        }
+        Optional<FriendStatus> result = friendStatusRepo.findByStatus(status);
+        if (result.isEmpty()) {
+            throw new BadRequestException("status.not.found");
+        }
+        return FriendStatusMapper.INSTANCE.toFriendStatusDto(result.get());
+    }
+}
