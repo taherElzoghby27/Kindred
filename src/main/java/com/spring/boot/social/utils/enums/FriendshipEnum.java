@@ -1,7 +1,7 @@
 package com.spring.boot.social.utils.enums;
 
 public enum FriendshipEnum {
-    PENDING("PENDING"), ACCEPTED("ACCEPTED"), BLOCKED("BLOCKED");
+    PENDING("PENDING"), ACCEPTED("ACCEPTED"), REJECTED("REJECTED"), BLOCKED("BLOCKED");
     private final String status;
 
     FriendshipEnum(String status) {

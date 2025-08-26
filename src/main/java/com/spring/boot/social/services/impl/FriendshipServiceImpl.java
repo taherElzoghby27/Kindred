@@ -1,5 +1,4 @@
 package com.spring.boot.social.services.impl;
-
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
@@ -61,6 +60,11 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     public void removeFriendShip(Long friendId) {
+
+    }
+
+    @Override
+    public void takeActionOnRequestFriendShip(Long friendId, String status) {
 
     }
 }
