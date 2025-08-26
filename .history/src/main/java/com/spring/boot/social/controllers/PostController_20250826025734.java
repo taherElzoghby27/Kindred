@@ -6,6 +6,7 @@ import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.vm.PostsVmResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -45,10 +46,10 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/delete-post")
-    public SuccessDto<ResponseEntity<String>> deletePost(@RequestParam Long id) {
+    public SuccessDto<ResponseEntity<SuccessDto>> deletePost(@RequestParam Long id) {
         postService.deletePost(id);
         return new SuccessDto<>(
-                ResponseEntity.ok("Successfully Deleted")
+                ResponseEntity.ok(new SuccessDto<>("Successfully Deleted"))
         );
     }
 

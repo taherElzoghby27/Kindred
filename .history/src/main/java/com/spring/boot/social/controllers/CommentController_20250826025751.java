@@ -1,5 +1,4 @@
 package com.spring.boot.social.controllers;
-
 import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.CommentService;
 import com.spring.boot.social.vm.CommentRequestVm;
@@ -39,10 +38,10 @@ public class CommentController {
 
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/delete-comment")
-    public SuccessDto<ResponseEntity<String>> deleteComment(@Valid @RequestParam Long commentId) {
+    public SuccessDto<ResponseEntity<SuccessDto>> deleteComment(@Valid @RequestParam Long commentId) {
         commentService.deleteComment(commentId);
         return new SuccessDto<>(
-                ResponseEntity.ok("Successfully Deleted")
+                ResponseEntity.ok(new SuccessDto<>("Successfully Deleted"))
         );
     }
 
