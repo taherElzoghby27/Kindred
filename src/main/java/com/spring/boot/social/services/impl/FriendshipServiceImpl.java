@@ -1,10 +1,13 @@
 package com.spring.boot.social.services.impl;
+
 import com.spring.boot.social.dto.AccountDto;
+import com.spring.boot.social.dto.FriendShipDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.AccountMapper;
-import com.spring.boot.social.models.Friendship;
-import com.spring.boot.social.models.FriendshipStatus;
+import com.spring.boot.social.mappers.FriendShipMapper;
+import com.spring.boot.social.models.friendship.Friendship;
+import com.spring.boot.social.models.friendship.FriendStatus;
 import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.repositories.FriendShipRepo;
 import com.spring.boot.social.services.AccountService;
@@ -25,7 +28,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     @Transactional
-    public void createFriendShip(Long friendId) {
+    public FriendShipDto createFriendShip(Long friendId) {
         //current account
         Account account = getCurrentAccount();
         if (Objects.isNull(friendId)) {
@@ -38,14 +41,15 @@ public class FriendshipServiceImpl implements FriendshipService {
             throw new NotFoundResourceException("friendship.already.exist");
         }
         //add pending status
-        FriendshipStatus status = new FriendshipStatus();
+        FriendStatus status = new FriendStatus();
         status.setStatus(FriendshipEnum.PENDING);
         //init friendship
         friendship = new Friendship();
         friendship.setAccount(account);
         friendship.setFriend(friend);
         friendship.setStatus(status);
-        friendShipRepo.save(friendship);
+        friendship = friendShipRepo.save(friendship);
+        return FriendShipMapper.INSTANCE.toFriendShipDto(friendship);
     }
 
     private Account getCurrentAccount() {

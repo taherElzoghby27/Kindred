@@ -1,0 +1,13 @@
+package com.spring.boot.social.mappers;
+
+import com.spring.boot.social.dto.FriendShipDto;
+import com.spring.boot.social.models.friendship.Friendship;
+import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
+
+@Mapper
+public interface FriendShipMapper {
+    FriendShipMapper INSTANCE = Mappers.getMapper(FriendShipMapper.class);
+
+    FriendShipDto toFriendShipDto(Friendship friendShip);
+}

@@ -1,5 +1,6 @@
-package com.spring.boot.social.models;
+package com.spring.boot.social.models.friendship;
 
+import com.spring.boot.social.models.BaseEntity;
 import com.spring.boot.social.models.security.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,6 @@ public class Friendship extends BaseEntity<String> {
     @ManyToOne
     @JoinColumn(name = "friend_id", nullable = false)
     private Account friend;
-    @OneToOne
-    @JoinColumn(name = "status_id", nullable = false)
-    private FriendshipStatus status;
+    @OneToOne(mappedBy = "friendship")
+    private FriendshipStatus friendshipStatus;
 }

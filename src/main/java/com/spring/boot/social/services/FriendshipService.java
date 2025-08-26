@@ -1,7 +1,9 @@
 package com.spring.boot.social.services;
 
+import com.spring.boot.social.dto.FriendShipDto;
+
 public interface FriendshipService {
-    void createFriendShip(Long friendId);
+    FriendShipDto createFriendShip(Long friendId);
 
     void removeFriendShip(Long friendId);
 

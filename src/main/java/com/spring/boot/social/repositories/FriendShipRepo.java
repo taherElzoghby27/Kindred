@@ -1,12 +1,10 @@
 package com.spring.boot.social.repositories;
 
-import com.spring.boot.social.models.Friendship;
+import com.spring.boot.social.models.friendship.Friendship;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface FriendShipRepo extends JpaRepository<Friendship, Long> {
