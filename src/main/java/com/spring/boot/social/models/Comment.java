@@ -1,4 +1,6 @@
 package com.spring.boot.social.models;
+
+import com.spring.boot.social.models.security.Account;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comment_post",schema = "kindred")
+@Table(name = "comment_post", schema = "kindred")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -17,4 +19,6 @@ public class Comment extends BaseEntity<String> {
     private String content;
     @ManyToOne
     private Post post;
+    @ManyToOne
+    private Account account;
 }

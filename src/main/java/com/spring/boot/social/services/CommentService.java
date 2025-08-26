@@ -15,7 +15,7 @@ public interface CommentService {
 
     List<CommentResponseVm> getCommentsByPostId(Long postId);
 
-    CommentDto getCommentById(Long commentId, Long postId);
+    CommentDto getCommentByIdBasedOnAccount(Long commentId, Long postId);
 
-    CommentResponseVm getCommentById(Long commentId);
+    CommentResponseVm getCommentByIdBasedOnAccount(Long commentId);
 }

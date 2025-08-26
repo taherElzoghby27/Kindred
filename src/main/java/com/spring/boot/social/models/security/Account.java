@@ -2,6 +2,7 @@ package com.spring.boot.social.models.security;
 
 import com.spring.boot.social.models.Activity;
 import com.spring.boot.social.models.BaseEntity;
+import com.spring.boot.social.models.Comment;
 import com.spring.boot.social.models.Post;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
@@ -47,6 +48,8 @@ public class Account extends BaseEntity<String> {
     private AccountDetails accountDetails;
     @OneToMany(mappedBy = "account")
     private List<Post> posts;
+    @OneToMany(mappedBy = "account")
+    private List<Comment> comments;
     @OneToMany(mappedBy = "account")
     private List<Activity> activities;
 }
