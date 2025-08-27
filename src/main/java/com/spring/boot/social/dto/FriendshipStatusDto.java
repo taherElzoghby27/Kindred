@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FriendshipStatusDto {
+    private Long id;
     private FriendShipDto friendship;
     private FriendStatusDto status;
 }

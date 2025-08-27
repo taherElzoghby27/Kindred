@@ -14,6 +14,8 @@ import com.spring.boot.social.services.FriendshipService;
 import com.spring.boot.social.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -43,6 +45,27 @@ public class FriendshipServiceImpl implements FriendshipService {
         //set status
         friendship = friendshipRepo.save(friendship);
         return FriendShipMapper.INSTANCE.toFriendShipDto(friendship);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FriendShipDto getFriendShip(Long friendId) {
+        //current account
+        Account account = getCurrentAccount();
+        if (Objects.isNull(friendId)) {
+            throw new BadRequestException("empty.account_id");
+        }
+        //get friend
+        Account friend = getAccount(friendId);
+        Friendship friendship = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());
+        return FriendShipMapper.INSTANCE.toFriendShipDto(friendship);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void removeFriendShip(Long friendId) {
+        FriendShipDto friendShipDto = getFriendShip(friendId);
+        friendshipRepo.deleteById(friendShipDto.getId());
     }
 
     private Account getCurrentAccount() {

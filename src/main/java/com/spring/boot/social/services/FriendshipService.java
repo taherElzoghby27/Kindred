@@ -4,4 +4,8 @@ import com.spring.boot.social.dto.FriendShipDto;
 
 public interface FriendshipService {
     FriendShipDto createFriendShip(Long friendId);
+
+    FriendShipDto getFriendShip(Long friendId);
+
+    void removeFriendShip(Long friendId);
 }
