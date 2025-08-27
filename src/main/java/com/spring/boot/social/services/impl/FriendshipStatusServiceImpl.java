@@ -22,6 +22,7 @@ import com.spring.boot.social.services.FriendshipStatusService;
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
@@ -90,6 +91,7 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
     }
 
     @Override
+    @Transactional
     public void removeFriendShipStatusById(Long id) {
         FriendshipStatusDto friendshipStatusDto = getFriendshipStatusById(id);
         //delete friendship with status
@@ -99,6 +101,7 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
     }
 
     @Override
+    @Transactional
     public void updateFriendshipStatus(Long id, String status) {
         if (Objects.isNull(id)) {
             throw new BadRequestException("id.must.be.not.null");
@@ -109,7 +112,9 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
         //get friendshipStatus
         FriendshipStatusDto friendshipStatusDto = getFriendshipStatusById(id);
         FriendshipStatus statusFriendship = FriendshipStatusMapper.INSTANCE.toFriendshipStatus(friendshipStatusDto);
-
+        if (status.equals(friendshipStatusDto.getStatus().getStatus().name())) {
+            return;
+        }
         switch (friendStatusDto.getStatus()) {
             case ACCEPTED:
             case BLOCKED:
@@ -117,11 +122,13 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
                 break;
             case REJECTED:
                 removeFriendShipStatusById(statusFriendship.getId());
-
+                break;
         }
+
     }
 
-    private void updateFriendshipStatusMethod(FriendshipStatus statusFriendship, FriendStatus statusFriend) {
+    @Transactional(propagation = Propagation.MANDATORY)
+    protected void updateFriendshipStatusMethod(FriendshipStatus statusFriendship, FriendStatus statusFriend) {
         statusFriendship.setStatus(statusFriend);
         friendshipStatusRepo.save(statusFriendship);
     }

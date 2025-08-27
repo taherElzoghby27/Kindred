@@ -23,6 +23,14 @@ public class FriendShipController {
         );
     }
 
+    @PutMapping("/update-friendship")
+    public SuccessDto<ResponseEntity<String>> updateFriendship(@RequestParam Long id, @RequestParam String status) {
+        friendshipService.updateFriendshipStatus(id, status);
+        return new SuccessDto<>(
+                ResponseEntity.ok("Friendship updated successfully")
+        );
+    }
+
     @DeleteMapping("/remove-friendship")
     public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam Long friendshipId) {
         friendshipService.removeFriendShipStatusByFriendId(friendshipId);
