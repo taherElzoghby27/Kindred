@@ -1,11 +1,11 @@
-package com.spring.boot.social.services.impl;
+package com.spring.boot.social.services.impl.friendship;
 
 import com.spring.boot.social.dto.friendship.FriendStatusDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.mappers.FriendStatusMapper;
 import com.spring.boot.social.models.friendship.FriendStatus;
 import com.spring.boot.social.repositories.FriendStatusRepo;
-import com.spring.boot.social.services.FriendStatusService;
+import com.spring.boot.social.services.friendship.FriendStatusService;
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

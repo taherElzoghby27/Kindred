@@ -1,24 +1,21 @@
-package com.spring.boot.social.services.impl;
+package com.spring.boot.social.services.impl.friendship;
 
-import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.friendship.FriendShipDto;
-import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 import com.spring.boot.social.dto.friendship.FriendStatusDto;
+import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
-import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.mappers.FriendShipMapper;
 import com.spring.boot.social.mappers.FriendStatusMapper;
 import com.spring.boot.social.mappers.FriendshipStatusMapper;
-import com.spring.boot.social.models.friendship.Friendship;
 import com.spring.boot.social.models.friendship.FriendStatus;
+import com.spring.boot.social.models.friendship.Friendship;
 import com.spring.boot.social.models.friendship.FriendshipStatus;
-import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.repositories.FriendShipStatusRepo;
 import com.spring.boot.social.services.AccountService;
-import com.spring.boot.social.services.FriendStatusService;
-import com.spring.boot.social.services.FriendshipService;
-import com.spring.boot.social.services.FriendshipStatusService;
+import com.spring.boot.social.services.friendship.FriendStatusService;
+import com.spring.boot.social.services.friendship.FriendshipService;
+import com.spring.boot.social.services.friendship.FriendshipStatusService;
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -131,10 +128,5 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
     protected void updateFriendshipStatusMethod(FriendshipStatus statusFriendship, FriendStatus statusFriend) {
         statusFriendship.setStatus(statusFriend);
         friendshipStatusRepo.save(statusFriendship);
-    }
-
-    private Account getAccount(Long accountId) {
-        AccountDto accountDto = accountService.getAccountById(accountId);
-        return AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
     }
 }

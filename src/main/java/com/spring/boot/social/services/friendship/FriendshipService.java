@@ -1,4 +1,4 @@
-package com.spring.boot.social.services;
+package com.spring.boot.social.services.friendship;
 
 import com.spring.boot.social.dto.friendship.FriendShipDto;
 

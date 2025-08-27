@@ -2,7 +2,7 @@ package com.spring.boot.social.controllers;
 
 import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 import com.spring.boot.social.dto.SuccessDto;
-import com.spring.boot.social.services.FriendshipStatusService;
+import com.spring.boot.social.services.friendship.FriendshipStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

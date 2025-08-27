@@ -1,4 +1,4 @@
-package com.spring.boot.social.services.impl;
+package com.spring.boot.social.services.impl.friendship;
 
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.friendship.FriendShipDto;
@@ -10,7 +10,7 @@ import com.spring.boot.social.models.friendship.Friendship;
 import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.repositories.FriendShipRepo;
 import com.spring.boot.social.services.AccountService;
-import com.spring.boot.social.services.FriendshipService;
+import com.spring.boot.social.services.friendship.FriendshipService;
 import com.spring.boot.social.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
