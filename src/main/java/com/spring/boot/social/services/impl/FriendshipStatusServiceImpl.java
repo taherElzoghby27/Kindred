@@ -73,7 +73,7 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
     public void removeFriendShipStatus(Long friendId) {
         FriendshipStatusDto friendshipStatusDto = getFriendshipStatus(friendId);
         //delete friendship with status
-        friendshipStatusRepo.deleteById(friendshipStatusDto.getId());
+        friendshipStatusRepo.deleteFriendshipStatusById(friendshipStatusDto.getId());
         //delete friendship
         friendshipService.removeFriendShip(friendId);
     }

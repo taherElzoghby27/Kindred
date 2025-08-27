@@ -65,7 +65,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Transactional(propagation = Propagation.MANDATORY)
     public void removeFriendShip(Long friendId) {
         FriendShipDto friendShipDto = getFriendShip(friendId);
-        friendshipRepo.deleteById(friendShipDto.getId());
+        friendshipRepo.deleteFriendShipById(friendShipDto.getId());
     }
 
     private Account getCurrentAccount() {
