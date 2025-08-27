@@ -13,5 +13,4 @@ public class FriendShipDto {
     private Long id;
     private AccountDto account;
     private AccountDto friend;
-    private FriendshipStatusDto status;
 }
