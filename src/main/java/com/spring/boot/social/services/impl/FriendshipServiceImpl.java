@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,12 +35,12 @@ public class FriendshipServiceImpl implements FriendshipService {
         }
         //get friend
         Account friend = getAccount(friendId);
-        Friendship friendship = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());
-        if (Objects.nonNull(friendship)) {
+        Optional<Friendship> result = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());
+        if (result.isPresent()) {
             throw new NotFoundResourceException("friendship.already.exist");
         }
         //create friendship without status
-        friendship = new Friendship();
+        Friendship friendship = new Friendship();
         friendship.setAccount(account);
         friendship.setFriend(friend);
         //set status
@@ -57,8 +58,11 @@ public class FriendshipServiceImpl implements FriendshipService {
         }
         //get friend
         Account friend = getAccount(friendId);
-        Friendship friendship = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());
-        return FriendShipMapper.INSTANCE.toFriendShipDto(friendship);
+        Optional<Friendship> result = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());
+        if (result.isEmpty()) {
+            throw new NotFoundResourceException("friendship.not.exist");
+        }
+        return FriendShipMapper.INSTANCE.toFriendShipDto(result.get());
     }
 
     @Override
