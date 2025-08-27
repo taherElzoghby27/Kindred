@@ -1,13 +1,17 @@
 package com.spring.boot.social.services;
 
-import com.spring.boot.social.dto.FriendshipStatusDto;
+import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 
 public interface FriendshipStatusService {
     FriendshipStatusDto createFriendShipStatus(Long friendId);
 
-    FriendshipStatusDto getFriendshipStatus(Long friendId);
+    FriendshipStatusDto getFriendshipStatusByFriendId(Long friendId);
 
-    void removeFriendShipStatus(Long friendId);
+    FriendshipStatusDto getFriendshipStatusById(Long friendshipStatusId);
 
-    void takeActionOnRequestFriendShip(Long friendId, String status);
+    void removeFriendShipStatusByFriendId(Long friendId);
+
+    void removeFriendShipStatusById(Long id);
+
+    void updateFriendshipStatus(Long id, String status);
 }

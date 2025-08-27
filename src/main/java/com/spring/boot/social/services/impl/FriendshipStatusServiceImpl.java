@@ -1,9 +1,9 @@
 package com.spring.boot.social.services.impl;
 
 import com.spring.boot.social.dto.AccountDto;
-import com.spring.boot.social.dto.FriendShipDto;
-import com.spring.boot.social.dto.FriendshipStatusDto;
-import com.spring.boot.social.dto.FriendStatusDto;
+import com.spring.boot.social.dto.friendship.FriendShipDto;
+import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
+import com.spring.boot.social.dto.friendship.FriendStatusDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.AccountMapper;
@@ -19,7 +19,6 @@ import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.FriendStatusService;
 import com.spring.boot.social.services.FriendshipService;
 import com.spring.boot.social.services.FriendshipStatusService;
-import com.spring.boot.social.utils.SecurityUtils;
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,13 +54,25 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
 
     @Transactional(readOnly = true)
     @Override
-    public FriendshipStatusDto getFriendshipStatus(Long friendId) {
+    public FriendshipStatusDto getFriendshipStatusByFriendId(Long friendId) {
         if (Objects.isNull(friendId)) {
             throw new BadRequestException("empty.account_id");
         }
         //get friendship
         FriendShipDto friendShipDto = friendshipService.getFriendShip(friendId);
-        Optional<FriendshipStatus> result = friendshipStatusRepo.findById(friendShipDto.getId());
+        Optional<FriendshipStatus> result = friendshipStatusRepo.findByFriendshipId(friendShipDto.getId());
+        if (result.isEmpty()) {
+            throw new NotFoundResourceException("friendship.not.exist");
+        }
+        return FriendshipStatusMapper.INSTANCE.toFriendshipStatusDto(result.get());
+    }
+
+    @Override
+    public FriendshipStatusDto getFriendshipStatusById(Long friendshipStatusId) {
+        if (Objects.isNull(friendshipStatusId)) {
+            throw new BadRequestException("id.must.be.not.null");
+        }
+        Optional<FriendshipStatus> result = friendshipStatusRepo.findById(friendshipStatusId);
         if (result.isEmpty()) {
             throw new NotFoundResourceException("friendship.not.exist");
         }
@@ -70,8 +81,8 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
 
     @Transactional
     @Override
-    public void removeFriendShipStatus(Long friendId) {
-        FriendshipStatusDto friendshipStatusDto = getFriendshipStatus(friendId);
+    public void removeFriendShipStatusByFriendId(Long friendId) {
+        FriendshipStatusDto friendshipStatusDto = getFriendshipStatusByFriendId(friendId);
         //delete friendship with status
         friendshipStatusRepo.deleteFriendshipStatusById(friendshipStatusDto.getId());
         //delete friendship
@@ -79,13 +90,40 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
     }
 
     @Override
-    public void takeActionOnRequestFriendShip(Long friendId, String status) {
-
+    public void removeFriendShipStatusById(Long id) {
+        FriendshipStatusDto friendshipStatusDto = getFriendshipStatusById(id);
+        //delete friendship with status
+        friendshipStatusRepo.deleteFriendshipStatusById(friendshipStatusDto.getId());
+        //delete friendship
+        friendshipService.removeFriendShip(friendshipStatusDto.getFriendship().getFriend().getId());
     }
 
-    private Account getCurrentAccount() {
-        AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        return getAccount(accountDto.getId());
+    @Override
+    public void updateFriendshipStatus(Long id, String status) {
+        if (Objects.isNull(id)) {
+            throw new BadRequestException("id.must.be.not.null");
+        }
+        //get pending status
+        FriendStatusDto friendStatusDto = friendStatusService.getStatus(FriendStatusEnum.valueOf(status));
+        FriendStatus statusFriend = FriendStatusMapper.INSTANCE.toFriendStatus(friendStatusDto);
+        //get friendshipStatus
+        FriendshipStatusDto friendshipStatusDto = getFriendshipStatusById(id);
+        FriendshipStatus statusFriendship = FriendshipStatusMapper.INSTANCE.toFriendshipStatus(friendshipStatusDto);
+
+        switch (friendStatusDto.getStatus()) {
+            case ACCEPTED:
+            case BLOCKED:
+                updateFriendshipStatusMethod(statusFriendship, statusFriend);
+                break;
+            case REJECTED:
+                removeFriendShipStatusById(statusFriendship.getId());
+
+        }
+    }
+
+    private void updateFriendshipStatusMethod(FriendshipStatus statusFriendship, FriendStatus statusFriend) {
+        statusFriendship.setStatus(statusFriend);
+        friendshipStatusRepo.save(statusFriendship);
     }
 
     private Account getAccount(Long accountId) {

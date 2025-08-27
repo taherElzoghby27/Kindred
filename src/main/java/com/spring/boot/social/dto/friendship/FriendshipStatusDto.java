@@ -1,4 +1,4 @@
-package com.spring.boot.social.dto;
+package com.spring.boot.social.dto.friendship;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.spring.boot.social.dto;
+package com.spring.boot.social.dto.friendship;
 
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import jakarta.persistence.EnumType;

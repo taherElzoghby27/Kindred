@@ -1,6 +1,6 @@
 package com.spring.boot.social.controllers;
 
-import com.spring.boot.social.dto.FriendshipStatusDto;
+import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.FriendshipStatusService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class FriendShipController {
 
     @DeleteMapping("/remove-friendship")
     public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam Long friendshipId) {
-        friendshipService.removeFriendShipStatus(friendshipId);
+        friendshipService.removeFriendShipStatusByFriendId(friendshipId);
         return new SuccessDto<>(
                 ResponseEntity.ok("Successfully Deleted")
         );

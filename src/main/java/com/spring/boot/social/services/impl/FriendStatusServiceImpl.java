@@ -1,6 +1,6 @@
 package com.spring.boot.social.services.impl;
 
-import com.spring.boot.social.dto.FriendStatusDto;
+import com.spring.boot.social.dto.friendship.FriendStatusDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.mappers.FriendStatusMapper;
 import com.spring.boot.social.models.friendship.FriendStatus;

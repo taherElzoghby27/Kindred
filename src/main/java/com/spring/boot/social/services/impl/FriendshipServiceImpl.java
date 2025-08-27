@@ -1,7 +1,7 @@
 package com.spring.boot.social.services.impl;
 
 import com.spring.boot.social.dto.AccountDto;
-import com.spring.boot.social.dto.FriendShipDto;
+import com.spring.boot.social.dto.friendship.FriendShipDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.AccountMapper;
