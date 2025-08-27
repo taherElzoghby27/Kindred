@@ -1,8 +1,7 @@
 package com.spring.boot.social.controllers;
-
-import com.spring.boot.social.dto.FriendShipDto;
+import com.spring.boot.social.dto.FriendshipStatusDto;
 import com.spring.boot.social.dto.SuccessDto;
-import com.spring.boot.social.services.FriendshipService;
+import com.spring.boot.social.services.FriendshipStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,12 +16,12 @@ import java.net.URI;
 @RequiredArgsConstructor
 public class FriendShipController {
 
-    private final FriendshipService friendshipService;
+    private final FriendshipStatusService friendshipService;
 
     @PostMapping("/create-friendship")
-    public SuccessDto<ResponseEntity<FriendShipDto>> createFriendship(@RequestParam Long friendshipId) {
+    public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam Long friendshipId) {
         return new SuccessDto<>(
-                ResponseEntity.created(URI.create("/create-friendship")).body(friendshipService.createFriendShip(friendshipId))
+                ResponseEntity.created(URI.create("/create-friendship")).body(friendshipService.createFriendShipStatus(friendshipId))
         );
     }
 

@@ -1,4 +1,11 @@
 spring:
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    user: kindred
+    password: kindred
+    url: jdbc:oracle:thin:@//localhost:1521/orcl
+    driver-class-name: oracle.jdbc.OracleDriver
   messages:
     basename: i18n/messages
   application:

@@ -109,6 +109,15 @@
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>10.20.1</version> <!-- Use the latest version -->
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-oracle</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -132,6 +141,20 @@
                             <version>1.5.2.Final</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>10.17.0</version>
+                <configuration>
+                    <user>kindred</user>
+                    <url>jdbc:oracle:thin:@//localhost:1521/orcl</url>
+                    <driver>oracle.jdbc.OracleDriver</driver>
+                    <password>kindred</password>
+                    <schemas>
+                        <schema>kindred</schema>
+                    </schemas>
                 </configuration>
             </plugin>
             <plugin>

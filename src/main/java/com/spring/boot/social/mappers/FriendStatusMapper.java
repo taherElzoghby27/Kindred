@@ -10,4 +10,6 @@ public interface FriendStatusMapper {
     FriendStatusMapper INSTANCE = Mappers.getMapper(FriendStatusMapper.class);
 
     FriendStatusDto toFriendStatusDto(FriendStatus friendStatus);
+
+    FriendStatus toFriendStatus(FriendStatusDto friendStatusDto);
 }

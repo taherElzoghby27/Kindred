@@ -6,6 +6,7 @@ import com.spring.boot.social.mappers.FriendStatusMapper;
 import com.spring.boot.social.models.friendship.FriendStatus;
 import com.spring.boot.social.repositories.FriendStatusRepo;
 import com.spring.boot.social.services.FriendStatusService;
+import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class FriendStatusServiceImpl implements FriendStatusService {
     private final FriendStatusRepo friendStatusRepo;
 
     @Override
-    public FriendStatusDto getStatus(String status) {
+    public FriendStatusDto getStatus(FriendStatusEnum status) {
         if (Objects.isNull(status)) {
             throw new BadRequestException("status.must.be.not_null");
         }

@@ -1,6 +1,6 @@
 package com.spring.boot.social.dto;
 
-import com.spring.boot.social.utils.enums.FriendshipEnum;
+import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -15,5 +15,5 @@ import lombok.Setter;
 public class FriendStatusDto {
     private Long id;
     @Enumerated(EnumType.STRING)
-    private FriendshipEnum status;
+    private FriendStatusEnum status;
 }

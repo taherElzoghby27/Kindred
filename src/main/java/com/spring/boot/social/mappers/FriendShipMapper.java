@@ -10,4 +10,6 @@ public interface FriendShipMapper {
     FriendShipMapper INSTANCE = Mappers.getMapper(FriendShipMapper.class);
 
     FriendShipDto toFriendShipDto(Friendship friendShip);
+
+    Friendship toFriendship(FriendShipDto friendShipDto);
 }

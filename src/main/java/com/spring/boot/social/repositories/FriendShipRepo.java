@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FriendShipRepo extends JpaRepository<Friendship, Long> {
-
     @Query(value = """
             select f from Friendship f
              where (:accountId=f.account.id and :friendId=f.friend.id)
