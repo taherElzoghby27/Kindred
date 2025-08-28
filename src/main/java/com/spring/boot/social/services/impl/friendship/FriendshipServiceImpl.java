@@ -33,6 +33,9 @@ public class FriendshipServiceImpl implements FriendshipService {
         if (Objects.isNull(friendId)) {
             throw new BadRequestException("empty.account_id");
         }
+        if (friendId.equals(account.getId())) {
+            throw new BadRequestException("two.accounts.must.be.diff");
+        }
         //get friend
         Account friend = getAccount(friendId);
         Optional<Friendship> result = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());

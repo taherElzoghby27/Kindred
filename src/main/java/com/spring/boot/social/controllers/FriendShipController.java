@@ -1,13 +1,14 @@
 package com.spring.boot.social.controllers;
 
-import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 import com.spring.boot.social.dto.SuccessDto;
+import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 import com.spring.boot.social.services.friendship.FriendshipStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/friendship")
@@ -39,4 +40,10 @@ public class FriendShipController {
         );
     }
 
+    @GetMapping("/all-friendships")
+    public SuccessDto<ResponseEntity<List<FriendshipStatusDto>>> getFriendshipStatusByStatus(@RequestParam String status) {
+        return new SuccessDto<>(
+                ResponseEntity.ok(friendshipService.getFriendshipStatusByStatus(status))
+        );
+    }
 }
