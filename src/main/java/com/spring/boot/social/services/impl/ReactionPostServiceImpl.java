@@ -32,9 +32,6 @@ public class ReactionPostServiceImpl implements ReactionPostService {
 
     @Override
     public void reactionRequest(ReactionRequestVm reactionRequestVm) {
-        if (Objects.isNull(reactionRequestVm.getPostId())) {
-            throw new BadRequestException("post_id.comment.not_null");
-        }
         //get account
         Account account = accountService.getCurrentAccount();
         //get post

@@ -7,7 +7,7 @@ import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.AuthService;
 import com.spring.boot.social.vm.AccountResponseVm;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +15,10 @@ import java.net.URI;
 
 @RequestMapping("/auth")
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
-    @Autowired
-    private AuthService authService;
-    @Autowired
-    private AccountService accountService;
+    private final AuthService authService;
+    private final AccountService accountService;
 
     @PostMapping("/sign-up")
     public SuccessDto<ResponseEntity<AccountResponseVm>> signUp(@Valid @RequestBody AccountDto accountDto) {
