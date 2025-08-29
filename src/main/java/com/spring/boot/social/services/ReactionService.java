@@ -1,6 +1,10 @@
 package com.spring.boot.social.services;
 
+import com.spring.boot.social.dto.ReactionDto;
+import com.spring.boot.social.vm.ReactionRequestVm;
+
 public interface ReactionService {
-//    createReaction();
-//    removeReaction();
+    ReactionDto createReaction(ReactionRequestVm reactionRequestVm);
+
+    ReactionDto removeReaction(ReactionRequestVm reactionRequestVm);
 }
