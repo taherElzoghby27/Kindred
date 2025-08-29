@@ -20,12 +20,11 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReactionRepo reactionRepo;
 
     @Override
-    public ReactionDto getReaction(String type) {
+    public ReactionDto getReaction(ReactionType type) {
         if (Objects.isNull(type)) {
             throw new BadRequestException("type.not.null");
         }
-        ReactionType reactionType = ReactionType.valueOf(type);
-        Optional<Reaction> result = reactionRepo.findReactionByReactionType(reactionType);
+        Optional<Reaction> result = reactionRepo.findReactionByReactionType(type);
         if (result.isEmpty()) {
             throw new NotFoundResourceException("reaction.not.found");
         }

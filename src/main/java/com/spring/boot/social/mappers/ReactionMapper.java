@@ -10,4 +10,6 @@ public interface ReactionMapper {
     ReactionMapper INSTANCE = Mappers.getMapper(ReactionMapper.class);
 
     ReactionDto toReactionDto(Reaction reaction);
+
+    Reaction toReaction(ReactionDto reactionDto);
 }
