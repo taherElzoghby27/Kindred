@@ -2,6 +2,7 @@ package com.spring.boot.social.services;
 
 import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
+import com.spring.boot.social.models.security.Account;
 
 public interface AccountService {
     AccountDto createAccount(AccountDto accountDto);
@@ -15,4 +16,8 @@ public interface AccountService {
     AccountDto getAccountByUsername(String username);
 
     AccountDto getAccountByEmail(String email);
+
+    Account getCurrentAccount();
+
+    Account getAccount(Long accountId);
 }

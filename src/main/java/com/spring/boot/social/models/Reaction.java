@@ -1,6 +1,5 @@
 package com.spring.boot.social.models;
 
-import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.utils.enums.ReactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Reaction extends BaseEntity<String> {
+public class Reaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @OneToMany(mappedBy = "reaction")
     private List<PostReactionAccount> postsReactionsAccounts;
     @Enumerated(EnumType.STRING)

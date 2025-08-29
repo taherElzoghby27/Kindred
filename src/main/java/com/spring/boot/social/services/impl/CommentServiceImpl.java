@@ -1,11 +1,9 @@
 package com.spring.boot.social.services.impl;
 
-import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.CommentDto;
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
-import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.mappers.CommentMapper;
 import com.spring.boot.social.mappers.PostMapper;
 import com.spring.boot.social.models.Comment;
@@ -15,7 +13,6 @@ import com.spring.boot.social.repositories.CommentRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.CommentService;
 import com.spring.boot.social.services.PostService;
-import com.spring.boot.social.utils.SecurityUtils;
 import com.spring.boot.social.vm.CommentRequestVm;
 import com.spring.boot.social.vm.CommentResponseVm;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
         if (Objects.nonNull(commentRequestVm.getId())) {
             throw new BadRequestException("id.comment.null");
         }
-        Account account = getCurrentAccount();
+        Account account = accountService.getCurrentAccount();
         PostDto postDto = postService.getPost(commentRequestVm.getPostId());
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
         Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
@@ -47,12 +44,6 @@ public class CommentServiceImpl implements CommentService {
         comment.setAccount(account);
         comment = commentRepo.save(comment);
         return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
-    }
-
-    private Account getCurrentAccount() {
-        AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        accountDto = accountService.getAccountById(accountDto.getId());
-        return AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
     }
 
     @Override
@@ -114,7 +105,7 @@ public class CommentServiceImpl implements CommentService {
         if (Objects.isNull(commentId)) {
             throw new BadRequestException("id.comment.not_null");
         }
-        Account account = getCurrentAccount();
+        Account account = accountService.getCurrentAccount();
         Optional<Comment> result = commentRepo.findByIdAndAccountId(commentId, account.getId());
         if (result.isEmpty()) {
             throw new NotFoundResourceException("comment.not.found");

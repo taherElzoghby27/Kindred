@@ -7,4 +7,6 @@ public interface ReactionService {
     ReactionDto createReaction(ReactionRequestVm reactionRequestVm);
 
     ReactionDto removeReaction(ReactionRequestVm reactionRequestVm);
+
+    ReactionDto updateReaction(ReactionRequestVm reactionRequestVm);
 }

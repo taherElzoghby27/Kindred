@@ -171,6 +171,18 @@ public class AccountServiceImpl implements AccountService {
         return AccountMapper.ACCOUNT_MAPPER.toAccountDto(result.get());
     }
 
+    @Override
+    public Account getCurrentAccount() {
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        return getAccount(accountDto.getId());
+    }
+
+    @Override
+    public Account getAccount(Long accountId) {
+        AccountDto accountDto = getAccountById(accountId);
+        return AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
+    }
+
     private boolean checkAccountByUsername(String username) {
         if (Objects.isNull(username)) {
             throw new BadRequestException("empty.username");
