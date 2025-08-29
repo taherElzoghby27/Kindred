@@ -23,5 +23,5 @@ public class Post extends BaseEntity<String> {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Comment> comments;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Reaction> reactions;
+    private List<PostReactionAccount> postsReactionsAccounts;
 }

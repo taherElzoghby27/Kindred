@@ -8,27 +8,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
-@Table(
-        schema = "kindred",
-        uniqueConstraints = @UniqueConstraint(
-                columnNames = {
-                        "account_id",
-                        "post_id"
-                }
-        )
-)
+@Table(schema = "kindred")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 public class Reaction extends BaseEntity<String> {
-    @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
-    @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @OneToMany(mappedBy = "reaction")
+    private List<PostReactionAccount> postsReactionsAccounts;
     @Enumerated(EnumType.STRING)
     private ReactionType reactionType;
 }
