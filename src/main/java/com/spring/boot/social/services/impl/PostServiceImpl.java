@@ -18,9 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -103,7 +103,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto getPost(Long id) {
+    public PostDto getPostByCurrentAccount(Long id) {
         if (Objects.isNull(id)) {
             throw new BadRequestException("required.id");
         }
@@ -112,6 +112,18 @@ public class PostServiceImpl implements PostService {
             throw new NotFoundResourceException("post.not.found");
         }
         return PostMapper.POST_INSTANCE.toPostDto(post);
+    }
+
+    @Override
+    public PostDto getPost(Long id) {
+        if (Objects.isNull(id)) {
+            throw new BadRequestException("required.id");
+        }
+        Optional<Post> result = postRepo.findById(id);
+        if (result.isEmpty()) {
+            throw new NotFoundResourceException("post.not.found");
+        }
+        return PostMapper.POST_INSTANCE.toPostDto(result.get());
     }
 
     @Override

@@ -18,6 +18,8 @@ import com.spring.boot.social.services.ReactionService;
 import com.spring.boot.social.vm.ReactionRequestVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -30,6 +32,7 @@ public class ReactionPostServiceImpl implements ReactionPostService {
     private final AccountService accountService;
     private final PostService postService;
 
+    @Transactional
     @Override
     public void reactionRequest(ReactionRequestVm reactionRequestVm) {
         //get account
@@ -43,23 +46,29 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction
-        postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction)).orElseGet(() -> createNewReactionWithPost(account, post, reaction));
+        postReactionAccount = result.map(
+                reactionAccount -> updateReaction(reactionAccount, reaction)
+        ).orElseGet(
+                () -> createNewReactionWithPost(account, post, reaction)
+        );
         reactionPostRepo.save(postReactionAccount);
     }
 
-    private static PostReactionAccount updateReaction(PostReactionAccount postReactionAccount, Reaction reaction) {
+    protected PostReactionAccount updateReaction(PostReactionAccount postReactionAccount, Reaction reaction) {
         postReactionAccount.setReaction(reaction);
         return postReactionAccount;
     }
 
-    private static PostReactionAccount createNewReactionWithPost(Account account, Post post, Reaction reaction) {
+    @Transactional(propagation = Propagation.MANDATORY)
+    protected PostReactionAccount createNewReactionWithPost(Account account, Post post, Reaction reaction) {
         PostReactionAccount postReactionAccount = new PostReactionAccount();
         postReactionAccount.setAccount(account);
-        postReactionAccount.setPost(post);
         postReactionAccount.setReaction(reaction);
+        postReactionAccount.setPost(post);
         return postReactionAccount;
     }
 
+    @Transactional
     @Override
     public void removeReaction(ReactionRequestVm reactionRequestVm) {
         if (Objects.isNull(reactionRequestVm.getPostId())) {

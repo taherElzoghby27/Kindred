@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
             throw new BadRequestException("id.comment.null");
         }
         Account account = accountService.getCurrentAccount();
-        PostDto postDto = postService.getPost(commentRequestVm.getPostId());
+        PostDto postDto = postService.getPostByCurrentAccount(commentRequestVm.getPostId());
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
         Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
         comment.setPost(post);

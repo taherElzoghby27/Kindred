@@ -56,7 +56,7 @@ public class PostController {
     @GetMapping("/get-post")
     public SuccessDto<ResponseEntity<PostDto>> getPost(@RequestParam Long id) {
         return new SuccessDto<>(
-                ResponseEntity.ok(postService.getPost(id))
+                ResponseEntity.ok(postService.getPostByCurrentAccount(id))
         );
     }
 
