@@ -48,11 +48,7 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction
-        postReactionAccount = result.map(
-                reactionAccount -> updateReaction(reactionAccount, reaction)
-        ).orElseGet(
-                () -> createNewReactionWithPost(account, post, reaction)
-        );
+        postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction)).orElseGet(() -> createNewReactionWithPost(account, post, reaction));
         reactionPostRepo.save(postReactionAccount);
     }
 
@@ -83,8 +79,16 @@ public class ReactionPostServiceImpl implements ReactionPostService {
 
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(reactionRequestVm.getPostId(), account.getId());
         result.map(
-                rPA -> reactionPostRepo.deleteByPostReactionAccountId(rPA.getId())
-        ).orElseThrow(() -> new NotFoundResourceException("reaction.not.found"));
+                rPA -> removeProcess(reactionRequestVm, rPA)
+                )
+                .orElseThrow(
+                        () -> new NotFoundResourceException("reaction.not.found")
+                );
     }
-
+    @Transactional(propagation = Propagation.MANDATORY)
+    protected Optional<Object> removeProcess(ReactionRequestVm reactionRequestVm, PostReactionAccount rPA) {
+        reactionPostRepo.deleteByPostReactionAccountId(rPA.getId());
+        postService.decrementReactionCount(reactionRequestVm.getPostId());
+        return Optional.empty();
+    }
 }
