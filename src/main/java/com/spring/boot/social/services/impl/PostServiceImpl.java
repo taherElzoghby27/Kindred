@@ -162,4 +162,16 @@ public class PostServiceImpl implements PostService {
     public void decrementReactionCount(Long postId) {
         postRepo.decrementReactionCount(postId);
     }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void incrementCommentCount(Long postId) {
+        postRepo.incrementCommentsCount(postId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void decrementCommentCount(Long postId) {
+        postRepo.decrementCommentsCount(postId);
+    }
 }

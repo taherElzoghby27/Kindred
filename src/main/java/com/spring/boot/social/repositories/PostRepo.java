@@ -25,4 +25,12 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     @Query("UPDATE Post p SET p.reactionsCount = GREATEST(COALESCE(p.reactionsCount, 0) - 1, 0) WHERE p.id = :postId")
     void decrementReactionCount(@Param("postId") Long postId);
 
+    @Modifying
+    @Query("UPDATE Post p SET p.commentsCount = COALESCE(p.commentsCount, 0) + 1 WHERE p.id = :postId")
+    void incrementCommentsCount(@Param("postId") Long postId);
+
+    @Modifying
+    @Query("UPDATE Post p SET p.commentsCount = GREATEST(COALESCE(p.commentsCount, 0) - 1, 0) WHERE p.id = :postId")
+    void decrementCommentsCount(@Param("postId") Long postId);
+
 }

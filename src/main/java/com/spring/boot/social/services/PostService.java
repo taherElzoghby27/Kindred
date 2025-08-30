@@ -21,4 +21,8 @@ public interface PostService {
     void incrementReactionCount(Long postId);
 
     void decrementReactionCount(Long postId);
+
+    void incrementCommentCount(Long postId);
+
+    void decrementCommentCount(Long postId);
 }
