@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -64,6 +66,8 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         PostReactionAccount postReactionAccount = new PostReactionAccount();
         postReactionAccount.setAccount(account);
         postReactionAccount.setReaction(reaction);
+        // atomic increment
+        postService.incrementReactionCount(post.getId());
         postReactionAccount.setPost(post);
         return postReactionAccount;
     }

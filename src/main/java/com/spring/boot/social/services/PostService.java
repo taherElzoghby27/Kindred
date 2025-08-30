@@ -17,4 +17,8 @@ public interface PostService {
     PostDto getPost(Long id);
 
     PostDto updatePost(PostDto postDto);
+
+    void incrementReactionCount(Long postId);
+
+    void decrementReactionCount(Long postId);
 }
