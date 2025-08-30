@@ -32,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final AccountService accountService;
 
     @Override
+    @Transactional
     public CommentResponseVm createComment(CommentRequestVm commentRequestVm) {
         if (Objects.nonNull(commentRequestVm.getId())) {
             throw new BadRequestException("id.comment.null");
@@ -43,6 +44,8 @@ public class CommentServiceImpl implements CommentService {
         comment.setPost(post);
         comment.setAccount(account);
         comment = commentRepo.save(comment);
+        //increment commentsCount num in post
+        postService.incrementCommentCount(post.getId());
         return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
     }
 
@@ -69,8 +72,10 @@ public class CommentServiceImpl implements CommentService {
         if (Objects.isNull(commentId)) {
             throw new BadRequestException("id.comment.not_null");
         }
-        getCommentByIdBasedOnAccount(commentId);
+        CommentResponseVm commentResponseVm = getCommentByIdBasedOnAccount(commentId);
         commentRepo.deleteByCommentId(commentId);
+        //decrement commentsCount num in post
+        postService.decrementCommentCount(commentResponseVm.getPostId());
     }
 
     @Override
