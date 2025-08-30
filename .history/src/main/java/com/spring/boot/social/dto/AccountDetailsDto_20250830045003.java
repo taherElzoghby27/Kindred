@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(schema = "kindred")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
