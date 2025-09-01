@@ -2,6 +2,7 @@ package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.ActivityDto;
 import com.spring.boot.social.models.Activity;
+import com.spring.boot.social.vm.RequestActivityVm;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -11,5 +12,5 @@ public interface ActivityMapper {
 
     ActivityDto toActivityDto(Activity activity);
 
-    Activity toActivity(ActivityDto activityDto);
+    Activity toActivity(RequestActivityVm requestActivityVm);
 }
