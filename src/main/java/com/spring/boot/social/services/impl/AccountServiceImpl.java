@@ -10,7 +10,7 @@ import com.spring.boot.social.models.security.AccountDetails;
 import com.spring.boot.social.repositories.AccountRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.utils.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +18,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
     private final AccountRepo accountRepo;
     private final PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public AccountServiceImpl(AccountRepo accountRepo, PasswordEncoder passwordEncoder) {
-        this.accountRepo = accountRepo;
-        this.passwordEncoder = passwordEncoder;
-    }
 
 
     @Override

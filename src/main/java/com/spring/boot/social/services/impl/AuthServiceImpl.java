@@ -7,20 +7,18 @@ import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.AuthService;
 import com.spring.boot.social.vm.AccountResponseVm;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private TokenHandler tokenHandler;
+    private final AccountService accountService;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenHandler tokenHandler;
 
     @Override
     public AccountResponseVm login(AccountDto accountDto) {
