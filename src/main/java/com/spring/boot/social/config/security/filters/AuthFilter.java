@@ -17,6 +17,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,8 +37,8 @@ public class AuthFilter extends OncePerRequestFilter {
             //2- check token
             if (Objects.isNull(token) || !token.startsWith("Bearer ")) {
                 response.reset();
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                //throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
             }
             token = token.substring(7);
             //3- validate token
@@ -45,8 +46,7 @@ public class AuthFilter extends OncePerRequestFilter {
             userValidated = tokenHandler.validateToken(token);
             if (Objects.isNull(userValidated) || userValidated.getEnabled() == 0) {
                 response.reset();
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
             }
             //4- get roles
 //            List<SimpleGrantedAuthority> roles = userValidated.getRoles().stream().map(
@@ -54,11 +54,7 @@ public class AuthFilter extends OncePerRequestFilter {
 //            ).toList();
             //5- encapsulate user data , used to store details about an authenticated user after authentication is complete.
             //Stored in the SecurityContextHolder to represent the authenticated user for the duration of the request.
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    userValidated,
-                    userValidated.getPassword()
-                    , List.of(new SimpleGrantedAuthority("ROLE_USER"))
-            );
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userValidated, userValidated.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
             //6- The SecurityContextHolder stores UsernamePasswordAuthenticationToken to make the authenticated user’s details available throughout the request.
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             //7- Continue with the filter chain
@@ -75,31 +71,21 @@ public class AuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private void handleExpiredToken(HttpServletResponse response)
-            throws IOException {
+    private void handleExpiredToken(HttpServletResponse response) throws IOException {
         response.setStatus(HttpStatus.UNAUTHORIZED.value()); // 401 for expired token
         response.setContentType("application/json");
 
-        ExceptionDto errorResponse = new ExceptionDto(
-                HttpStatus.UNAUTHORIZED.value(),
-                new BundleMessage("Token has expired"),
-                HttpStatus.UNAUTHORIZED.getReasonPhrase()
-        );
+        ExceptionDto errorResponse = new ExceptionDto(HttpStatus.UNAUTHORIZED.value(), new BundleMessage("Token has expired"), HttpStatus.UNAUTHORIZED.getReasonPhrase());
         // Convert Java object to JSON string and write to response
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(mapper.writeValueAsString(errorResponse));
     }
 
-    private void handleAuthException(HttpServletResponse response, Exception ex)
-            throws IOException {
+    private void handleAuthException(HttpServletResponse response, Exception ex) throws IOException {
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setContentType("application/json");
 
-        ExceptionDto errorResponse = new ExceptionDto(
-                HttpStatus.FORBIDDEN.value(),
-                new BundleMessage(ex.getMessage()),
-                HttpStatus.FORBIDDEN.getReasonPhrase()
-        );
+        ExceptionDto errorResponse = new ExceptionDto(HttpStatus.FORBIDDEN.value(), new BundleMessage(ex.getMessage()), HttpStatus.FORBIDDEN.getReasonPhrase());
 
         ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(mapper.writeValueAsString(errorResponse));
@@ -107,10 +93,6 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().contains("auth/login")
-               || request.getRequestURI().contains("auth/sign-up")
-               || request.getRequestURI().contains("/v3/api-docs")
-               || request.getRequestURI().contains("/swagger-ui")
-               || request.getRequestURI().contains("/swagger-ui.html");
+        return request.getRequestURI().contains("auth/login") || request.getRequestURI().contains("auth/sign-up") || request.getRequestURI().contains("/v3/api-docs") || request.getRequestURI().contains("/swagger-ui") || request.getRequestURI().contains("/swagger-ui.html");
     }
 }
