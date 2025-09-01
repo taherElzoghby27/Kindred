@@ -23,12 +23,12 @@ import lombok.Setter;
 @Getter
 public class PostReactionAccount extends BaseEntity<String> {
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
     @ManyToOne
-    @JoinColumn(name = "reaction_id")
+    @JoinColumn(name = "reaction_id", nullable = false)
     private Reaction reaction;
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 }

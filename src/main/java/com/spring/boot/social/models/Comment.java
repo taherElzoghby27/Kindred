@@ -17,8 +17,10 @@ import lombok.Setter;
 public class Comment extends BaseEntity<String> {
     @NotEmpty
     private String content;
+    @JoinColumn(nullable = false)
     @ManyToOne
     private Post post;
+    @JoinColumn(nullable = false)
     @ManyToOne
     private Account account;
 }

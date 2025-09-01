@@ -2,7 +2,6 @@ package com.spring.boot.social.models.security;
 
 import com.spring.boot.social.models.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +26,6 @@ public class AccountDetails extends BaseEntity<String> {
     private String bio;
     private String profilePictureUrl;
     @OneToOne
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(nullable = false)
     private Account account;
 }

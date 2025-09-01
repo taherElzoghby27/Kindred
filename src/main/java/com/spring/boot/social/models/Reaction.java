@@ -21,6 +21,7 @@ public class Reaction {
     private Long id;
     @OneToMany(mappedBy = "reaction")
     private List<PostReactionAccount> postsReactionsAccounts;
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReactionType reactionType;
 }

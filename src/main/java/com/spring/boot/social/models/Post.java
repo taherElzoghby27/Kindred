@@ -18,8 +18,9 @@ import java.util.List;
 public class Post extends BaseEntity<String> {
     private String content;
     private String media;
-    private Long reactionsCount;
-    private Long commentsCount;
+    private Long reactionsCount = 0L;
+    private Long commentsCount = 0L;
+    @JoinColumn(nullable = false)
     @ManyToOne
     private Account account;
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
