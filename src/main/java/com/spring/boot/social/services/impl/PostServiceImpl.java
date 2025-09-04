@@ -10,9 +10,12 @@ import com.spring.boot.social.models.Post;
 import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.repositories.PostRepo;
 import com.spring.boot.social.services.AccountService;
+import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.utils.SecurityUtils;
+import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.PostsVmResponse;
+import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +33,7 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService {
     private final PostRepo postRepo;
     private final AccountService accountService;
+    private final ActivityService activityService;
 
     @Override
     public PostDto createPost(PostDto postDto) {
@@ -38,15 +42,20 @@ public class PostServiceImpl implements PostService {
             throw new BadRequestException("error.required.one.field.post");
         }
         //get current account
-        AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        accountDto = accountService.getAccountById(accountDto.getId());
-        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
+        Account account = accountService.getCurrentAccount();
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
         //set account to post
         post.setAccount(account);
         //save post in db
         post = postRepo.save(post);
         postDto = PostMapper.POST_INSTANCE.toPostDto(post);
+        //add log
+        activityService.logActivity(
+                new RequestActivityVm(
+                        "Created post " + post.getContent(),
+                        ActivityType.POST_CREATED
+                )
+        );
         return postDto;
     }
 
