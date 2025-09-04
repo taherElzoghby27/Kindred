@@ -9,6 +9,7 @@ import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.models.security.AccountDetails;
 import com.spring.boot.social.repositories.AccountRepo;
 import com.spring.boot.social.services.AccountService;
+import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +23,7 @@ import java.util.Optional;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepo accountRepo;
     private final PasswordEncoder passwordEncoder;
+    private final ActivityService activityService;
 
 
     @Override

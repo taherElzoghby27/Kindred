@@ -11,11 +11,15 @@ import com.spring.boot.social.models.Post;
 import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.repositories.CommentRepo;
 import com.spring.boot.social.services.AccountService;
+import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.CommentService;
 import com.spring.boot.social.services.PostService;
+import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.CommentRequestVm;
 import com.spring.boot.social.vm.CommentResponseVm;
+import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +34,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepo commentRepo;
     private final PostService postService;
     private final AccountService accountService;
+    @Lazy
+    private final ActivityService activityService;
 
     @Override
     @Transactional
@@ -38,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
             throw new BadRequestException("id.comment.null");
         }
         Account account = accountService.getCurrentAccount();
-        PostDto postDto = postService.getPostByCurrentAccount(commentRequestVm.getPostId());
+        PostDto postDto = postService.getPost(commentRequestVm.getPostId());
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
         Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
         comment.setPost(post);
@@ -46,6 +52,13 @@ public class CommentServiceImpl implements CommentService {
         comment = commentRepo.save(comment);
         //increment commentsCount num in post
         postService.incrementCommentCount(post.getId());
+        //add log
+        activityService.logActivity(
+                new RequestActivityVm(
+                        "Created comment " + comment.getContent() + " on post " + post.getAccount().getUsername(),
+                        ActivityType.COMMENT_CREATED
+                )
+        );
         return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
     }
 

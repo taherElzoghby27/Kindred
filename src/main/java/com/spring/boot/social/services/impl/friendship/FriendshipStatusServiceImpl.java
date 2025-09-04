@@ -174,7 +174,7 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
                 activityService.logActivity(
                         new RequestActivityVm(
                                 "blocked " + statusFriendship.getFriendship().getAccount().getUsername(),
-                                ActivityType.FRIENDSHIP_REJECTED
+                                ActivityType.FRIENDSHIP_BLOCKED
                         )
                 );
                 break;

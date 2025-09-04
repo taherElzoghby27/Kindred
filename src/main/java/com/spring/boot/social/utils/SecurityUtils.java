@@ -24,14 +24,4 @@ public class SecurityUtils {
 
         return (AccountDto) principal;
     }
-
-//    public static List<RoleEnum> getCurrentRole() {
-//        AccountDto account = getCurrentAccount();
-//        return account.getRoles().stream().map(role -> RoleEnum.valueOf(role.getRole())).toList();
-//    }
-
-//    public static boolean hasRole(RoleEnum roleEnum) {
-//        AccountDto account = getCurrentAccount();
-//        return account.getRoles().stream().anyMatch(role -> role.getRole().equals(roleEnum.toString()));
-//    }
 }
