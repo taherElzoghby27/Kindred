@@ -1,9 +1,12 @@
 package com.spring.boot.social.services.impl;
+
 import com.spring.boot.social.dto.ActivityDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.mappers.ActivityMapper;
 import com.spring.boot.social.models.Activity;
+import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.repositories.ActivityRepo;
+import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepo activityRepo;
+    private final AccountService accountService;
 
     @Override
     public List<ActivityDto> getAllActivities() {
@@ -31,7 +35,9 @@ public class ActivityServiceImpl implements ActivityService {
         if (Objects.isNull(requestActivityVm.getActivityMessage()) || Objects.isNull(requestActivityVm.getActivity())) {
             throw new BadRequestException("activity.not.empty");
         }
+        Account account = accountService.getCurrentAccount();
         Activity activity = ActivityMapper.INSTANCE.toActivity(requestActivityVm);
+        activity.setAccount(account);
         activityRepo.save(activity);
     }
 }
