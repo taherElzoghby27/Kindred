@@ -11,18 +11,15 @@ import com.spring.boot.social.models.PostReactionAccount;
 import com.spring.boot.social.models.Reaction;
 import com.spring.boot.social.models.security.Account;
 import com.spring.boot.social.repositories.ReactionPostRepo;
-import com.spring.boot.social.services.AccountService;
-import com.spring.boot.social.services.PostService;
-import com.spring.boot.social.services.ReactionPostService;
-import com.spring.boot.social.services.ReactionService;
+import com.spring.boot.social.services.*;
+import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.ReactionRequestVm;
+import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,6 +30,7 @@ public class ReactionPostServiceImpl implements ReactionPostService {
     private final ReactionService reactionService;
     private final AccountService accountService;
     private final PostService postService;
+    private final ActivityService activityService;
 
     @Transactional
     @Override
@@ -48,8 +46,19 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction
-        postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction)).orElseGet(() -> createNewReactionWithPost(account, post, reaction));
+        postReactionAccount = result.map(
+                reactionAccount -> updateReaction(reactionAccount, reaction)
+        ).orElseGet(
+                () -> createNewReactionWithPost(account, post, reaction)
+        );
         reactionPostRepo.save(postReactionAccount);
+        //add log
+        activityService.logActivity(
+                new RequestActivityVm(
+                        "react on " + post.getContent(),
+                        ActivityType.REACTION_ADDED
+                )
+        );
     }
 
     protected PostReactionAccount updateReaction(PostReactionAccount postReactionAccount, Reaction reaction) {
@@ -79,12 +88,13 @@ public class ReactionPostServiceImpl implements ReactionPostService {
 
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(reactionRequestVm.getPostId(), account.getId());
         result.map(
-                rPA -> removeProcess(reactionRequestVm, rPA)
+                        rPA -> removeProcess(reactionRequestVm, rPA)
                 )
                 .orElseThrow(
                         () -> new NotFoundResourceException("reaction.not.found")
                 );
     }
+
     @Transactional(propagation = Propagation.MANDATORY)
     protected Optional<Object> removeProcess(ReactionRequestVm reactionRequestVm, PostReactionAccount rPA) {
         reactionPostRepo.deleteByPostReactionAccountId(rPA.getId());
