@@ -19,10 +19,10 @@ import lombok.Setter;
 public class ReactionRequestVm {
     @NotNull(message = "post_id.comment.not_null")
     @JsonProperty(value = "post_id")
-    @Schema(description = "ID of the post to react to", example = "123", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "ID of the post to react to", example = "123", required = true)
     private Long postId;
-
+    
     @Enumerated(EnumType.STRING)
-    @Schema(description = "Type of reaction to add to the post", example = "LIKE", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "Type of reaction to add to the post", example = "LIKE")
     private ReactionType reactionType;
 }
