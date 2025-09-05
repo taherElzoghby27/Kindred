@@ -71,3 +71,9 @@ this project captures the core features of a large-scale social media app.
 * `Postman / Insomnia` (API testing)
 
 ---
+
+### API Documentation
+
+Once the application is running, you can access the Swagger UI here:  
+👉 [Swagger UI](http://localhost:7070/swagger-ui/index.html)
+
