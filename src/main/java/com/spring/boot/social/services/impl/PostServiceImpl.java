@@ -4,7 +4,6 @@ import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
-import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.mappers.PostMapper;
 import com.spring.boot.social.models.Post;
 import com.spring.boot.social.models.security.Account;
@@ -37,8 +36,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto createPost(PostDto postDto) {
-        if (Objects.isNull(postDto.getContent()) && Objects.isNull(postDto.getMedia())
-            || (postDto.getContent().isEmpty() && postDto.getMedia().isEmpty())) {
+        if (Objects.isNull(postDto.getContent()) && Objects.isNull(postDto.getMedia()) || (postDto.getContent().isEmpty() && postDto.getMedia().isEmpty())) {
             throw new BadRequestException("error.required.one.field.post");
         }
         //get current account
@@ -50,12 +48,7 @@ public class PostServiceImpl implements PostService {
         post = postRepo.save(post);
         postDto = PostMapper.POST_INSTANCE.toPostDto(post);
         //add log
-        activityService.logActivity(
-                new RequestActivityVm(
-                        "Created post " + post.getContent(),
-                        ActivityType.POST_CREATED
-                )
-        );
+        activityService.logActivity(new RequestActivityVm("Created post " + post.getContent(), ActivityType.POST_CREATED));
         return postDto;
     }
 
@@ -66,11 +59,7 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = getPageable(page, size);
         Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedByAsc(pageable, accountDto.getId());
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
-        return new PostsVmResponse(
-                postsDto,
-                posts.getNumber() + 1,
-                posts.getSize()
-        );
+        return new PostsVmResponse(postsDto, posts.getNumber() + 1, posts.getSize());
     }
 
     @Override
@@ -78,11 +67,7 @@ public class PostServiceImpl implements PostService {
         Pageable pageable = getPageable(page, size);
         Page<Post> posts = postRepo.findAllByOrderByCreatedByAsc(pageable);
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
-        return new PostsVmResponse(
-                postsDto,
-                posts.getNumber() + 1,
-                posts.getSize()
-        );
+        return new PostsVmResponse(postsDto, posts.getNumber() + 1, posts.getSize());
     }
 
     private Pageable getPageable(int page, int size) {

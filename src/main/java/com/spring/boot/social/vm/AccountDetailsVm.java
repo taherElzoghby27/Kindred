@@ -16,10 +16,10 @@ import lombok.Setter;
 public class AccountDetailsVm {
     @Schema(description = "Unique identifier for account details", example = "1")
     private Long id;
-    
+
     @Schema(description = "User's full name", example = "John Doe")
     private String fullName;
-    
+
     @Schema(description = "User's profile picture URL", example = "https://example.com/profile.jpg")
     private String profilePictureUrl;
 }

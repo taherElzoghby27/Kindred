@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @OpenAPIDefinition(
         info = @Info(
                 title = "Kindred Endpoints",
-                description = "all apis for DineEasy",
+                description = "all apis for Kindred (Social Network)",
                 contact = @Contact(
                         name = "Taher Elzoghby",
                         email = "tataamen678@gmail.com",
