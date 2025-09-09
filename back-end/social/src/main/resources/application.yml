@@ -24,5 +24,5 @@ server:
   port: 7070
 
 token:
-  secret: 832t82eg8dgwd2fc8cg2bfghbftg8oe8g2e8hihrfghe87drf
+  secret: mysuperlongsecretk334eythatismorethan32chars
   time: 30d
