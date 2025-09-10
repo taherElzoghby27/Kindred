@@ -1,0 +1,32 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    user: kindred
+    password: kindred
+    url: jdbc:oracle:thin:@//localhost:1521/orcl
+    driver-class-name: oracle.jdbc.OracleDriver
+  messages:
+    basename: i18n/messages
+  application:
+    name: social
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@//localhost:1521/orcl
+    username: kindred
+    password: kindred
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  port: 7070
+
+token:
+  secret: mysuperlongsecretk334eythatismorethan32chars
+  time: 30d

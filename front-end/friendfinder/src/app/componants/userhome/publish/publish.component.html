@@ -1,24 +1,53 @@
-
-<!-- Post Create Box
-           ================================================= -->
+<!-- Post Create Box ================================================= -->
 <div class="create-post">
   <div class="row">
     <div class="col-md-7 col-sm-7">
       <div class="form-group">
         <img src="assets/images/users/user-1.jpg" alt="" class="profile-photo-md" />
-        <textarea name="texts" id="exampleTextarea" cols="30" rows="1" class="form-control" placeholder="Write what you wish"></textarea>
+        <textarea
+          name="texts"
+          id="exampleTextarea"
+          cols="30"
+          rows="1"
+          class="form-control"
+          placeholder="Write what you wish">
+        </textarea>
       </div>
     </div>
+
     <div class="col-md-5 col-sm-5">
       <div class="tools">
         <ul class="publishing-tools list-inline">
-          <li><a href="#"><i class="ion-compose"></i></a></li>
-          <li><a href="#"><i class="ion-images"></i></a></li>
-          <li><a href="#"><i class="ion-ios-videocam"></i></a></li>
-          <li><a href="#"><i class="ion-map"></i></a></li>
+          <!-- Single Media Icon -->
+          <li>
+            <button type="button" class="btn btn-link p-0" (click)="onMediaClick()">
+              <i class="ion-images" style="font-size:20px;"></i>
+            </button>
+            <input
+              type="file"
+              #mediaInput
+              accept="image/*,video/*"
+              style="display:none;"
+              (change)="onMediaSelected($event)"
+            />
+          </li>
         </ul>
         <button class="btn btn-primary pull-right">Publish</button>
       </div>
     </div>
   </div>
-</div><!-- Post Create Box End -->
+
+  <!-- Preview Section -->
+  <div *ngIf="loading" class="mt-2 text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    <p>Loading media...</p>
+  </div>
+
+  <div *ngIf="!loading && previewUrl" class="mt-2">
+    <img *ngIf="isImage" [src]="previewUrl" alt="preview" class="img-thumbnail" style="max-height:150px;" />
+    <video *ngIf="!isImage" [src]="previewUrl" controls style="max-height:200px; max-width:100%;"></video>
+  </div>
+</div>
+<!-- Post Create Box End -->
