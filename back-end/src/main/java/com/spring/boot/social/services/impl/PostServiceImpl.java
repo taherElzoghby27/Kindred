@@ -152,22 +152,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto updatePost(PostDto postDto) {
-        if (Objects.isNull(postDto.getId())) {
+    public PostDto updatePost(PostRequestVm postRequestVm) {
+        if (Objects.isNull(postRequestVm.getId())) {
             throw new BadRequestException("required.id");
         }
-        Post post = getPostBasedOnCurrentAccount(postDto.getId());
+        Post post = getPostBasedOnCurrentAccount(postRequestVm.getId());
         if (Objects.isNull(post)) {
             throw new BadRequestException("post.not.found");
         }
-        if (postDto.getContent().equals(post.getContent()) && postDto.getMedia().equals(post.getMedia())) {
+        if (postRequestVm.getContent().equals(post.getContent()) && post.getMedia().equals(postRequestVm.getMedia().getOriginalFilename())) {
             throw new BadRequestException("no.changes");
         }
-        if (Objects.nonNull(postDto.getMedia())) {
-            post.setMedia(postDto.getMedia());
+        if (Objects.nonNull(postRequestVm.getMedia())) {
+            post.setMedia(postRequestVm.getMedia().getOriginalFilename());
         }
-        if (Objects.nonNull(postDto.getContent())) {
-            post.setContent(postDto.getContent());
+        if (Objects.nonNull(postRequestVm.getContent())) {
+            post.setContent(postRequestVm.getContent());
         }
         post = postRepo.save(post);
         return PostMapper.POST_INSTANCE.toPostDto(post);

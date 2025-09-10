@@ -1,4 +1,5 @@
 export class PostRequest {
+  id: number | null;
   /** Content of the post */
   content: string;
 

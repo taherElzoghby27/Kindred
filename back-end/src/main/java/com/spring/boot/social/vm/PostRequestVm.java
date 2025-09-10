@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Schema(description = "Post information for creation and updates")
 public class PostRequestVm {
-
+    private Long id;
     @Schema(description = "Content of the post", example = "This is my first post!")
     private String content;
 

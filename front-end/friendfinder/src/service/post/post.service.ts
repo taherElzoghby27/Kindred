@@ -3,6 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {PostRequest} from '../../model/post-request';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {PostsResponse} from '../../model/posts-response';
+import {PostResponse} from '../../model/post-response';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,54 @@ export class PostService {
     formData.append('content', postRequest.content);
     formData.append('media', postRequest.media);
     return this.http.post<any>(`${this.baseUrl}create-post`, formData).pipe(
+      map(response => response)
+    );
+  }
+
+  getAllPosts(page: number, pageSize: number): Observable<PostsResponse> {
+    return this.http.get<PostsResponse>(`${this.baseUrl}get-all-posts`, {
+      params: {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      }
+    }).pipe(
+      map(response => response)
+    );
+  }
+
+  getMyPosts(page: number, pageSize: number): Observable<PostsResponse> {
+    return this.http.get<PostsResponse>(`${this.baseUrl}get-my-posts`, {
+      params: {
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+      }
+    }).pipe(
+      map(response => response)
+    );
+  }
+
+  deletePost(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.baseUrl}delete-post`, {
+      params: {
+        id: id.toString()
+      }
+    }).pipe(
+      map(response => response)
+    );
+  }
+
+  getPost(id: number): Observable<PostResponse> {
+    return this.http.get<PostResponse>(`${this.baseUrl}get-post`, {
+      params: {
+        id: id.toString()
+      }
+    }).pipe(
+      map(response => response)
+    );
+  }
+
+  updatePost(postRequest: PostRequest): Observable<any> {
+    return this.http.put<any>(`${this.baseUrl}update-post`, postRequest).pipe(
       map(response => response)
     );
   }

@@ -73,7 +73,7 @@ public class PostController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Post updated successfully", content = @Content(schema = @Schema(implementation = PostDto.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/update-post")
-    public SuccessDto<ResponseEntity<PostDto>> updatePost(@RequestBody PostDto postDto) {
-        return new SuccessDto<>(ResponseEntity.ok(postService.updatePost(postDto)));
+    public SuccessDto<ResponseEntity<PostDto>> updatePost(@RequestBody PostRequestVm postRequestVm) {
+        return new SuccessDto<>(ResponseEntity.ok(postService.updatePost(postRequestVm)));
     }
 }
