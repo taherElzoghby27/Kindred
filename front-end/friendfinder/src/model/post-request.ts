@@ -1,8 +1,15 @@
 export class PostRequest {
   id: number | null;
-  /** Content of the post */
-  content: string;
-
-  /** Media file (video or photo) */
+  content?: string;
   media?: File;
+
+  constructor(
+    id: number | null = null,
+    content?: string,
+    media?: File
+  ) {
+    this.id = id;
+    this.content = content;
+    this.media = media;
+  }
 }

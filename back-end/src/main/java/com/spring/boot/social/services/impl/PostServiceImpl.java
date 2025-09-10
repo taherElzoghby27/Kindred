@@ -43,14 +43,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void createPost(PostRequestVm postRequestVm) {
-        if (Objects.isNull(postRequestVm.getContent()) && Objects.isNull(postRequestVm.getMedia()) || (postRequestVm.getContent().isEmpty() && postRequestVm.getMedia().isEmpty())) {
+        if (Objects.isNull(postRequestVm.getContent()) && Objects.isNull(postRequestVm.getMedia())) {
             throw new BadRequestException("error.required.one.field.post");
         }
         //get current account
         Account account = accountService.getCurrentAccount();
         Post post = PostMapper.POST_INSTANCE.toPost(postRequestVm);
-        System.out.println(uploadFile(postRequestVm.getMedia()));
-        post.setMedia(postRequestVm.getMedia().getOriginalFilename());
+        if (Objects.nonNull(postRequestVm.getMedia())) {
+            post.setMedia(postRequestVm.getMedia().getOriginalFilename());
+            uploadFile(postRequestVm.getMedia());
+        }
         //set account to post
         post.setAccount(account);
         //save post in db

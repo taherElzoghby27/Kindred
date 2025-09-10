@@ -28,6 +28,7 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {APP_BASE_HREF} from '@angular/common';
 import {AuthInterceptor} from '../service/interceptors/auth.interceptor';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // http://localhost:4200
 
@@ -72,7 +73,8 @@ const routes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    MatSnackBarModule
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},

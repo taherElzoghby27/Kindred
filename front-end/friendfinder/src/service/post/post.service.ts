@@ -18,8 +18,12 @@ export class PostService {
 
   createPost(postRequest: PostRequest): Observable<any> {
     const formData = new FormData();
-    formData.append('content', postRequest.content);
-    formData.append('media', postRequest.media);
+    if (postRequest.content) {
+      formData.append('content', postRequest.content);
+    }
+    if (postRequest.media) {
+      formData.append('media', postRequest.media, postRequest.media.name);
+    }
     return this.http.post<any>(`${this.baseUrl}create-post`, formData).pipe(
       map(response => response)
     );
