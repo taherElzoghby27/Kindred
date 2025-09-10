@@ -1,106 +1,100 @@
-/* Main post create box */
+/* Container */
 .create-post {
   background: #fff;
-  border: 1px solid #e6e6e6;
-  border-radius: 10px;
-  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.create-post:hover {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 /* Profile photo */
 .profile-photo-md {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 10px;
+  margin-right: 12px;
+  vertical-align: top;
 }
 
 /* Textarea */
-.create-post textarea.form-control {
-  border-radius: 8px;
+.create-post textarea {
+  width: calc(100% - 60px);
+  border: none;
   resize: none;
-  min-height: 50px;
+  font-size: 15px;
+  padding: 10px;
+  outline: none;
+  box-shadow: none;
+  min-height: 48px;
+  border-radius: 8px;
+  background: #f9f9f9;
+  transition: background 0.2s;
+}
+
+.create-post textarea:focus {
+  background: #fff;
+  border: 1px solid #007bff;
 }
 
 /* Tools section */
 .tools {
   display: flex;
-  justify-content: flex-end;
   align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
 }
 
-/* Publishing tools list */
+/* Publishing icons */
 .publishing-tools {
   margin: 0;
   padding: 0;
-  list-style: none;
-  display: flex;
-  gap: 10px;
 }
 
 .publishing-tools li {
   display: inline-block;
+  margin-right: 10px;
 }
 
-/* Media icon button */
-.publishing-tools button {
-  background: none;
-  border: none;
+.publishing-tools i {
+  color: #555;
+  transition: color 0.2s;
   cursor: pointer;
-  font-size: 22px;
-  color: #666;
-  transition: color 0.2s ease;
 }
 
-.publishing-tools button:hover {
+.publishing-tools i:hover {
   color: #007bff;
 }
 
 /* Publish button */
-button.btn-primary {
+.create-post .btn-primary {
   border-radius: 20px;
-  padding: 5px 15px;
+  padding: 6px 18px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Preview */
+.create-post .img-thumbnail,
+.create-post video {
+  border-radius: 8px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+}
+
+/* Error and loading states */
+.create-post .text-center p {
+  margin: 4px 0;
   font-size: 14px;
 }
 
-/* Preview section */
-.img-thumbnail {
-  border-radius: 8px;
-  margin-top: 10px;
-  max-width: 100%;
-  height: auto;
-}
-
-/* Video preview */
-video {
-  border-radius: 8px;
-  margin-top: 10px;
-  max-width: 100%;
-}
-
-/* Loading spinner */
 .spinner-border {
   width: 2rem;
   height: 2rem;
-  border: 0.25em solid #e0e0e0;
-  border-top: 0.25em solid #007bff;
-  border-radius: 50%;
-  animation: spin 0.75s linear infinite;
-  display: inline-block;
-}
-
-@keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* Loading text */
-.mt-2 p {
-  margin-top: 5px;
-  font-size: 14px;
-  color: #555;
-  text-align: center;
 }
