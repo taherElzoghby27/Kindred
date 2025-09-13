@@ -12,6 +12,7 @@ import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.utils.SecurityUtils;
+import com.spring.boot.social.utils.UploadFileLocal;
 import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.PostRequestVm;
 import com.spring.boot.social.vm.PostsResponseVm;
@@ -23,13 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -51,7 +46,7 @@ public class PostServiceImpl implements PostService {
         Post post = PostMapper.POST_INSTANCE.toPost(postRequestVm);
         if (Objects.nonNull(postRequestVm.getMedia())) {
             post.setMedia(postRequestVm.getMedia().getOriginalFilename());
-            uploadFile(postRequestVm.getMedia());
+            UploadFileLocal.uploadFile(postRequestVm.getMedia());
         }
         //set account to post
         post.setAccount(account);
@@ -61,26 +56,6 @@ public class PostServiceImpl implements PostService {
         activityService.logActivity(new RequestActivityVm("Created post " + post.getContent(), ActivityType.POST_CREATED));
     }
 
-    private String uploadFile(MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new BadRequestException("not.found.media");
-        }
-        try {
-            final String UPLOAD_DIR = "uploads/";
-            // 1.make sure upload directory exist
-            File uploadsDir = new File(UPLOAD_DIR);
-            if (!uploadsDir.exists()) {
-                uploadsDir.mkdir();
-            }
-            // 2. Build the path: uploads/filename.ext
-            Path filePath = Paths.get(UPLOAD_DIR, file.getOriginalFilename());
-            // 3. Save file to the path
-            Files.write(filePath, file.getBytes());
-            return file.getOriginalFilename();
-        } catch (IOException e) {
-            throw new RuntimeException("File upload failed: " + e.getMessage());
-        }
-    }
 
     @Override
     public PostsResponseVm getPostsByAccount(int page, int size) {
