@@ -2,6 +2,7 @@ package com.spring.boot.social.services.impl;
 
 import com.spring.boot.social.dto.ActivityDto;
 import com.spring.boot.social.exceptions.BadRequestException;
+import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.ActivityMapper;
 import com.spring.boot.social.models.Activity;
 import com.spring.boot.social.models.security.Account;
@@ -28,7 +29,7 @@ public class ActivityServiceImpl implements ActivityService {
     public List<ActivityDto> getAllActivities() {
         List<Activity> activities = activityRepo.findAll();
         if (activities.isEmpty()) {
-            throw new BadRequestException("no_activities");
+            throw new NotFoundResourceException("no_activities");
         }
         return activities.stream().map(ActivityMapper.INSTANCE::toActivityDto).toList();
     }

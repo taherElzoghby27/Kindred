@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepo extends JpaRepository<Post, Long> {
-    Page<Post> findAllByAccountIdOrderByCreatedByAsc(Pageable pageable, Long accountId);
+    Page<Post> findAllByAccountIdOrderByCreatedByDesc(Pageable pageable, Long accountId);
 
-    Page<Post> findAllByOrderByCreatedByAsc(Pageable pageable);
+    Page<Post> findAllByOrderByCreatedByDesc(Pageable pageable);
 
     Post findPostsByIdAndAccountId(Long id, Long accountId);
 

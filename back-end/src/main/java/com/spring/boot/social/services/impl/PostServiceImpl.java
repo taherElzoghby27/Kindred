@@ -87,7 +87,7 @@ public class PostServiceImpl implements PostService {
         //get current account
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
         Pageable pageable = getPageable(page, size);
-        Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedByAsc(pageable, accountDto.getId());
+        Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedByDesc(pageable, accountDto.getId());
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
         return new PostsResponseVm(postsDto, posts.getNumber() + 1, posts.getSize());
     }
@@ -95,7 +95,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostsResponseVm getPosts(int page, int size) {
         Pageable pageable = getPageable(page, size);
-        Page<Post> posts = postRepo.findAllByOrderByCreatedByAsc(pageable);
+        Page<Post> posts = postRepo.findAllByOrderByCreatedByDesc(pageable);
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
         return new PostsResponseVm(postsDto, posts.getNumber() + 1, posts.getSize());
     }
