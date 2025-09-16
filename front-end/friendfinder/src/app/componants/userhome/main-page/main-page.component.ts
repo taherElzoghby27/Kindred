@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {PostService} from '../../../../service/post/post.service';
+import {PostsResponse} from '../../../../model/posts-response';
 
 @Component({
   selector: 'app-main-page',
@@ -7,42 +9,84 @@ import {Component, OnInit} from '@angular/core';
 })
 export class MainPageComponent implements OnInit {
 
-  // Post data
-  post = {
-    author: 'Alexis Clark',
-    authorImage: 'assets/images/users/user-5.jpg',
-    timeAgo: '3 minutes ago',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. 😱 😱 😱',
-    image: 'assets/images/post-images/1.jpg',
-    likes: 13,
-    comments: 5,
-    isLiked: false,
-    showComments: true
-  };
 
-  // Comments data
-  comments = [
-    {
-      author: 'Diana',
-      authorImage: 'assets/images/users/user-11.jpg',
-      timeAgo: '2 minutes ago',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 😂'
-    },
-    {
-      author: 'John',
-      authorImage: 'assets/images/users/user-4.jpg',
-      timeAgo: '1 hour ago',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    }
-  ];
+  postsResponse: PostsResponse;
 
   newComment = '';
+  messageAr = '';
+  messageEn = '';
+  unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
 
-  constructor() {
+  constructor(private postService: PostService) {
   }
 
   ngOnInit(): void {
+    this.getAllPosts();
   }
+
+  getBaseUrlForMedia(): string {
+    return this.postService.baseUrlMedia;
+  }
+
+  getTimeAgo(dateTime: string): string {
+    const now = new Date();
+    const past = new Date(dateTime);
+    const diffMs = now.getTime() - past.getTime();
+
+    if (isNaN(past.getTime())) {
+      return 'Invalid date';
+    }
+
+    const seconds = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30);
+    const years = Math.floor(days / 365);
+
+    if (seconds < 60) {
+      return `since ${seconds} second${seconds !== 1 ? 's' : ''} ago`;
+    }
+    if (minutes < 60) {
+      return `since ${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    }
+    if (hours < 24) {
+      return `since ${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    }
+    if (days < 30) {
+      return `since ${days} day${days !== 1 ? 's' : ''} ago`;
+    }
+    if (months < 12) {
+      return `since ${months} month${months !== 1 ? 's' : ''} ago`;
+    }
+
+    return `since ${years} year${years !== 1 ? 's' : ''} ago`;
+  }
+
+  getFullMediaPost(path: string): string {
+    return `${this.getBaseUrlForMedia()}${path}`;
+  }
+
+  isImage(media: string): boolean {
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(media);
+  }
+
+  isVideo(media: string): boolean {
+    return /\.(mp4|webm|ogg)$/i.test(media);
+  }
+
+  getAllPosts(): void {
+    this.postService.getAllPosts(1, 10).subscribe(
+      response => {
+        this.postsResponse = response;
+      },
+      errors => {
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        this.messageEn = errors.error.bundleMessage.message_en;
+      }
+    );
+  }
+
 
   // Toggle like functionality
   toggleLike(): void {

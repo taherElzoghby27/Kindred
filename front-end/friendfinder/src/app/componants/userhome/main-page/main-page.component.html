@@ -4,18 +4,24 @@
 
       <app-left-bar></app-left-bar>
       <div class="col-md-7">
-          <app-publish></app-publish>
+        <app-publish></app-publish>
 
-          <!-- Post Content
-                ================================================= -->
+        <!-- Post Content
+              ================================================= -->
+        <div *ngFor="let post of postsResponse.posts">
           <div class="post-content">
             <!-- Post Header -->
             <div class="post-header">
               <div class="post-author">
-                <img [src]="post.authorImage" alt="user" class="profile-photo-md" />
+                <img [src]="unKnownImage" alt="user" class="profile-photo-md"/>
                 <div class="author-info">
-                  <h5><a href="timeline.html" class="profile-link">{{ post.author }}</a></h5>
-                  <p class="post-time">{{ post.timeAgo }}</p>
+                  <h5>
+                    <a href="timeline.html" class="profile-link">
+                      <p>{{ post.account.firstName }}</p>
+                      <p>{{ post.account.lastName }}</p>
+                    </a>
+                  </h5>
+                  <p class="post-time">{{ getTimeAgo(post.createdDate) }}</p>
                 </div>
               </div>
               <div class="post-options">
@@ -31,24 +37,38 @@
             </div>
 
             <!-- Post Image -->
-            <div class="post-image-container" *ngIf="post.image">
-              <img [src]="post.image" alt="post-image" class="post-image" />
+            <div class="post-media-container" *ngIf="post.media">
+              <!-- Image -->
+              <img
+                *ngIf="isImage(post.media)"
+                [src]="getFullMediaPost(post.media)"
+                alt="post-image"
+                class="post-image"
+              />
+
+              <!-- Video -->
+              <video
+                *ngIf="isVideo(post.media)"
+                [src]="getFullMediaPost(post.media)"
+                controls
+                class="post-video"
+              ></video>
             </div>
 
             <!-- Post Stats -->
-            <div class="post-stats" *ngIf="post.likes > 0 || post.comments > 0">
-              <div class="reactions" *ngIf="post.likes > 0">
+            <div class="post-stats" *ngIf="post.reactionsCount > 0 || post.commentsCount > 0">
+              <div class="reactions" *ngIf="post.reactionsCount > 0">
                 <div class="reaction-icons">
                   <i class="fa fa-thumbs-up"></i>
                   <i class="fa fa-heart"></i>
                   <i class="fa fa-laugh"></i>
                 </div>
-                <span class="reaction-count">{{ post.likes }}</span>
+                <span class="reaction-count">{{ post.reactionsCount }}</span>
               </div>
-              <div class="comments-count" *ngIf="post.comments > 0">
-                <a href="#" class="comments-link" (click)="toggleComments(); $event.preventDefault()">
-                  {{ post.comments }} comment{{ post.comments !== 1 ? 's' : '' }}
-                </a>
+              <div class="comments-count" *ngIf="post.commentsCount > 0">
+<!--                <a href="#" class="comments-link" (click)="toggleComments(); $event.preventDefault()">-->
+<!--                  {{ post.comments }} comment{{ post.comments !== 1 ? 's' : '' }}-->
+<!--                </a>-->
               </div>
             </div>
 
@@ -71,7 +91,7 @@
             <!-- Comments Section -->
             <div class="comments-section" *ngIf="post.showComments">
               <div class="comment" *ngFor="let comment of comments">
-                <img [src]="comment.authorImage" alt="" class="comment-avatar" />
+                <img [src]="comment.authorImage" alt="" class="comment-avatar"/>
                 <div class="comment-content">
                   <div class="comment-header">
                     <a href="timeline.html" class="comment-author">{{ comment.author }}</a>
@@ -83,11 +103,11 @@
 
               <!-- Add Comment -->
               <div class="add-comment">
-                <img src="assets/images/users/user-1.jpg" alt="" class="comment-avatar" />
+                <img src="assets/images/users/user-1.jpg" alt="" class="comment-avatar"/>
                 <div class="comment-input-container">
-                  <input 
-                    type="text" 
-                    class="comment-input" 
+                  <input
+                    type="text"
+                    class="comment-input"
                     placeholder="Write a comment..."
                     [(ngModel)]="newComment"
                     (keypress)="onCommentKeyPress($event)"
@@ -96,11 +116,11 @@
               </div>
             </div>
           </div>
-
+        </div>
 
 
       </div>
-    <app-right-bar></app-right-bar>
+      <app-right-bar></app-right-bar>
     </div>
   </div>
 </div>

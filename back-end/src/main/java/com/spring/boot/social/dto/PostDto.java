@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class PostDto {
     @Schema(description = "Unique identifier for the post", example = "1")
     private Long id;
-
+    private Long liked;
     @Schema(description = "Content of the post", example = "This is my first post!")
     private String content;
 

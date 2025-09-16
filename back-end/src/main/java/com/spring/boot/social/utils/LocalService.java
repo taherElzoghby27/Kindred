@@ -9,8 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class UploadFileLocal {
-    private UploadFileLocal() {
+public class LocalService {
+    private LocalService() {
     }
 
     public static String uploadFile(MultipartFile file) {

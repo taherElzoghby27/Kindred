@@ -20,6 +20,7 @@ public class Post extends BaseEntity<String> {
     private String media;
     private Long reactionsCount = 0L;
     private Long commentsCount = 0L;
+    private Long liked = 0L;
     @JoinColumn(nullable = false)
     @ManyToOne
     private Account account;

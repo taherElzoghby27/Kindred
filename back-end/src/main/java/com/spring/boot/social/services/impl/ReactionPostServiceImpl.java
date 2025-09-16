@@ -46,19 +46,12 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction
-        postReactionAccount = result.map(
-                reactionAccount -> updateReaction(reactionAccount, reaction)
-        ).orElseGet(
-                () -> createNewReactionWithPost(account, post, reaction)
-        );
+        postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction)).orElseGet(() -> createNewReactionWithPost(account, post, reaction));
         reactionPostRepo.save(postReactionAccount);
+        //add liked in post
+        postService.makeItLiked(post.getId());
         //add log
-        activityService.logActivity(
-                new RequestActivityVm(
-                        "react on " + post.getContent(),
-                        ActivityType.REACTION_ADDED
-                )
-        );
+        activityService.logActivity(new RequestActivityVm("react on " + post.getContent(), ActivityType.REACTION_ADDED));
     }
 
     protected PostReactionAccount updateReaction(PostReactionAccount postReactionAccount, Reaction reaction) {
@@ -87,18 +80,15 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Account account = accountService.getCurrentAccount();
 
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(reactionRequestVm.getPostId(), account.getId());
-        result.map(
-                        rPA -> removeProcess(reactionRequestVm, rPA)
-                )
-                .orElseThrow(
-                        () -> new NotFoundResourceException("reaction.not.found")
-                );
+        result.map(rPA -> removeProcess(reactionRequestVm, rPA)).orElseThrow(() -> new NotFoundResourceException("reaction.not.found"));
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
     protected Optional<Object> removeProcess(ReactionRequestVm reactionRequestVm, PostReactionAccount rPA) {
         reactionPostRepo.deleteByPostReactionAccountId(rPA.getId());
         postService.decrementReactionCount(reactionRequestVm.getPostId());
+        //add liked in post
+        postService.makeItDisliked(reactionRequestVm.getPostId());
         return Optional.empty();
     }
 }

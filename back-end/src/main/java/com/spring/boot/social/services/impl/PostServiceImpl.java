@@ -12,7 +12,7 @@ import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.utils.SecurityUtils;
-import com.spring.boot.social.utils.UploadFileLocal;
+import com.spring.boot.social.utils.LocalService;
 import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.PostRequestVm;
 import com.spring.boot.social.vm.PostsResponseVm;
@@ -46,7 +46,7 @@ public class PostServiceImpl implements PostService {
         Post post = PostMapper.POST_INSTANCE.toPost(postRequestVm);
         if (Objects.nonNull(postRequestVm.getMedia())) {
             post.setMedia(postRequestVm.getMedia().getOriginalFilename());
-            UploadFileLocal.uploadFile(postRequestVm.getMedia());
+            LocalService.uploadFile(postRequestVm.getMedia());
         }
         //set account to post
         post.setAccount(account);
@@ -173,4 +173,17 @@ public class PostServiceImpl implements PostService {
     public void decrementCommentCount(Long postId) {
         postRepo.decrementCommentsCount(postId);
     }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    @Override
+    public void makeItLiked(Long postId) {
+        postRepo.makeItLiked(postId);
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    @Override
+    public void makeItDisliked(Long postId) {
+        postRepo.makeItDisliked(postId);
+    }
+
 }

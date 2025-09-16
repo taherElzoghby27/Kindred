@@ -26,4 +26,8 @@ public interface PostService {
     void incrementCommentCount(Long postId);
 
     void decrementCommentCount(Long postId);
+
+    void makeItLiked(Long postId);
+
+    void makeItDisliked(Long postId);
 }
