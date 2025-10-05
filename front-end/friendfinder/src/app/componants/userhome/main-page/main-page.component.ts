@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {PostService} from '../../../../service/post/post.service';
 import {PostsResponse} from '../../../../model/posts-response';
+import {PostResponse} from '../../../../model/post-response';
 
 @Component({
   selector: 'app-main-page',
@@ -89,29 +90,31 @@ export class MainPageComponent implements OnInit {
 
 
   // Toggle like functionality
-  toggleLike(): void {
-    this.post.isLiked = !this.post.isLiked;
-    this.post.likes += this.post.isLiked ? 1 : -1;
+  toggleLike(post: PostResponse): void {
+    const postFounded = this.postsResponse.posts.find(p => p.id === post.id);
+    postFounded.liked = postFounded.liked === 0 ? 1 : 0;
+    // this.postsResponse.posts.isLiked = !this.post.isLiked;
+    // this.post.likes += this.post.isLiked ? 1 : -1;
   }
 
   // Add new comment
   addComment(): void {
-    if (this.newComment.trim()) {
-      const comment = {
-        author: 'You',
-        authorImage: 'assets/images/users/user-1.jpg',
-        timeAgo: 'now',
-        content: this.newComment.trim()
-      };
-      this.comments.push(comment);
-      this.post.comments++;
-      this.newComment = '';
-    }
+    // if (this.newComment.trim()) {
+    //   const comment = {
+    //     author: 'You',
+    //     authorImage: 'assets/images/users/user-1.jpg',
+    //     timeAgo: 'now',
+    //     content: this.newComment.trim()
+    //   };
+    //   this.comments.push(comment);
+    //   this.post.comments++;
+    //   this.newComment = '';
+    // }
   }
 
   // Toggle comments visibility
   toggleComments(): void {
-    this.post.showComments = !this.post.showComments;
+    // this.post.showComments = !this.post.showComments;
   }
 
   // Handle enter key in comment input

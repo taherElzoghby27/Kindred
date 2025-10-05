@@ -1,6 +1,6 @@
 package com.spring.boot.social.repositories;
 
-import com.spring.boot.social.models.Reaction;
+import com.spring.boot.social.entity.Reaction;
 import com.spring.boot.social.utils.enums.ReactionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

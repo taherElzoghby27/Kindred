@@ -2,7 +2,7 @@ package com.spring.boot.social.services;
 
 import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
-import com.spring.boot.social.models.security.Account;
+import com.spring.boot.social.entity.security.Account;
 
 public interface AccountService {
     AccountDto createAccount(AccountDto accountDto);

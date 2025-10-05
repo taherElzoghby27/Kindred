@@ -1,6 +1,6 @@
 package com.spring.boot.social.repositories;
 
-import com.spring.boot.social.models.friendship.FriendStatus;
+import com.spring.boot.social.entity.friendship.FriendStatus;
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

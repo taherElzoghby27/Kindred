@@ -5,7 +5,7 @@ import com.spring.boot.social.config.security.TokenHandler;
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.ExceptionDto;
 import com.spring.boot.social.exceptions.ExpiredTokenException;
-import com.spring.boot.social.models.BundleMessage;
+import com.spring.boot.social.entity.BundleMessage;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +17,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.util.List;

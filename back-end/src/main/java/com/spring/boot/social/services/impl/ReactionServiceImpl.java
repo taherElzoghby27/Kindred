@@ -4,7 +4,7 @@ import com.spring.boot.social.dto.ReactionDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.ReactionMapper;
-import com.spring.boot.social.models.Reaction;
+import com.spring.boot.social.entity.Reaction;
 import com.spring.boot.social.repositories.ReactionRepo;
 import com.spring.boot.social.services.ReactionService;
 import com.spring.boot.social.utils.enums.ReactionType;

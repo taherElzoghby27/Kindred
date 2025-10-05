@@ -1,6 +1,6 @@
-package com.spring.boot.social.models.security;
+package com.spring.boot.social.entity.security;
 
-import com.spring.boot.social.models.*;
+import com.spring.boot.social.entity.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

@@ -1,7 +1,7 @@
 package com.spring.boot.social.exceptions;
 
 import com.spring.boot.social.dto.ExceptionDto;
-import com.spring.boot.social.models.BundleMessage;
+import com.spring.boot.social.entity.BundleMessage;
 import com.spring.boot.social.services.BundleTranslationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;

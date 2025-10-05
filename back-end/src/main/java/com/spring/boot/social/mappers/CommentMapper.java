@@ -1,7 +1,7 @@
 package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.CommentDto;
-import com.spring.boot.social.models.Comment;
+import com.spring.boot.social.entity.Comment;
 import com.spring.boot.social.vm.CommentRequestVm;
 import com.spring.boot.social.vm.CommentResponseVm;
 import org.mapstruct.Mapper;

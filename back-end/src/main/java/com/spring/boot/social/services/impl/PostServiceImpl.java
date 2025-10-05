@@ -5,9 +5,10 @@ import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.PostMapper;
-import com.spring.boot.social.models.Post;
-import com.spring.boot.social.models.security.Account;
+import com.spring.boot.social.entity.Post;
+import com.spring.boot.social.entity.security.Account;
 import com.spring.boot.social.repositories.PostRepo;
+import com.spring.boot.social.repositories.ReactionPostRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.PostService;
@@ -35,6 +36,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepo postRepo;
     private final AccountService accountService;
     private final ActivityService activityService;
+    private final ReactionPostRepo reactionPostRepo;
 
     @Override
     public void createPost(PostRequestVm postRequestVm) {
@@ -63,16 +65,27 @@ public class PostServiceImpl implements PostService {
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
         Pageable pageable = getPageable(page, size);
         Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedByDesc(pageable, accountDto.getId());
-        List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
-        return new PostsResponseVm(postsDto, posts.getNumber() + 1, posts.getSize());
+        return getPostsResponseVm(accountDto, posts);
     }
 
     @Override
     public PostsResponseVm getPosts(int page, int size) {
         Pageable pageable = getPageable(page, size);
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
         Page<Post> posts = postRepo.findAllByOrderByCreatedByDesc(pageable);
+        return getPostsResponseVm(accountDto, posts);
+    }
+
+    private PostsResponseVm getPostsResponseVm(AccountDto accountDto, Page<Post> posts) {
+        updateLikedFields(accountDto, posts.getContent());
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
         return new PostsResponseVm(postsDto, posts.getNumber() + 1, posts.getSize());
+    }
+
+    private void updateLikedFields(AccountDto accountDto, List<Post> posts) {
+        //posts liked (ids)
+        List<Long> liked = reactionPostRepo.findPostIdsLikedByAccount(accountDto.getId());
+        posts.forEach(p -> p.setLiked(liked.contains(p.getId()) ? 1L : 0L));
     }
 
     private Pageable getPageable(int page, int size) {
@@ -125,7 +138,10 @@ public class PostServiceImpl implements PostService {
         if (result.isEmpty()) {
             throw new NotFoundResourceException("post.not.found");
         }
-        return PostMapper.POST_INSTANCE.toPostDto(result.get());
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        Post post = result.get();
+        updateLikedFields(accountDto, List.of(post));
+        return PostMapper.POST_INSTANCE.toPostDto(post);
     }
 
     @Override
@@ -173,17 +189,4 @@ public class PostServiceImpl implements PostService {
     public void decrementCommentCount(Long postId) {
         postRepo.decrementCommentsCount(postId);
     }
-
-    @Transactional(propagation = Propagation.MANDATORY)
-    @Override
-    public void makeItLiked(Long postId) {
-        postRepo.makeItLiked(postId);
-    }
-
-    @Transactional(propagation = Propagation.MANDATORY)
-    @Override
-    public void makeItDisliked(Long postId) {
-        postRepo.makeItDisliked(postId);
-    }
-
 }

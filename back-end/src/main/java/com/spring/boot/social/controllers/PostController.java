@@ -66,7 +66,7 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/get-post")
     public SuccessDto<ResponseEntity<PostDto>> getPost(@RequestParam Long id) {
-        return new SuccessDto<>(ResponseEntity.ok(postService.getPostByCurrentAccount(id)));
+        return new SuccessDto<>(ResponseEntity.ok(postService.getPost(id)));
     }
 
     @Operation(summary = "Update Post", description = "Update an existing post")

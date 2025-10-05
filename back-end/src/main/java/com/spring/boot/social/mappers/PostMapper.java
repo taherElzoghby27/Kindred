@@ -1,7 +1,7 @@
 package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.PostDto;
-import com.spring.boot.social.models.Post;
+import com.spring.boot.social.entity.Post;
 import com.spring.boot.social.vm.PostRequestVm;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

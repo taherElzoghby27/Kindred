@@ -1,6 +1,6 @@
-package com.spring.boot.social.models;
+package com.spring.boot.social.entity;
 
-import com.spring.boot.social.models.security.Account;
+import com.spring.boot.social.entity.security.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,8 @@ public class Post extends BaseEntity<String> {
     private String media;
     private Long reactionsCount = 0L;
     private Long commentsCount = 0L;
-    private Long liked = 0L;
+    @Transient
+    private Long liked;
     @JoinColumn(nullable = false)
     @ManyToOne
     private Account account;

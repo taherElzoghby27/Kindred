@@ -1,7 +1,6 @@
-package com.spring.boot.social.models.friendship;
+package com.spring.boot.social.entity;
 
-import com.spring.boot.social.models.BaseEntity;
-import com.spring.boot.social.models.security.Account;
+import com.spring.boot.social.entity.security.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +13,7 @@ import lombok.Setter;
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {
                         "account_id",
-                        "friend_id"
+                        "post_id"
                 }
         )
 )
@@ -22,13 +21,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Friendship extends BaseEntity<String> {
+public class PostReactionAccount extends BaseEntity<String> {
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+    @ManyToOne
+    @JoinColumn(name = "reaction_id", nullable = false)
+    private Reaction reaction;
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
-    @ManyToOne
-    @JoinColumn(name = "friend_id", nullable = false)
-    private Account friend;
-    @OneToOne(mappedBy = "friendship")
-    private FriendshipStatus friendshipStatus;
 }

@@ -1,4 +1,4 @@
-package com.spring.boot.social.models;
+package com.spring.boot.social.entity;
 
 import com.spring.boot.social.utils.enums.ReactionType;
 import jakarta.persistence.*;

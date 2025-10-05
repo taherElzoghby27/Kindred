@@ -1,6 +1,6 @@
-package com.spring.boot.social.models.friendship;
+package com.spring.boot.social.entity.friendship;
 
-import com.spring.boot.social.models.BaseEntity;
+import com.spring.boot.social.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,8 +2,8 @@ package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
-import com.spring.boot.social.models.security.Account;
-import com.spring.boot.social.models.security.AccountDetails;
+import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.entity.security.AccountDetails;
 import com.spring.boot.social.vm.AccountResponseVm;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

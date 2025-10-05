@@ -1,4 +1,4 @@
-package com.spring.boot.social.models;
+package com.spring.boot.social.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.spring.boot.social.dto;
 
-import com.spring.boot.social.models.BundleMessage;
+import com.spring.boot.social.entity.BundleMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

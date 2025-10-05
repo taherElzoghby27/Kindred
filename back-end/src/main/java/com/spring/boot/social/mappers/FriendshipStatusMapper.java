@@ -1,7 +1,7 @@
 package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
-import com.spring.boot.social.models.friendship.FriendshipStatus;
+import com.spring.boot.social.entity.friendship.FriendshipStatus;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

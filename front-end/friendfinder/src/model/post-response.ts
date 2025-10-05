@@ -6,6 +6,7 @@ export class PostResponse {
   media?: string;
   reactionsCount: number;
   commentsCount: number;
+  liked: number;
   createdDate: string;
   account: AccountVm;
 }

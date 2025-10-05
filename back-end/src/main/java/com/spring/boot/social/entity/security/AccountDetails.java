@@ -1,6 +1,6 @@
-package com.spring.boot.social.models.security;
+package com.spring.boot.social.entity.security;
 
-import com.spring.boot.social.models.BaseEntity;
+import com.spring.boot.social.entity.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;

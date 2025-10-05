@@ -1,4 +1,4 @@
-package com.spring.boot.social.models;
+package com.spring.boot.social.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

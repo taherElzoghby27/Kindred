@@ -1,6 +1,6 @@
 package com.spring.boot.social.repositories;
 
-import com.spring.boot.social.models.Post;
+import com.spring.boot.social.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,12 +32,5 @@ public interface PostRepo extends JpaRepository<Post, Long> {
     @Modifying
     @Query("UPDATE Post p SET p.commentsCount = GREATEST(COALESCE(p.commentsCount, 0) - 1, 0) WHERE p.id = :postId")
     void decrementCommentsCount(@Param("postId") Long postId);
-
-    @Modifying
-    @Query("UPDATE Post p set p.liked=1 WHERE p.id = :postId")
-    void makeItLiked(@Param("postId") Long postId);
-    @Modifying
-    @Query("UPDATE Post p set p.liked=0 WHERE p.id = :postId")
-    void makeItDisliked(@Param("postId") Long postId);
 
 }

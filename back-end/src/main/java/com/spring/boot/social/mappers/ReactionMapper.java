@@ -1,7 +1,7 @@
 package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.ReactionDto;
-import com.spring.boot.social.models.Reaction;
+import com.spring.boot.social.entity.Reaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

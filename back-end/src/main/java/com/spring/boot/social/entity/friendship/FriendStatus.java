@@ -1,4 +1,4 @@
-package com.spring.boot.social.models.friendship;
+package com.spring.boot.social.entity.friendship;
 
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import jakarta.persistence.*;

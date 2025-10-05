@@ -30,13 +30,13 @@ export class PostService {
   }
 
   getAllPosts(page: number, pageSize: number): Observable<PostsResponse> {
-    return this.http.get<PostsResponse>(`${this.baseUrl}get-all-posts`, {
+    return this.http.get<any>(`${this.baseUrl}get-all-posts`, {
       params: {
         page: page.toString(),
         pageSize: pageSize.toString(),
       }
     }).pipe(
-      map(response => response)
+      map(response => response.data.body)
     );
   }
 
