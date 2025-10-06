@@ -1,4 +1,5 @@
 package com.spring.boot.social.services.impl;
+
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.dto.ReactionDto;
 import com.spring.boot.social.exceptions.BadRequestException;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Objects;
 import java.util.Optional;
 
@@ -71,23 +73,23 @@ public class ReactionPostServiceImpl implements ReactionPostService {
 
     @Transactional
     @Override
-    public void removeReaction(ReactionRequestVm reactionRequestVm) {
-        if (Objects.isNull(reactionRequestVm.getPostId())) {
+    public void removeReaction(Long postId) {
+        if (Objects.isNull(postId)) {
             throw new BadRequestException("post_id.comment.not_null");
         }
         //get account
         Account account = accountService.getCurrentAccount();
 
-        Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(reactionRequestVm.getPostId(), account.getId());
-        result.map(rPA -> removeProcess(reactionRequestVm, rPA)).orElseThrow(() -> new NotFoundResourceException("reaction.not.found"));
+        Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(postId, account.getId());
+        result.map(rPA -> removeProcess(postId, rPA))
+                .orElseThrow(() -> new NotFoundResourceException("reaction.not.found"));
     }
 
 
-
     @Transactional(propagation = Propagation.MANDATORY)
-    protected Optional<Object> removeProcess(ReactionRequestVm reactionRequestVm, PostReactionAccount rPA) {
+    protected Optional<Object> removeProcess(Long postId, PostReactionAccount rPA) {
         reactionPostRepo.deleteByPostReactionAccountId(rPA.getId());
-        postService.decrementReactionCount(reactionRequestVm.getPostId());
+        postService.decrementReactionCount(postId);
         //add liked in post
         //postService.makeItDisliked(reactionRequestVm.getPostId());
         return Optional.empty();

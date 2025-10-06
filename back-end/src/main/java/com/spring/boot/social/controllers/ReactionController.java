@@ -49,8 +49,8 @@ public class ReactionController {
     })
     @DeleteMapping("/delete-react")
     @PreAuthorize("isAuthenticated()")
-    public SuccessDto<ResponseEntity<String>> deleteReact(@Valid @RequestBody ReactionRequestVm reactionRequestVm) {
-        reactionPostService.removeReaction(reactionRequestVm);
+    public SuccessDto<ResponseEntity<String>> deleteReact(@Valid @RequestParam("post_id") Long postId) {
+        reactionPostService.removeReaction(postId);
         return new SuccessDto<>(ResponseEntity.ok("Success"));
     }
 }

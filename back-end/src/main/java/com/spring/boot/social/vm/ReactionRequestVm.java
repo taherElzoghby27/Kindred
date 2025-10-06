@@ -24,5 +24,6 @@ public class ReactionRequestVm {
 
     @Enumerated(EnumType.STRING)
     @Schema(description = "Type of reaction to add to the post", example = "LIKE", requiredMode = Schema.RequiredMode.REQUIRED)
+    @JsonProperty(value = "reaction_type")
     private ReactionType reactionType;
 }
