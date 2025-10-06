@@ -23,7 +23,7 @@ export class ReactionService {
     );
   }
 
-  deletePost(postId: number): Observable<any> {
+  removeReact(postId: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}delete-react`, {
       params: {
         post_id: postId.toString()

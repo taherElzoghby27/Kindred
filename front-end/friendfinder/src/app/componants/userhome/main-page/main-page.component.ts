@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {PostService} from '../../../../service/post/post.service';
 import {PostsResponse} from '../../../../model/posts-response';
 import {PostResponse} from '../../../../model/post-response';
+import {ReactionService} from '../../../../service/reaction/reaction.service';
+import {ReactionRequestVm, ReactionType} from '../../../../model/reaction-request-vm';
 
 @Component({
   selector: 'app-main-page',
@@ -18,7 +20,7 @@ export class MainPageComponent implements OnInit {
   messageEn = '';
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
 
-  constructor(private postService: PostService) {
+  constructor(private postService: PostService, private reactionService: ReactionService) {
   }
 
   ngOnInit(): void {
@@ -91,10 +93,44 @@ export class MainPageComponent implements OnInit {
 
   // Toggle like functionality
   toggleLike(post: PostResponse): void {
-    const postFounded = this.postsResponse.posts.find(p => p.id === post.id);
-    postFounded.liked = postFounded.liked === 0 ? 1 : 0;
-    // this.postsResponse.posts.isLiked = !this.post.isLiked;
-    // this.post.likes += this.post.isLiked ? 1 : -1;
+    if (post.liked) {
+      console.log('liked');
+      this.removeReact(post.id);
+    } else {
+      console.log('un liked');
+      const reactionRequest = new ReactionRequestVm(post.id, ReactionType.LIKE);
+      this.makeReact(reactionRequest);
+    }
+  }
+
+  makeReact(reactionRequestVm: ReactionRequestVm): void {
+    this.reactionService.makeReact(reactionRequestVm).subscribe(
+      response => {
+        const postFounded = this.postsResponse.posts.find(p => p.id === reactionRequestVm.postId);
+        postFounded.liked = 1;
+        postFounded.reactionsCount++;
+        // this.postsResponse.posts.isLiked = !this.post.isLiked;
+        // this.post.likes += this.post.isLiked ? 1 : -1;
+      },
+      errors => {
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        this.messageEn = errors.error.bundleMessage.message_en;
+      }
+    );
+  }
+
+  removeReact(postId: number): void {
+    this.reactionService.removeReact(postId).subscribe(
+      response => {
+        const postFounded = this.postsResponse.posts.find(p => p.id === postId);
+        postFounded.liked = 0;
+        postFounded.reactionsCount--;
+      },
+      errors => {
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        this.messageEn = errors.error.bundleMessage.message_en;
+      }
+    );
   }
 
   // Add new comment

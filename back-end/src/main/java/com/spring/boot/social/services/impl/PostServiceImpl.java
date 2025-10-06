@@ -64,7 +64,7 @@ public class PostServiceImpl implements PostService {
         //get current account
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
         Pageable pageable = getPageable(page, size);
-        Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedByDesc(pageable, accountDto.getId());
+        Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedDateDesc(pageable, accountDto.getId());
         return getPostsResponseVm(accountDto, posts);
     }
 
@@ -72,7 +72,7 @@ public class PostServiceImpl implements PostService {
     public PostsResponseVm getPosts(int page, int size) {
         Pageable pageable = getPageable(page, size);
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        Page<Post> posts = postRepo.findAllByOrderByCreatedByDesc(pageable);
+        Page<Post> posts = postRepo.findAllByOrderByCreatedDateDesc(pageable);
         return getPostsResponseVm(accountDto, posts);
     }
 

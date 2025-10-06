@@ -77,7 +77,7 @@
 
             <!-- Post Actions -->
             <div class="post-actions">
-              <button class="action-btn like-btn" [class.liked]="post.liked" (click)="toggleLike()">
+              <button class="action-btn like-btn" [class.liked]="post.liked" (click)="toggleLike(post)">
                 <i class="fa fa-thumbs-up"></i>
                 <span>{{ post.liked ? 'Liked' : 'Like' }}</span>
               </button>
