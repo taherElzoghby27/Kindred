@@ -3,8 +3,8 @@ import {HttpClient} from '@angular/common/http';
 import {PostRequest} from '../../model/post-request';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {PostsResponse} from '../../model/posts-response';
 import {PostResponse} from '../../model/post-response';
+import {GeneralResponse} from '../../model/general-response';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +29,7 @@ export class PostService {
     );
   }
 
-  getAllPosts(page: number, pageSize: number): Observable<PostsResponse> {
+  getAllPosts(page: number, pageSize: number): Observable<GeneralResponse<PostResponse>> {
     return this.http.get<any>(`${this.baseUrl}get-all-posts`, {
       params: {
         page: page.toString(),
@@ -40,14 +40,14 @@ export class PostService {
     );
   }
 
-  getMyPosts(page: number, pageSize: number): Observable<PostsResponse> {
-    return this.http.get<PostsResponse>(`${this.baseUrl}get-my-posts`, {
+  getMyPosts(page: number, pageSize: number): Observable<GeneralResponse<PostResponse>> {
+    return this.http.get<any>(`${this.baseUrl}get-my-posts`, {
       params: {
         page: page.toString(),
         pageSize: pageSize.toString(),
       }
     }).pipe(
-      map(response => response)
+      map(response => response.data.body)
     );
   }
 

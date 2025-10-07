@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {PostService} from '../../../../service/post/post.service';
-import {PostsResponse} from '../../../../model/posts-response';
+import {PostsResponse} from '../../../../model/general-response';
 import {PostResponse} from '../../../../model/post-response';
 import {ReactionService} from '../../../../service/reaction/reaction.service';
 import {ReactionRequestVm, ReactionType} from '../../../../model/reaction-request-vm';

@@ -1,4 +1,4 @@
-import { PostsResponse } from './posts-response';
+import { PostsResponse } from './general-response';
 
 describe('PostsResponse', () => {
   it('should create an instance', () => {
