@@ -17,13 +17,13 @@ export class CommentService {
   constructor(private http: HttpClient) {
   }
 
-  createComment(commentRequestVm: CommentRequestVm): Observable<any> {
+  createComment(commentRequestVm: CommentRequestVm): Observable<CommentResponseVm> {
     const body = {
       content: commentRequestVm.content,
       post_id: commentRequestVm.postId,
     };
     return this.http.post<any>(`${this.baseUrl}create-comment`, body).pipe(
-      map(response => response)
+      map(response => response.data.body)
     );
   }
 

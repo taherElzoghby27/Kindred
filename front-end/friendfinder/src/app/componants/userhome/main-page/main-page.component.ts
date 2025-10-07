@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {PostService} from '../../../../service/post/post.service';
-import {PostsResponse} from '../../../../model/general-response';
 import {PostResponse} from '../../../../model/post-response';
 import {ReactionService} from '../../../../service/reaction/reaction.service';
 import {ReactionRequestVm, ReactionType} from '../../../../model/reaction-request-vm';
+import {GeneralResponse} from '../../../../model/general-response';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogCommentsComponent} from '../dialog-comments/dialog-comments.component';
 
 @Component({
   selector: 'app-main-page',
@@ -13,14 +15,16 @@ import {ReactionRequestVm, ReactionType} from '../../../../model/reaction-reques
 export class MainPageComponent implements OnInit {
 
 
-  postsResponse: PostsResponse;
+  postsResponse: GeneralResponse<PostResponse>;
 
   newComment = '';
   messageAr = '';
   messageEn = '';
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
 
-  constructor(private postService: PostService, private reactionService: ReactionService) {
+  constructor(private postService: PostService,
+              private reactionService: ReactionService,
+              public dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -103,7 +107,7 @@ export class MainPageComponent implements OnInit {
   makeReact(reactionRequestVm: ReactionRequestVm): void {
     this.reactionService.makeReact(reactionRequestVm).subscribe(
       response => {
-        const postFounded = this.postsResponse.posts.find(p => p.id === reactionRequestVm.postId);
+        const postFounded = this.postsResponse.data.find(p => p.id === reactionRequestVm.postId);
         postFounded.liked = 1;
         postFounded.reactionsCount++;
       },
@@ -117,7 +121,7 @@ export class MainPageComponent implements OnInit {
   removeReact(postId: number): void {
     this.reactionService.removeReact(postId).subscribe(
       response => {
-        const postFounded = this.postsResponse.posts.find(p => p.id === postId);
+        const postFounded = this.postsResponse.data.find(p => p.id === postId);
         postFounded.liked = 0;
         postFounded.reactionsCount--;
       },
@@ -128,30 +132,13 @@ export class MainPageComponent implements OnInit {
     );
   }
 
-  // Add new comment
-  addComment(): void {
-    // if (this.newComment.trim()) {
-    //   const comment = {
-    //     author: 'You',
-    //     authorImage: 'assets/images/users/user-1.jpg',
-    //     timeAgo: 'now',
-    //     content: this.newComment.trim()
-    //   };
-    //   this.comments.push(comment);
-    //   this.post.comments++;
-    //   this.newComment = '';
-    // }
-  }
 
-  // Toggle comments visibility
-  toggleComments(): void {
-    // this.post.showComments = !this.post.showComments;
-  }
+  comments(postId: number): void {
+    const dialogRef = this.dialog.open(DialogCommentsComponent, {
+      width: '600px',
+      data: {post_id: postId}
+    });
 
-  // Handle enter key in comment input
-  onCommentKeyPress(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.addComment();
-    }
+    dialogRef.afterClosed().subscribe(result => {});
   }
 }

@@ -8,7 +8,7 @@
 
         <!-- Post Content
               ================================================= -->
-        <div *ngFor="let post of postsResponse.posts">
+        <div *ngFor="let post of postsResponse.data">
           <div class="post-content">
             <!-- Post Header -->
             <div class="post-header flex justify-between items-start mb-3">
@@ -70,7 +70,7 @@
               </div>
               <div class="comments-count" *ngIf="post.commentsCount > 0">
                 <a href="#" class="comments-link" (click)="toggleComments(); $event.preventDefault()">
-                  {{ post.comments }} comment{{ post.comments !== 1 ? 's' : '' }}
+                  {{ post.commentsCount }} comment{{ post.comments !== 1 ? 's' : '' }}
                 </a>
               </div>
             </div>
@@ -81,7 +81,7 @@
                 <i class="fa fa-thumbs-up"></i>
                 <span>{{ post.liked ? 'Liked' : 'Like' }}</span>
               </button>
-              <button class="action-btn comment-btn" (click)="toggleComments()">
+              <button class="action-btn comment-btn" (click)="comments(post.id)">
                 <i class="fa fa-comment"></i>
                 <span>Comment</span>
               </button>
@@ -89,34 +89,6 @@
                 <i class="fa fa-share"></i>
                 <span>Share</span>
               </button>
-            </div>
-
-            <!-- Comments Section -->
-            <div class="comments-section" *ngIf="post.commentsCount!=0">
-              <div class="comment" *ngFor="let comment of comments">
-                <img [src]="comment.authorImage" alt="" class="comment-avatar"/>
-                <div class="comment-content">
-                  <div class="comment-header">
-                    <a href="timeline.html" class="comment-author">{{ comment.author }}</a>
-                    <span class="comment-time">{{ comment.timeAgo }}</span>
-                  </div>
-                  <p class="comment-text">{{ comment.content }}</p>
-                </div>
-              </div>
-
-              <!-- Add Comment -->
-              <div class="add-comment">
-                <img src="assets/images/users/user-1.jpg" alt="" class="comment-avatar"/>
-                <div class="comment-input-container">
-                  <input
-                    type="text"
-                    class="comment-input"
-                    placeholder="Write a comment..."
-                    [(ngModel)]="newComment"
-                    (keypress)="onCommentKeyPress($event)"
-                  >
-                </div>
-              </div>
             </div>
           </div>
         </div>

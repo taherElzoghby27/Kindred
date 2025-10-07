@@ -1,0 +1,147 @@
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.close-button {
+  margin-right: -12px;
+}
+
+.dialog-content {
+  padding: 0 !important;
+  max-height: 500px;
+}
+
+.comments-container {
+  padding: 16px 24px;
+}
+
+.comment-item {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.comment-item:last-child {
+  border-bottom: none;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.comment-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.author-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #050505;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #65676b;
+}
+
+.comment-content {
+  margin-left: 52px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #050505;
+  margin-bottom: 8px;
+}
+
+.comment-actions {
+  margin-left: 52px;
+  display: flex;
+  gap: 8px;
+}
+
+.action-button {
+  font-size: 13px;
+  color: #65676b;
+  min-width: auto;
+  padding: 0 8px;
+  height: 32px;
+}
+
+.action-button mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+.action-button:hover {
+  background-color: #f2f2f2;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #65676b;
+}
+
+.empty-state mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #bdbdbd;
+  margin-bottom: 16px;
+}
+
+.dialog-actions {
+  padding: 16px 24px !important;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.comment-input {
+  flex: 1;
+  margin: 0;
+}
+
+.comment-input textarea {
+  font-size: 15px;
+  resize: none;
+}
+
+.post-button {
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+::ng-deep .mat-mdc-dialog-container {
+  padding: 0 !important;
+}

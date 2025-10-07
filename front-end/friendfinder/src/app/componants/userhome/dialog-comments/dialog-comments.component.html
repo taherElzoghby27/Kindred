@@ -1,0 +1,87 @@
+<!-- 🟦 Dialog Header -->
+<div class="dialog-header flex justify-between items-center border-b pb-2 mb-3">
+  <h2 mat-dialog-title class="text-lg font-semibold m-0">Comments</h2>
+  <button mat-icon-button (click)="onClose()" aria-label="Close comments dialog">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<!-- 🟩 Dialog Content -->
+<mat-dialog-content class="dialog-content max-h-[60vh] overflow-y-auto">
+
+  <!-- Comments List -->
+  <div class="comments-container space-y-4">
+
+    <!-- Single Comment -->
+    <div *ngFor="let comment of comments?.data"
+         class="comment-item p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition">
+
+      <!-- Header -->
+      <div class="comment-header flex items-center space-x-3 mb-2">
+        <img
+          [src]="unKnownImage"
+          [alt]="comment.account?.firstName || 'User avatar'"
+          class="avatar w-10 h-10 rounded-full object-cover"
+        />
+        <div class="comment-info">
+          <span class="author-name font-medium" *ngIf="comment.account!=null">
+            {{ comment.account?.firstName }} {{ comment.account?.lastName }}
+          </span>
+          <span class="author-name font-medium" *ngIf="comment.account==null">
+            {{ getCurrentUser() }}
+          </span>
+          <span class="timestamp text-sm text-gray-500 ml-2">
+            {{ getTimeAgo(comment.createdDate) }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="comment-content text-gray-800 whitespace-pre-line">
+        {{ comment.content }}
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!comments?.data?.length" class="empty-state flex flex-col items-center text-gray-500 py-6">
+      <mat-icon class="text-5xl mb-2">comment</mat-icon>
+      <p>No comments yet. Be the first to comment!</p>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+<!-- 🟨 Dialog Footer: Add Comment -->
+<mat-dialog-actions class="dialog-actions flex items-start gap-3 pt-3 border-t mt-3">
+
+  <!-- Avatar -->
+  <img
+    [src]="unKnownImage"
+    [alt]="getCurrentUser()"
+    class="avatar-small w-9 h-9 rounded-full object-cover mt-1"
+  />
+
+  <!-- Input -->
+  <mat-form-field appearance="outline" class="comment-input flex-1">
+    <mat-label>Write a comment...</mat-label>
+    <textarea
+      matInput
+      [(ngModel)]="newComment"
+      rows="2"
+      (keydown.enter)="$event.ctrlKey && addComment()"
+      placeholder="Press Ctrl + Enter to post"
+    ></textarea>
+  </mat-form-field>
+
+  <!-- Post Button -->
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="addComment()"
+    [disabled]="!newComment?.trim()"
+    class="post-button h-fit mt-1"
+  >
+    Post
+  </button>
+
+</mat-dialog-actions>

@@ -28,7 +28,14 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {APP_BASE_HREF} from '@angular/common';
 import {AuthInterceptor} from '../service/interceptors/auth.interceptor';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {DialogCommentsComponent} from './componants/userhome/dialog-comments/dialog-comments.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatDividerModule} from '@angular/material/divider';
 
 // http://localhost:4200
 
@@ -67,6 +74,7 @@ const routes: Routes = [
     TimeLineProfileComponent,
     TimeLineDetailesComponent,
     LoginComponent,
+    DialogCommentsComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
@@ -74,7 +82,14 @@ const routes: Routes = [
     HttpClientModule,
     FormsModule,
     NoopAnimationsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule,
+    MatIconModule,
+    MatInputModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatDividerModule
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},

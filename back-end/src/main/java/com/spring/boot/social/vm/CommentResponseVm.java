@@ -19,6 +19,7 @@ public class CommentResponseVm {
     private String content;
     @JsonProperty("post_id")
     private Long postId;
+    private AccountVm account;
     private String createdBy;
     private LocalDateTime updatedDate;
     private LocalDateTime createdDate;
