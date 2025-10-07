@@ -14,12 +14,17 @@ import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.CommentService;
 import com.spring.boot.social.services.PostService;
+import com.spring.boot.social.utils.PaginationHelper;
 import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.CommentRequestVm;
 import com.spring.boot.social.vm.CommentResponseVm;
+import com.spring.boot.social.vm.GeneralResponseVm;
 import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,15 +97,17 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseVm> getCommentsByPostId(Long postId) {
+    public GeneralResponseVm<CommentResponseVm> getCommentsByPostId(Long postId, int page, int size) {
         if (Objects.isNull(postId)) {
             throw new BadRequestException("post_id.comment.not_null");
         }
-        Optional<List<Comment>> result = commentRepo.findByPostId(postId);
+        Pageable pageable = PaginationHelper.getPageable(page, size);
+        Page<Comment> result = commentRepo.findByPostId(postId, pageable);
         if (result.isEmpty()) {
             throw new NotFoundResourceException("comments.not.found");
         }
-        return result.get().stream().map(CommentMapper.COMMENT_MAPPER::toCommentResponseVm).toList();
+        List<CommentResponseVm> comments = result.getContent().stream().map(CommentMapper.COMMENT_MAPPER::toCommentResponseVm).toList();
+        return new GeneralResponseVm<>(comments, result.getNumber() + 1, result.getSize());
     }
 
     @Override
@@ -130,4 +137,5 @@ public class CommentServiceImpl implements CommentService {
         }
         return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(result.get());
     }
+
 }

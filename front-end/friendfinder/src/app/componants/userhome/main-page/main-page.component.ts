@@ -90,14 +90,11 @@ export class MainPageComponent implements OnInit {
     );
   }
 
-
   // Toggle like functionality
   toggleLike(post: PostResponse): void {
     if (post.liked) {
-      console.log('liked');
       this.removeReact(post.id);
     } else {
-      console.log('un liked');
       const reactionRequest = new ReactionRequestVm(post.id, ReactionType.LIKE);
       this.makeReact(reactionRequest);
     }
@@ -109,8 +106,6 @@ export class MainPageComponent implements OnInit {
         const postFounded = this.postsResponse.posts.find(p => p.id === reactionRequestVm.postId);
         postFounded.liked = 1;
         postFounded.reactionsCount++;
-        // this.postsResponse.posts.isLiked = !this.post.isLiked;
-        // this.post.likes += this.post.isLiked ? 1 : -1;
       },
       errors => {
         this.messageAr = errors.error.bundleMessage.message_ar;

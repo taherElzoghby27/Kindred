@@ -1,6 +1,8 @@
 package com.spring.boot.social.repositories;
 
 import com.spring.boot.social.entity.Comment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +17,7 @@ public interface CommentRepo extends JpaRepository<Comment, Long> {
 
     Optional<Comment> findByIdAndAccountId(Long id, Long accountId);
 
-    Optional<List<Comment>> findByPostId(Long postId);
+    Page<Comment> findByPostId(Long postId, Pageable pageable);
 
     @Modifying
     @Query(value = "delete from Comment c where c.id=:id")

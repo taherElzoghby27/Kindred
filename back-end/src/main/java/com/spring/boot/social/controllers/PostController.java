@@ -4,7 +4,7 @@ import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.vm.PostRequestVm;
-import com.spring.boot.social.vm.PostsResponseVm;
+import com.spring.boot.social.vm.GeneralResponseVm;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -37,18 +37,18 @@ public class PostController {
     }
 
     @Operation(summary = "Get My Posts", description = "Retrieve posts created by the current user")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = PostsResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = GeneralResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/get-my-posts")
-    public SuccessDto<ResponseEntity<PostsResponseVm>> getMyPosts(@RequestParam int page, @RequestParam int pageSize) {
+    public SuccessDto<ResponseEntity<GeneralResponseVm>> getMyPosts(@RequestParam int page, @RequestParam int pageSize) {
         return new SuccessDto<>(ResponseEntity.ok(postService.getPostsByAccount(page, pageSize)));
     }
 
     @Operation(summary = "Get All Posts", description = "Retrieve all posts with pagination")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = PostsResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = GeneralResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/get-all-posts")
-    public SuccessDto<ResponseEntity<PostsResponseVm>> getAllPosts(@RequestParam int page, @RequestParam int pageSize) {
+    public SuccessDto<ResponseEntity<GeneralResponseVm>> getAllPosts(@RequestParam int page, @RequestParam int pageSize) {
         return new SuccessDto<>(ResponseEntity.ok(postService.getPosts(page, pageSize)));
     }
 

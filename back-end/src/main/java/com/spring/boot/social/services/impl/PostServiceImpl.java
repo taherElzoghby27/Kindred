@@ -12,15 +12,15 @@ import com.spring.boot.social.repositories.ReactionPostRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.PostService;
+import com.spring.boot.social.utils.PaginationHelper;
 import com.spring.boot.social.utils.SecurityUtils;
 import com.spring.boot.social.utils.LocalService;
 import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.PostRequestVm;
-import com.spring.boot.social.vm.PostsResponseVm;
+import com.spring.boot.social.vm.GeneralResponseVm;
 import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -60,39 +60,32 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public PostsResponseVm getPostsByAccount(int page, int size) {
+    public GeneralResponseVm<PostDto> getPostsByAccount(int page, int size) {
         //get current account
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        Pageable pageable = getPageable(page, size);
+        Pageable pageable = PaginationHelper.getPageable(page, size);
         Page<Post> posts = postRepo.findAllByAccountIdOrderByCreatedDateDesc(pageable, accountDto.getId());
         return getPostsResponseVm(accountDto, posts);
     }
 
     @Override
-    public PostsResponseVm getPosts(int page, int size) {
-        Pageable pageable = getPageable(page, size);
+    public GeneralResponseVm<PostDto> getPosts(int page, int size) {
+        Pageable pageable = PaginationHelper.getPageable(page, size);
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
         Page<Post> posts = postRepo.findAllByOrderByCreatedDateDesc(pageable);
         return getPostsResponseVm(accountDto, posts);
     }
 
-    private PostsResponseVm getPostsResponseVm(AccountDto accountDto, Page<Post> posts) {
+    private GeneralResponseVm<PostDto> getPostsResponseVm(AccountDto accountDto, Page<Post> posts) {
         updateLikedFields(accountDto, posts.getContent());
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
-        return new PostsResponseVm(postsDto, posts.getNumber() + 1, posts.getSize());
+        return new GeneralResponseVm<>(postsDto, posts.getNumber() + 1, posts.getSize());
     }
 
     private void updateLikedFields(AccountDto accountDto, List<Post> posts) {
         //posts liked (ids)
         List<Long> liked = reactionPostRepo.findPostIdsLikedByAccount(accountDto.getId());
         posts.forEach(p -> p.setLiked(liked.contains(p.getId()) ? 1L : 0L));
-    }
-
-    private Pageable getPageable(int page, int size) {
-        if (page < 1) {
-            throw new BadRequestException("error.min.one.page");
-        }
-        return PageRequest.of(page - 1, size);
     }
 
     @Override

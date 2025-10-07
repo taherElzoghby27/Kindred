@@ -2,14 +2,14 @@ package com.spring.boot.social.services;
 
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.vm.PostRequestVm;
-import com.spring.boot.social.vm.PostsResponseVm;
+import com.spring.boot.social.vm.GeneralResponseVm;
 
 public interface PostService {
     void createPost(PostRequestVm postRequestVm);
 
-    PostsResponseVm getPostsByAccount(int page, int size);
+    GeneralResponseVm getPostsByAccount(int page, int size);
 
-    PostsResponseVm getPosts(int page, int size);
+    GeneralResponseVm getPosts(int page, int size);
 
     void deletePost(Long id);
 

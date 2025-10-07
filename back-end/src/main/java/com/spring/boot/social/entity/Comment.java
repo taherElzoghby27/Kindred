@@ -18,9 +18,9 @@ public class Comment extends BaseEntity<String> {
     @NotEmpty
     private String content;
     @JoinColumn(nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
     @JoinColumn(nullable = false)
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 }

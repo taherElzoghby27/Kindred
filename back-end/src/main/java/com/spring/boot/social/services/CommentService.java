@@ -3,8 +3,7 @@ package com.spring.boot.social.services;
 import com.spring.boot.social.dto.CommentDto;
 import com.spring.boot.social.vm.CommentRequestVm;
 import com.spring.boot.social.vm.CommentResponseVm;
-
-import java.util.List;
+import com.spring.boot.social.vm.GeneralResponseVm;
 
 public interface CommentService {
     CommentResponseVm createComment(CommentRequestVm commentRequestVm);
@@ -13,7 +12,7 @@ public interface CommentService {
 
     void deleteComment(Long commentId);
 
-    List<CommentResponseVm> getCommentsByPostId(Long postId);
+    GeneralResponseVm<CommentResponseVm> getCommentsByPostId(Long postId, int page, int size);
 
     CommentDto getCommentByIdBasedOnAccount(Long commentId, Long postId);
 
