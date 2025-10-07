@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
         if (!passwordEncoder.matches(accountDto.getPassword(), accountExist.getPassword())) {
             throw new BadRequestException("wrong.password");
         }
-        return getAccountResponseVm(accountDto);
+        return getAccountResponseVm(accountExist);
     }
 
     private AccountResponseVm getAccountResponseVm(AccountDto accountDto) {

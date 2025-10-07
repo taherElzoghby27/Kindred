@@ -22,6 +22,10 @@ export class AuthService {
     return sessionStorage.getItem('userName');
   }
 
+  getAccountId(): string {
+    return sessionStorage.getItem('account_id');
+  }
+
   logout(): void {
     sessionStorage.removeItem('token');
   }

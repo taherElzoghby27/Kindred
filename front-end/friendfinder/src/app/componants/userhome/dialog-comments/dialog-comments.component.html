@@ -17,23 +17,35 @@
          class="comment-item p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition">
 
       <!-- Header -->
-      <div class="comment-header flex items-center space-x-3 mb-2">
-        <img
-          [src]="unKnownImage"
-          [alt]="comment.account?.firstName || 'User avatar'"
-          class="avatar w-10 h-10 rounded-full object-cover"
-        />
-        <div class="comment-info">
-          <span class="author-name font-medium" *ngIf="comment.account!=null">
-            {{ comment.account?.firstName }} {{ comment.account?.lastName }}
-          </span>
-          <span class="author-name font-medium" *ngIf="comment.account==null">
-            {{ getCurrentUser() }}
-          </span>
-          <span class="timestamp text-sm text-gray-500 ml-2">
-            {{ getTimeAgo(comment.createdDate) }}
-          </span>
+      <div class="comment-header flex justify-between items-start mb-2">
+        <div class="flex items-center space-x-3">
+          <img
+            [src]="unKnownImage"
+            [alt]="comment.account?.firstName || 'User avatar'"
+            class="avatar w-10 h-10 rounded-full object-cover"
+          />
+          <div class="comment-info">
+            <span class="author-name font-medium" *ngIf="comment.account != null">
+              {{ comment.account?.firstName }} {{ comment.account?.lastName }}
+            </span>
+            <span class="author-name font-medium" *ngIf="comment.account == null">
+              {{ getCurrentUser() }}
+            </span>
+            <span class="timestamp text-sm text-gray-500 ml-2">
+              {{ getTimeAgo(comment.createdDate) }}
+            </span>
+          </div>
         </div>
+        <!-- 🗑️ Delete Button (only for current user's comments) -->
+        <button
+          mat-icon-button
+          color="warn"
+          *ngIf="isCurrentUserComment(comment)"
+          (click)="confirmDelete(comment.id)"
+          aria-label="Delete comment"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
       </div>
 
       <!-- Content -->

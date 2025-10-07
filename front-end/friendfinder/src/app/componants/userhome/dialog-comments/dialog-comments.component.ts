@@ -72,6 +72,24 @@ export class DialogCommentsComponent implements OnInit {
     }
   }
 
+  isCurrentUserComment(comment: any): boolean {
+    return comment.account?.id.toString() === this.authService.getAccountId();
+  }
+
+  confirmDelete(commentId: number): void {
+    this.commentService.deleteComment(commentId).subscribe({
+      next: () => {
+        this.comments.data = this.comments.data.filter(
+          (c: any) => c.id !== commentId
+        );
+      },
+      error: (errors) => {
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        this.messageEn = errors.error.bundleMessage.message_en;
+      }
+    });
+  }
+
   // Handle enter key in comment input
   onCommentKeyPress(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
