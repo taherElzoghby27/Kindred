@@ -24,9 +24,12 @@ import java.util.Objects;
 
 @Component
 public class AuthFilter extends OncePerRequestFilter {
-    @Lazy
-    @Autowired
     private TokenHandler tokenHandler;
+
+    @Autowired
+    public void setTokenHandler(@Lazy TokenHandler tokenHandler) {
+        this.tokenHandler = tokenHandler;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {

@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Setter
 @Getter
@@ -17,6 +16,6 @@ public class PostRequestVm {
     @Schema(description = "Content of the post", example = "This is my first post!")
     private String content;
 
-    @Schema(description = "Media file (video or photo)")
-    private MultipartFile media;
+    @Schema(description = "Media file name (video or photo)")
+    private String media;
 }

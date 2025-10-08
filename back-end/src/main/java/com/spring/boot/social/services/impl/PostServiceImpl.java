@@ -14,7 +14,6 @@ import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.services.PostService;
 import com.spring.boot.social.utils.PaginationHelper;
 import com.spring.boot.social.utils.SecurityUtils;
-import com.spring.boot.social.utils.LocalService;
 import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.PostRequestVm;
 import com.spring.boot.social.vm.GeneralResponseVm;
@@ -47,8 +46,7 @@ public class PostServiceImpl implements PostService {
         Account account = accountService.getCurrentAccount();
         Post post = PostMapper.POST_INSTANCE.toPost(postRequestVm);
         if (Objects.nonNull(postRequestVm.getMedia())) {
-            post.setMedia(postRequestVm.getMedia().getOriginalFilename());
-            LocalService.uploadFile(postRequestVm.getMedia());
+            post.setMedia(postRequestVm.getMedia());
         }
         //set account to post
         post.setAccount(account);
@@ -146,11 +144,11 @@ public class PostServiceImpl implements PostService {
         if (Objects.isNull(post)) {
             throw new BadRequestException("post.not.found");
         }
-        if (postRequestVm.getContent().equals(post.getContent()) && post.getMedia().equals(postRequestVm.getMedia().getOriginalFilename())) {
+        if (postRequestVm.getContent().equals(post.getContent()) && post.getMedia().equals(postRequestVm.getMedia())) {
             throw new BadRequestException("no.changes");
         }
         if (Objects.nonNull(postRequestVm.getMedia())) {
-            post.setMedia(postRequestVm.getMedia().getOriginalFilename());
+            post.setMedia(postRequestVm.getMedia());
         }
         if (Objects.nonNull(postRequestVm.getContent())) {
             post.setContent(postRequestVm.getContent());

@@ -10,20 +10,18 @@ import com.spring.boot.social.repositories.ActivityRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
 import com.spring.boot.social.vm.RequestActivityVm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class ActivityServiceImpl implements ActivityService {
-    @Autowired
-    private ActivityRepo activityRepo;
-    @Lazy
-    @Autowired
-    private AccountService accountService;
+
+    private final ActivityRepo activityRepo;
+    private final AccountService accountService;
 
     @Override
     public List<ActivityDto> getAllActivities() {

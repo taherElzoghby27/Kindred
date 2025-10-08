@@ -39,7 +39,6 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepo commentRepo;
     private final PostService postService;
     private final AccountService accountService;
-    @Lazy
     private final ActivityService activityService;
 
     @Override

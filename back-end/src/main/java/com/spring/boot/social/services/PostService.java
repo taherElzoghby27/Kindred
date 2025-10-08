@@ -7,9 +7,9 @@ import com.spring.boot.social.vm.GeneralResponseVm;
 public interface PostService {
     void createPost(PostRequestVm postRequestVm);
 
-    GeneralResponseVm getPostsByAccount(int page, int size);
+    GeneralResponseVm<PostDto> getPostsByAccount(int page, int size);
 
-    GeneralResponseVm getPosts(int page, int size);
+    GeneralResponseVm<PostDto> getPosts(int page, int size);
 
     void deletePost(Long id);
 

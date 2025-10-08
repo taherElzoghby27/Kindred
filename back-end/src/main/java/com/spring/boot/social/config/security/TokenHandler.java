@@ -21,8 +21,13 @@ public class TokenHandler {
     private Duration time;
     private JwtBuilder jwtBuilder;
     private JwtParser jwtParser;
-    @Autowired
+
     private AccountService accountService;
+
+    @Autowired
+    public void setAccountService(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     public TokenHandler(JWTToken jwtToken) {
         this.secret = jwtToken.getSecret();
