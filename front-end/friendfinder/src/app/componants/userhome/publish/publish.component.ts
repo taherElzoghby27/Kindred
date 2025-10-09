@@ -34,7 +34,7 @@ export class PublishComponent {
         this.showSnackBar('Published', SnackbarPanelClass.Success);
         this.clearData();
       }, errors => {
-        this.showSnackBar(errors.bundleMessage.message_en, SnackbarPanelClass.Error);
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       });
   }
 
