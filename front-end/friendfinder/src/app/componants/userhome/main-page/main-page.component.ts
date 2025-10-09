@@ -6,6 +6,8 @@ import {ReactionRequestVm, ReactionType} from '../../../../model/reaction-reques
 import {GeneralResponse} from '../../../../model/general-response';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogCommentsComponent} from '../dialog-comments/dialog-comments.component';
+import {PostRequest} from '../../../../model/post-request';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-main-page',
@@ -16,15 +18,20 @@ export class MainPageComponent implements OnInit {
 
 
   postsResponse: GeneralResponse<PostResponse>;
+  isDropdownOpen = false;
 
   newComment = '';
   messageAr = '';
   messageEn = '';
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
+  edit = false;
+  editId: number;
+  errorMessage = '';
+  errorBackend: boolean;
 
   constructor(private postService: PostService,
               private reactionService: ReactionService,
-              public dialog: MatDialog) {
+              public dialog: MatDialog, private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -34,6 +41,7 @@ export class MainPageComponent implements OnInit {
   getBaseUrlForMedia(): string {
     return this.postService.baseUrlMedia;
   }
+
 
   getTimeAgo(dateTime: string): string {
     const now = new Date();
@@ -80,6 +88,68 @@ export class MainPageComponent implements OnInit {
 
   isVideo(media: string): boolean {
     return /\.(mp4|webm|ogg)$/i.test(media);
+  }
+
+  closeDropdown(): void {
+    this.edit = false;
+    this.isDropdownOpen = false;
+    this.clearData();
+  }
+
+  cancelEditing(): void {
+    this.closeDropdown();
+  }
+
+  onEdit(post: PostResponse): void {
+    this.edit = true;
+    this.editId = post.id;
+  }
+
+  saveEdit(postResponse: PostResponse): void {
+    const post = new PostRequest(postResponse.id, postResponse.content, postResponse.media);
+    this.postService.updatePost(post).subscribe(
+      success => {
+        this.closeDropdown();
+        this.snackBar.open('Updated', 'Close', {
+          duration: 3000, // milliseconds
+          verticalPosition: 'bottom', // or 'top'
+          panelClass: ['snackbar-success']
+        });
+        this.clearData();
+      }, errors => {
+        this.errorBackend = true;
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        this.messageEn = errors.error.bundleMessage.message_en;
+      });
+  }
+
+  clearData(): void {
+    this.errorBackend = false;
+    this.errorMessage = '';
+    this.messageAr = '';
+    this.messageEn = '';
+  }
+
+  onDelete(post: PostResponse): void {
+    this.postService.deletePost(post.id).subscribe(
+      success => {
+        this.removePostLocal(post.id);
+        this.closeDropdown();
+        this.snackBar.open('Deleted', 'Close', {
+          duration: 3000, // milliseconds
+          verticalPosition: 'bottom', // or 'top'
+          panelClass: ['snackbar-success']
+        });
+        this.clearData();
+      }, errors => {
+        this.errorBackend = true;
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        this.messageEn = errors.error.bundleMessage.message_en;
+      });
+  }
+
+  removePostLocal(postId: number): void {
+    this.postsResponse.data = this.postsResponse.data.filter(p => p.id !== postId);
   }
 
   getAllPosts(): void {

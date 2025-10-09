@@ -30,7 +30,7 @@ export class PublishComponent {
     if (!this.validateFields()) {
       return;
     }
-    const post = new PostRequest(null, this.content, this.file.name);
+    const post = new PostRequest(null, this.content, this.file == null ? '' : this.file.name);
     this.postService.createPost(post).subscribe(
       success => {
         this.snackBar.open('Published', 'Close', {

@@ -147,12 +147,7 @@ public class PostServiceImpl implements PostService {
         if (postRequestVm.getContent().equals(post.getContent()) && post.getMedia().equals(postRequestVm.getMedia())) {
             throw new BadRequestException("no.changes");
         }
-        if (Objects.nonNull(postRequestVm.getMedia())) {
-            post.setMedia(postRequestVm.getMedia());
-        }
-        if (Objects.nonNull(postRequestVm.getContent())) {
-            post.setContent(postRequestVm.getContent());
-        }
+        post.setContent(postRequestVm.getContent());
         post = postRepo.save(post);
         return PostMapper.POST_INSTANCE.toPostDto(post);
     }

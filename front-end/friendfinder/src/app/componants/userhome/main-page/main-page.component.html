@@ -26,17 +26,57 @@
                   <p class="post-time text-sm text-gray-500">{{ getTimeAgo(post.createdDate) }}</p>
                 </div>
               </div>
+              <!-- Use fixed positioning -->
+              <div class="relative inline-block">
+                <button
+                  class="btn-options text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
+                  (click)="dropdown.hidden = !dropdown.hidden">
+                  <i class="fa fa-ellipsis-h"></i>
+                </button>
 
-              <!-- Post Options -->
-              <button class="btn-options text-gray-500 hover:text-gray-700">
-                <i class="fa fa-ellipsis-h"></i>
-              </button>
+                <div #dropdown
+                     hidden
+                     class="fixed mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50"
+                     [style.top.px]="dropdownTop"
+                     [style.right.px]="dropdownRight">
+                  <div class="py-1">
+                    <button (click)="onEdit(post); dropdown.hidden = true"
+                            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3">
+                      <i class="fa fa-edit text-blue-500"></i>
+                      <span>Edit Post</span>
+                    </button>
+                    <div class="border-t border-gray-200 my-1"></div>
+                    <button (click)="onDelete(post); dropdown.hidden = true"
+                            class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-3">
+                      <i class="fa fa-trash"></i>
+                      <span>Delete Post</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
 
             <!-- Post Text -->
-            <div class="post-text" *ngIf="post.content">
+            <div class="post-text" *ngIf="post.content&&!(edit&&editId===post.id)">
               <p>{{ post.content }}</p>
+            </div>
+            <!-- Post Text - Edit Mode -->
+            <div class="post-text" *ngIf="edit&&editId===post.id">
+              <textarea
+                [(ngModel)]="post.content"
+                class="edit-textarea"
+                [placeholder]="post.content==null?'what\'s in your mind':post.content"
+                rows="4">
+              </textarea>
+              <div class="edit-actions">
+                <button class="btn-cancel" (click)="closeDropdown()">
+                  Cancel
+                </button>
+                <button class="btn-save" (click)="saveEdit(post)">
+                  Save Changes
+                </button>
+              </div>
             </div>
 
             <!-- Post Image -->
