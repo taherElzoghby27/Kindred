@@ -139,6 +139,12 @@ export class MainPageComponent implements OnInit {
       data: {post_id: postId}
     });
 
-    dialogRef.afterClosed().subscribe(result => {});
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('Name:', result.countComments);
+        const postFounded = this.postsResponse.data.find(p => p.id === result.postId);
+        postFounded.commentsCount += result.countComments;
+      }
+    });
   }
 }

@@ -20,6 +20,7 @@ export class DialogCommentsComponent implements OnInit {
   comments: GeneralResponse<CommentResponseVm>;
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
   newComment: string;
+  countComments = 0;
 
   constructor(private commentService: CommentService,
               public dialogRef: MatDialogRef<DialogCommentsComponent>,
@@ -33,7 +34,10 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   onClose(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({
+      countComments: this.countComments,
+      postId: this.data.post_id,
+    });
   }
 
   getAllComments(): void {
@@ -63,6 +67,7 @@ export class DialogCommentsComponent implements OnInit {
           }
           this.comments.data.push(response);
           this.newComment = '';
+          this.countComments++;
         },
         errors => {
           this.messageAr = errors.error.bundleMessage.message_ar;
@@ -82,6 +87,7 @@ export class DialogCommentsComponent implements OnInit {
         this.comments.data = this.comments.data.filter(
           (c: any) => c.id !== commentId
         );
+        this.countComments--;
       },
       error: (errors) => {
         this.messageAr = errors.error.bundleMessage.message_ar;
