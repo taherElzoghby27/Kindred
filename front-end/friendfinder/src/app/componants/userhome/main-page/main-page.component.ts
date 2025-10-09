@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DialogCommentsComponent} from '../dialog-comments/dialog-comments.component';
 import {PostRequest} from '../../../../model/post-request';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
 
 @Component({
   selector: 'app-main-page',
@@ -19,15 +20,9 @@ export class MainPageComponent implements OnInit {
 
   postsResponse: GeneralResponse<PostResponse>;
   isDropdownOpen = false;
-
-  newComment = '';
-  messageAr = '';
-  messageEn = '';
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
   edit = false;
   editId: number;
-  errorMessage = '';
-  errorBackend: boolean;
 
   constructor(private postService: PostService,
               private reactionService: ReactionService,
@@ -93,7 +88,6 @@ export class MainPageComponent implements OnInit {
   closeDropdown(): void {
     this.edit = false;
     this.isDropdownOpen = false;
-    this.clearData();
   }
 
   onEditPost(post: PostResponse): void {
@@ -106,24 +100,10 @@ export class MainPageComponent implements OnInit {
     this.postService.updatePost(post).subscribe(
       success => {
         this.closeDropdown();
-        this.snackBar.open('Updated', 'Close', {
-          duration: 3000, // milliseconds
-          verticalPosition: 'bottom', // or 'top'
-          panelClass: ['snackbar-success']
-        });
-        this.clearData();
+        this.showSnackBar('Updated', SnackbarPanelClass.Success);
       }, errors => {
-        this.errorBackend = true;
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       });
-  }
-
-  clearData(): void {
-    this.errorBackend = false;
-    this.errorMessage = '';
-    this.messageAr = '';
-    this.messageEn = '';
   }
 
   onDeletePost(post: PostResponse): void {
@@ -131,16 +111,9 @@ export class MainPageComponent implements OnInit {
       success => {
         this.removePostLocal(post.id);
         this.closeDropdown();
-        this.snackBar.open('Deleted', 'Close', {
-          duration: 3000, // milliseconds
-          verticalPosition: 'bottom', // or 'top'
-          panelClass: ['snackbar-success']
-        });
-        this.clearData();
+        this.showSnackBar('Deleted', SnackbarPanelClass.Success);
       }, errors => {
-        this.errorBackend = true;
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       });
   }
 
@@ -154,8 +127,7 @@ export class MainPageComponent implements OnInit {
         this.postsResponse = response;
       },
       errors => {
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     );
   }
@@ -178,8 +150,7 @@ export class MainPageComponent implements OnInit {
         postFounded.reactionsCount++;
       },
       errors => {
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     );
   }
@@ -192,8 +163,7 @@ export class MainPageComponent implements OnInit {
         postFounded.reactionsCount--;
       },
       errors => {
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     );
   }
@@ -211,6 +181,14 @@ export class MainPageComponent implements OnInit {
         const postFounded = this.postsResponse.data.find(p => p.id === result.postId);
         postFounded.commentsCount += result.countComments;
       }
+    });
+  }
+
+  showSnackBar(message: string, snackType: SnackbarPanelClass): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000, // milliseconds
+      verticalPosition: 'bottom', // or 'top'
+      panelClass: [snackType]
     });
   }
 }
