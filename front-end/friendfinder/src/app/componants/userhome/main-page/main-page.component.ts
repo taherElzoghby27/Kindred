@@ -96,16 +96,12 @@ export class MainPageComponent implements OnInit {
     this.clearData();
   }
 
-  cancelEditing(): void {
-    this.closeDropdown();
-  }
-
-  onEdit(post: PostResponse): void {
+  onEditPost(post: PostResponse): void {
     this.edit = true;
     this.editId = post.id;
   }
 
-  saveEdit(postResponse: PostResponse): void {
+  savePostEdit(postResponse: PostResponse): void {
     const post = new PostRequest(postResponse.id, postResponse.content, postResponse.media);
     this.postService.updatePost(post).subscribe(
       success => {
@@ -130,7 +126,7 @@ export class MainPageComponent implements OnInit {
     this.messageEn = '';
   }
 
-  onDelete(post: PostResponse): void {
+  onDeletePost(post: PostResponse): void {
     this.postService.deletePost(post.id).subscribe(
       success => {
         this.removePostLocal(post.id);

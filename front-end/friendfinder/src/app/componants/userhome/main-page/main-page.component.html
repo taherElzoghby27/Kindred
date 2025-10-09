@@ -40,13 +40,13 @@
                      [style.top.px]="dropdownTop"
                      [style.right.px]="dropdownRight">
                   <div class="py-1">
-                    <button (click)="onEdit(post); dropdown.hidden = true"
+                    <button (click)="onEditPost(post); dropdown.hidden = true"
                             class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3">
                       <i class="fa fa-edit text-blue-500"></i>
                       <span>Edit Post</span>
                     </button>
                     <div class="border-t border-gray-200 my-1"></div>
-                    <button (click)="onDelete(post); dropdown.hidden = true"
+                    <button (click)="onDeletePost(post); dropdown.hidden = true"
                             class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-3">
                       <i class="fa fa-trash"></i>
                       <span>Delete Post</span>
@@ -73,7 +73,7 @@
                 <button class="btn-cancel" (click)="closeDropdown()">
                   Cancel
                 </button>
-                <button class="btn-save" (click)="saveEdit(post)">
+                <button class="btn-save" (click)="savePostEdit(post)">
                   Save Changes
                 </button>
               </div>

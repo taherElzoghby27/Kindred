@@ -16,4 +16,5 @@ public class CommentDto {
     private String createdBy;
     private LocalDateTime createdDate;
     private PostDto post;
+    private AccountDto account;
 }

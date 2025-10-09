@@ -21,6 +21,9 @@ export class DialogCommentsComponent implements OnInit {
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
   newComment: string;
   countComments = 0;
+  // Edit state
+  editingCommentId: number | null = null;
+  editedContent = '';
 
   constructor(private commentService: CommentService,
               public dialogRef: MatDialogRef<DialogCommentsComponent>,
@@ -103,9 +106,31 @@ export class DialogCommentsComponent implements OnInit {
     }
   }
 
-  // Toggle comments visibility
-  toggleComments(): void {
-    // this.post.showComments = !this.post.showComments;
+  startEdit(comment: any): void {
+    this.editingCommentId = comment.id;
+    this.editedContent = comment.content;
+  }
+
+  cancelEdit(): void {
+    this.editingCommentId = null;
+    this.editedContent = null;
+  }
+
+  saveEdit(commentResponse: CommentResponseVm): void {
+    const comment = new CommentRequestVm(
+      commentResponse.content,
+      commentResponse.post_id,
+      commentResponse.id,
+    );
+    this.commentService.updateComment(comment).subscribe(
+      response => {
+        this.cancelEdit();
+      },
+      errors => {
+        this.messageAr = errors.error.bundleMessage.message_ar;
+        this.messageEn = errors.error.bundleMessage.message_en;
+      },
+    );
   }
 
   getTimeAgo(input: string | Date): string {

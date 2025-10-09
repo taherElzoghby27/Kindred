@@ -37,10 +37,21 @@
           </div>
         </div>
         <!-- 🗑️ Delete Button (only for current user's comments) -->
+        <!-- Edit Button -->
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="startEdit(comment)"
+          [disabled]="editingCommentId === comment.id"
+          aria-label="Edit comment"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+
+        <!-- Delete Button -->
         <button
           mat-icon-button
           color="warn"
-          *ngIf="isCurrentUserComment(comment)"
           (click)="confirmDelete(comment.id)"
           aria-label="Delete comment"
         >
@@ -49,8 +60,25 @@
       </div>
 
       <!-- Content -->
-      <div class="comment-content text-gray-800 whitespace-pre-line">
+      <div class="comment-content text-gray-800 whitespace-pre-line"
+           *ngIf="editingCommentId==null||editingCommentId!==comment.id">
         {{ comment.content }}
+      </div>
+      <div class="post-text" *ngIf="editingCommentId!=null&&editingCommentId===comment.id">
+              <textarea
+                [(ngModel)]="comment.content"
+                class="edit-textarea"
+                [placeholder]="comment.content==null?'what\'s in your mind':comment.content"
+                rows="4">
+              </textarea>
+        <div class="edit-actions">
+          <button class="btn-cancel" (click)="cancelEdit()">
+            Cancel
+          </button>
+          <button class="btn-save" (click)="saveEdit(comment)">
+            Save Changes
+          </button>
+        </div>
       </div>
     </div>
 

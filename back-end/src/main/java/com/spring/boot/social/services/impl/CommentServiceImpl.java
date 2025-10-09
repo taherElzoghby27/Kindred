@@ -4,6 +4,7 @@ import com.spring.boot.social.dto.CommentDto;
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
+import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.mappers.CommentMapper;
 import com.spring.boot.social.mappers.PostMapper;
 import com.spring.boot.social.entity.Comment;
@@ -71,14 +72,16 @@ public class CommentServiceImpl implements CommentService {
         if (Objects.isNull(commentRequestVm.getId())) {
             throw new BadRequestException("id.comment.not_null");
         }
-        CommentDto oldCommentDto = getCommentByIdBasedOnAccount(commentRequestVm.getId(), commentRequestVm.getPostId());
+        CommentDto oldCommentDto = getCommentByIdAndPostId(commentRequestVm.getId(), commentRequestVm.getPostId());
         if (oldCommentDto.getContent().equals(commentRequestVm.getContent())) {
             throw new BadRequestException("no.changes");
         }
         oldCommentDto.setContent(commentRequestVm.getContent());
         Post post = PostMapper.POST_INSTANCE.toPost(oldCommentDto.getPost());
         Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
+        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(oldCommentDto.getAccount());
         comment.setPost(post);
+        comment.setAccount(account);
         comment = commentRepo.save(comment);
         return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
     }
@@ -110,7 +113,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getCommentByIdBasedOnAccount(Long commentId, Long postId) {
+    public CommentDto getCommentByIdAndPostId(Long commentId, Long postId) {
         if (Objects.isNull(commentId)) {
             throw new BadRequestException("id.comment.not_null");
         }
