@@ -45,11 +45,7 @@
     </div>
     <p>Loading media...</p>
   </div>
-  <div *ngIf="errorBackend" class="mt-2 text-center">
-    <p>{{ errorEn }}</p>
-    <p>{{ errorAr }}</p>
-  </div>
-  <div *ngIf="!errorBackend" class="mt-2 text-center">
+  <div *ngIf="errorMessage!==''&&errorMessage!=null" class="mt-2 text-center">
     <p>{{ errorMessage }}</p>
   </div>
 

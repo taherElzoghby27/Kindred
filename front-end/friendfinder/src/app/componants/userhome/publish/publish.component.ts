@@ -2,6 +2,7 @@ import {Component, ElementRef, ViewChild} from '@angular/core';
 import {PostService} from '../../../../service/post/post.service';
 import {PostRequest} from '../../../../model/post-request';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
 
 @Component({
   selector: 'app-publish',
@@ -18,9 +19,6 @@ export class PublishComponent {
   loading = false;
   content: string;
   errorMessage = '';
-  errorBackend: boolean;
-  errorAr = '';
-  errorEn = '';
 
   constructor(private postService: PostService, private snackBar: MatSnackBar) {
   }
@@ -33,30 +31,22 @@ export class PublishComponent {
     const post = new PostRequest(null, this.content, this.file == null ? '' : this.file.name);
     this.postService.createPost(post).subscribe(
       success => {
-        this.snackBar.open('Published', 'Close', {
-          duration: 3000, // milliseconds
-          verticalPosition: 'bottom', // or 'top'
-          panelClass: ['snackbar-success']
-        });
+        this.showSnackBar('Published', SnackbarPanelClass.Success);
         this.clearData();
       }, errors => {
-        this.errorBackend = true;
-        this.errorAr = errors.error.bundleMessage.message_ar;
-        this.errorEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.bundleMessage.message_en, SnackbarPanelClass.Error);
       });
   }
 
   validateFields(): boolean {
     if (!this.selectedFileName && !this.content) {
       this.errorMessage = 'One Required';
-      this.errorBackend = false;
       return false;
     }
     return true;
   }
 
   clearData(): void {
-    this.errorBackend = false;
     this.errorMessage = '';
     this.selectedFileName = null;
     this.content = null;
@@ -87,5 +77,13 @@ export class PublishComponent {
       this.loading = false;
     };
     reader.readAsDataURL(file);
+  }
+
+  showSnackBar(message: string, snackType: SnackbarPanelClass): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000, // milliseconds
+      verticalPosition: 'bottom', // or 'top'
+      panelClass: [snackType]
+    });
   }
 }
