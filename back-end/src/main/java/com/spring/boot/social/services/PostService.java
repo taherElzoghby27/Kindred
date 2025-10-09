@@ -11,6 +11,8 @@ public interface PostService {
 
     GeneralResponseVm<PostDto> getPosts(int page, int size);
 
+    GeneralResponseVm<PostDto> searchByContent(int page, int size, String content);
+
     void deletePost(Long id);
 
     PostDto getPostByCurrentAccount(Long id);

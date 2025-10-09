@@ -15,6 +15,9 @@ public interface PostRepo extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByOrderByCreatedDateDesc(Pageable pageable);
 
+    @Query(value = "select p from Post p where p.content like %:content%")
+    Page<Post> findAllByContent(@Param("content") String content, Pageable pageable);
+
     Post findPostsByIdAndAccountId(Long id, Long accountId);
 
     @Modifying

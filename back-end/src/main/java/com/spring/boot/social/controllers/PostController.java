@@ -52,6 +52,16 @@ public class PostController {
         return new SuccessDto<>(ResponseEntity.ok(postService.getPosts(page, pageSize)));
     }
 
+    @Operation(summary = "search by content on Posts", description = "Retrieve all posts with pagination based on content")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = GeneralResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/get-all-posts-by-content")
+    public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getPostsByContent(@RequestParam int page,
+                                                                                    @RequestParam int pageSize,
+                                                                                    @RequestParam String content) {
+        return new SuccessDto<>(ResponseEntity.ok(postService.searchByContent(page, pageSize, content)));
+    }
+
     @Operation(summary = "Delete Post", description = "Delete a post by ID")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Post deleted successfully"), @ApiResponse(responseCode = "400", description = "Invalid post ID"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PreAuthorize("isAuthenticated()")

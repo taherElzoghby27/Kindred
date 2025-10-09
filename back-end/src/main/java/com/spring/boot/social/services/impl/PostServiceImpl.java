@@ -74,6 +74,14 @@ public class PostServiceImpl implements PostService {
         return getPostsResponseVm(accountDto, posts);
     }
 
+    @Override
+    public GeneralResponseVm<PostDto> searchByContent(int page, int size, String content) {
+        Pageable pageable = PaginationHelper.getPageable(page, size);
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        Page<Post> posts = postRepo.findAllByContent(content, pageable);
+        return getPostsResponseVm(accountDto, posts);
+    }
+
     private GeneralResponseVm<PostDto> getPostsResponseVm(AccountDto accountDto, Page<Post> posts) {
         updateLikedFields(accountDto, posts.getContent());
         List<PostDto> postsDto = posts.getContent().stream().map(PostMapper.POST_INSTANCE::toPostDto).toList();
