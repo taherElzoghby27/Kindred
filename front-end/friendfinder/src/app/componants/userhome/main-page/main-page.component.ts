@@ -9,6 +9,7 @@ import {DialogCommentsComponent} from '../dialog-comments/dialog-comments.compon
 import {PostRequest} from '../../../../model/post-request';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
+import {AuthService} from '../../../../service/auth/auth.service';
 
 @Component({
   selector: 'app-main-page',
@@ -29,7 +30,8 @@ export class MainPageComponent implements OnInit {
   constructor(private postService: PostService,
               private reactionService: ReactionService,
               public dialog: MatDialog,
-              private snackBar: MatSnackBar
+              private snackBar: MatSnackBar,
+              private authService: AuthService
   ) {
   }
 
@@ -128,6 +130,10 @@ export class MainPageComponent implements OnInit {
   onScroll(): void {
     this.page++;
     this.getAllPosts();
+  }
+
+  isCurrentUserPost(post: PostResponse): boolean {
+    return post.account?.id.toString() === this.authService.getAccountId();
   }
 
   getAllPosts(): void {
