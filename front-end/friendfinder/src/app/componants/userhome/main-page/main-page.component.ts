@@ -10,6 +10,7 @@ import {PostRequest} from '../../../../model/post-request';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
 import {AuthService} from '../../../../service/auth/auth.service';
+import {SharedService} from '../../../../service/shared.service';
 
 @Component({
   selector: 'app-main-page',
@@ -26,17 +27,28 @@ export class MainPageComponent implements OnInit {
   editId: number;
   page = 1;
   limit = 10;
+  searchKey!: string;
 
   constructor(private postService: PostService,
               private reactionService: ReactionService,
               public dialog: MatDialog,
               private snackBar: MatSnackBar,
-              private authService: AuthService
+              private authService: AuthService,
+              private sharedService: SharedService
   ) {
   }
 
   ngOnInit(): void {
-    this.getAllPosts();
+    this.sharedService.currentMessage.subscribe(msg => {
+      console.log('11');
+      console.log(msg);
+      this.searchKey = msg;
+      if (msg === '') {
+        this.getAllPosts();
+      } else {
+        this.searchByContent(msg);
+      }
+    });
   }
 
   getBaseUrlForMedia(): string {
@@ -138,6 +150,21 @@ export class MainPageComponent implements OnInit {
 
   getAllPosts(): void {
     this.postService.getAllPosts(this.page, this.limit).subscribe(
+      response => {
+        if (this.page === 1) {
+          this.postsResponse = response;
+        } else {
+          this.postsResponse.data.push(...response.data);
+        }
+      },
+      errors => {
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
+      }
+    );
+  }
+
+  searchByContent(content: string): void {
+    this.postService.searchByContent(this.page, this.limit, content).subscribe(
       response => {
         if (this.page === 1) {
           this.postsResponse = response;

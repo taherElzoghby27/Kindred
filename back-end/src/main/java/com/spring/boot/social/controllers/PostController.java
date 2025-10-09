@@ -40,7 +40,7 @@ public class PostController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = GeneralResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/get-my-posts")
-    public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getMyPosts(@RequestParam int page, @RequestParam int pageSize) {
+    public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getMyPosts(@RequestParam int page, @RequestParam("page_size") int pageSize) {
         return new SuccessDto<>(ResponseEntity.ok(postService.getPostsByAccount(page, pageSize)));
     }
 
@@ -48,7 +48,7 @@ public class PostController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = GeneralResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/get-all-posts")
-    public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getAllPosts(@RequestParam int page, @RequestParam int pageSize) {
+    public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getAllPosts(@RequestParam int page, @RequestParam("page_size") int pageSize) {
         return new SuccessDto<>(ResponseEntity.ok(postService.getPosts(page, pageSize)));
     }
 
@@ -57,7 +57,7 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/get-all-posts-by-content")
     public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getPostsByContent(@RequestParam int page,
-                                                                                    @RequestParam int pageSize,
+                                                                                    @RequestParam("page_size") int pageSize,
                                                                                     @RequestParam String content) {
         return new SuccessDto<>(ResponseEntity.ok(postService.searchByContent(page, pageSize, content)));
     }

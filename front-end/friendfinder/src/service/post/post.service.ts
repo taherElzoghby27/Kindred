@@ -26,7 +26,19 @@ export class PostService {
     return this.http.get<any>(`${this.baseUrl}get-all-posts`, {
       params: {
         page: page.toString(),
-        pageSize: pageSize.toString(),
+        page_size: pageSize.toString(),
+      }
+    }).pipe(
+      map(response => response.data.body)
+    );
+  }
+
+  searchByContent(page: number, pageSize: number, content: string): Observable<GeneralResponse<PostResponse>> {
+    return this.http.get<any>(`${this.baseUrl}get-all-posts-by-content`, {
+      params: {
+        page: page.toString(),
+        page_size: pageSize.toString(),
+        content: content.toString(),
       }
     }).pipe(
       map(response => response.data.body)
@@ -37,7 +49,7 @@ export class PostService {
     return this.http.get<any>(`${this.baseUrl}get-my-posts`, {
       params: {
         page: page.toString(),
-        pageSize: pageSize.toString(),
+        page_size: pageSize.toString(),
       }
     }).pipe(
       map(response => response.data.body)

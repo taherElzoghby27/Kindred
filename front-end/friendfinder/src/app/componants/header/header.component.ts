@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {SharedService} from '../../../service/shared.service';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(private sharedService: SharedService) {
+  }
 
   ngOnInit(): void {
   }
 
+  searchPosts(content: string): void {
+    console.log('content', content);
+    this.sharedService.changeMessage(content);
+  }
 }
