@@ -1,12 +1,12 @@
 export class PostRequest {
   id: number | null;
   content?: string;
-  media?: File;
+  media?: string;
 
   constructor(
     id: number | null = null,
     content?: string,
-    media?: File
+    media?: string
   ) {
     this.id = id;
     this.content = content;

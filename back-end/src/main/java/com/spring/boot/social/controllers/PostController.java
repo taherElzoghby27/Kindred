@@ -30,8 +30,8 @@ public class PostController {
     @Operation(summary = "Create Post", description = "Create a new post")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Post created successfully", content = @Content(schema = @Schema(implementation = PostDto.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PreAuthorize("isAuthenticated()")
-    @PostMapping(value = "/create-post")
-    public SuccessDto<ResponseEntity<String>> createPost(@Valid PostRequestVm postRequestVm) {
+    @PostMapping("/create-post")
+    public SuccessDto<ResponseEntity<String>> createPost(@Valid @RequestBody PostRequestVm postRequestVm) {
         postService.createPost(postRequestVm);
         return new SuccessDto<>(ResponseEntity.created(URI.create("/create-post")).body("Created post successfully"));
     }

@@ -28,19 +28,17 @@ export class PublishComponent {
   // create post (publish)
   publish(): void {
     if (!this.validateFields()) {
-      console.log('invalid');
       return;
     }
-    console.log('valid');
-    const post = new PostRequest(null, this.content, this.file);
+    const post = new PostRequest(null, this.content, this.file.name);
     this.postService.createPost(post).subscribe(
       success => {
-        this.clearData();
         this.snackBar.open('Published', 'Close', {
           duration: 3000, // milliseconds
           verticalPosition: 'bottom', // or 'top'
           panelClass: ['snackbar-success']
         });
+        this.clearData();
       }, errors => {
         this.errorBackend = true;
         this.errorAr = errors.error.bundleMessage.message_ar;

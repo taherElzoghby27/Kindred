@@ -11,20 +11,13 @@ import {GeneralResponse} from '../../model/general-response';
 })
 export class PostService {
   baseUrl = 'http://localhost:7070/posts/';
-  baseUrlMedia = 'http://localhost:7070/uploads/';
+  baseUrlMedia = 'assets/images/post-images/';
 
   constructor(private http: HttpClient) {
   }
 
   createPost(postRequest: PostRequest): Observable<any> {
-    const formData = new FormData();
-    if (postRequest.content) {
-      formData.append('content', postRequest.content);
-    }
-    if (postRequest.media) {
-      formData.append('media', postRequest.media, postRequest.media.name);
-    }
-    return this.http.post<any>(`${this.baseUrl}create-post`, formData).pipe(
+    return this.http.post<any>(`${this.baseUrl}create-post`, postRequest).pipe(
       map(response => response)
     );
   }
