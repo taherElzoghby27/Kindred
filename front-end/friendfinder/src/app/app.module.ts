@@ -36,6 +36,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDividerModule} from '@angular/material/divider';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 // http://localhost:4200
 
@@ -89,7 +90,8 @@ const routes: Routes = [
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatDividerModule
+    MatDividerModule,
+    InfiniteScrollModule
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},

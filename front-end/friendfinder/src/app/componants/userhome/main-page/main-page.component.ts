@@ -23,10 +23,14 @@ export class MainPageComponent implements OnInit {
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
   edit = false;
   editId: number;
+  page = 1;
+  limit = 10;
+  loading = false;
 
   constructor(private postService: PostService,
               private reactionService: ReactionService,
-              public dialog: MatDialog, private snackBar: MatSnackBar) {
+              public dialog: MatDialog, private snackBar: MatSnackBar
+  ) {
   }
 
   ngOnInit(): void {
@@ -121,12 +125,27 @@ export class MainPageComponent implements OnInit {
     this.postsResponse.data = this.postsResponse.data.filter(p => p.id !== postId);
   }
 
+  onScroll(): void {
+    this.page++;
+    this.getAllPosts();
+  }
+
   getAllPosts(): void {
-    this.postService.getAllPosts(1, 10).subscribe(
+    if (this.loading) {
+      return;
+    }
+    this.loading = true;
+    this.postService.getAllPosts(this.page, this.limit).subscribe(
       response => {
-        this.postsResponse = response;
+        this.loading = false;
+        if (this.page === 1) {
+          this.postsResponse = response;
+        } else {
+          this.postsResponse.data.push(...response.data);
+        }
       },
       errors => {
+        this.loading = false;
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     );
