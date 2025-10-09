@@ -9,6 +9,7 @@
              infiniteScroll
              [infiniteScrollDistance]="2"
              [infiniteScrollThrottle]="300"
+             [scrollWindow]="false"
              (scrolled)="onScroll()">
 
           <div *ngFor="let post of postsResponse.data">
@@ -134,10 +135,6 @@
                 </button>
               </div>
             </div>
-          </div>
-
-          <div *ngIf="loading" class="loading-spinner">
-            Loading more posts...
           </div>
         </div>
       </div>

@@ -7,9 +7,14 @@
 </div>
 
 <!-- 🟩 Dialog Content -->
-<mat-dialog-content class="dialog-content max-h-[60vh] overflow-y-auto">
+<mat-dialog-content
+  class="dialog-content max-h-[60vh] overflow-y-auto"
+  infiniteScroll
+  [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="300"
+  [scrollWindow]="false"
+  (scrolled)="onScroll()">
 
-  <!-- Comments List -->
   <div class="comments-container space-y-4">
 
     <!-- Single Comment -->
@@ -81,13 +86,11 @@
         </div>
       </div>
     </div>
-
-    <!-- Empty State -->
-    <div *ngIf="!comments?.data?.length" class="empty-state flex flex-col items-center text-gray-500 py-6">
-      <mat-icon class="text-5xl mb-2">comment</mat-icon>
-      <p>No comments yet. Be the first to comment!</p>
-    </div>
-
+  </div>
+  <!-- Empty State -->
+  <div *ngIf="!comments?.data?.length" class="empty-state flex flex-col items-center text-gray-500 py-6">
+    <mat-icon class="text-5xl mb-2">comment</mat-icon>
+    <p>No comments yet. Be the first to comment!</p>
   </div>
 </mat-dialog-content>
 

@@ -25,11 +25,11 @@ export class MainPageComponent implements OnInit {
   editId: number;
   page = 1;
   limit = 10;
-  loading = false;
 
   constructor(private postService: PostService,
               private reactionService: ReactionService,
-              public dialog: MatDialog, private snackBar: MatSnackBar
+              public dialog: MatDialog,
+              private snackBar: MatSnackBar
   ) {
   }
 
@@ -131,13 +131,8 @@ export class MainPageComponent implements OnInit {
   }
 
   getAllPosts(): void {
-    if (this.loading) {
-      return;
-    }
-    this.loading = true;
     this.postService.getAllPosts(this.page, this.limit).subscribe(
       response => {
-        this.loading = false;
         if (this.page === 1) {
           this.postsResponse = response;
         } else {
@@ -145,7 +140,6 @@ export class MainPageComponent implements OnInit {
         }
       },
       errors => {
-        this.loading = false;
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     );

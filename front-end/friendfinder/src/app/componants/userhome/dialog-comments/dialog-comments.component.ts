@@ -24,6 +24,8 @@ export class DialogCommentsComponent implements OnInit {
   // Edit state
   editingCommentId: number | null = null;
   editedContent = '';
+  page = 1;
+  limit = 10;
 
   constructor(private commentService: CommentService,
               public dialogRef: MatDialogRef<DialogCommentsComponent>,
@@ -44,13 +46,21 @@ export class DialogCommentsComponent implements OnInit {
     });
   }
 
+  onScroll(): void {
+    this.page++;
+    this.getAllComments();
+  }
+
   getAllComments(): void {
-    this.commentService.getComments(this.data.post_id, 1, 10).subscribe(
+    this.commentService.getComments(this.data.post_id, this.page, this.limit).subscribe(
       comments => {
-        this.comments = comments;
+        if (this.page === 1) {
+          this.comments = comments;
+        } else {
+          this.comments.data.push(...comments.data);
+        }
       },
       errors => {
-        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     );
   }
