@@ -109,9 +109,9 @@
                 <span class="reaction-count">{{ post.reactionsCount }}</span>
               </div>
               <div class="comments-count" *ngIf="post.commentsCount > 0">
-                <a href="#" class="comments-link" (click)="toggleComments(); $event.preventDefault()">
-                  {{ post.commentsCount }} comment{{ post.comments !== 1 ? 's' : '' }}
-                </a>
+                <button class="comments-link" (click)="comments(post.id)">
+                  {{ post.commentsCount }} comment{{ post.commentsCount !== 1 ? 's' : '' }}
+                </button>
               </div>
             </div>
 

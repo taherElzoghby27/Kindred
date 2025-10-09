@@ -6,6 +6,8 @@ import {CommentResponseVm} from '../../../../model/comment-response-vm';
 import {AuthService} from '../../../../service/auth/auth.service';
 import {ActivatedRoute} from '@angular/router';
 import {CommentRequestVm} from '../../../../model/comment-request-vm';
+import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 // @ts-ignore
@@ -15,8 +17,6 @@ import {CommentRequestVm} from '../../../../model/comment-request-vm';
   styleUrls: ['./dialog-comments.component.css'],
 })
 export class DialogCommentsComponent implements OnInit {
-  messageAr = '';
-  messageEn = '';
   comments: GeneralResponse<CommentResponseVm>;
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
   newComment: string;
@@ -29,7 +29,8 @@ export class DialogCommentsComponent implements OnInit {
               public dialogRef: MatDialogRef<DialogCommentsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private authService: AuthService,
-              private activatedRoute: ActivatedRoute) {
+              private activatedRoute: ActivatedRoute,
+              private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -47,11 +48,9 @@ export class DialogCommentsComponent implements OnInit {
     this.commentService.getComments(this.data.post_id, 1, 10).subscribe(
       comments => {
         this.comments = comments;
-        console.log(this.comments.data);
       },
       errors => {
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     );
   }
@@ -73,8 +72,7 @@ export class DialogCommentsComponent implements OnInit {
           this.countComments++;
         },
         errors => {
-          this.messageAr = errors.error.bundleMessage.message_ar;
-          this.messageEn = errors.error.bundleMessage.message_en;
+          this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
         },
       );
     }
@@ -93,8 +91,7 @@ export class DialogCommentsComponent implements OnInit {
         this.countComments--;
       },
       error: (errors) => {
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
     });
   }
@@ -127,8 +124,7 @@ export class DialogCommentsComponent implements OnInit {
         this.cancelEdit();
       },
       errors => {
-        this.messageAr = errors.error.bundleMessage.message_ar;
-        this.messageEn = errors.error.bundleMessage.message_en;
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       },
     );
   }
@@ -164,5 +160,13 @@ export class DialogCommentsComponent implements OnInit {
 
   getCurrentUser(): string {
     return this.authService.getCurrentUser();
+  }
+
+  showSnackBar(message: string, snackType: SnackbarPanelClass): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000, // milliseconds
+      verticalPosition: 'bottom', // or 'top'
+      panelClass: [snackType]
+    });
   }
 }
