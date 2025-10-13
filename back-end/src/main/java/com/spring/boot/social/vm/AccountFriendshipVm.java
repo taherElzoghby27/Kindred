@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AccountFriendshipVm {
     private AccountVm account;
-    private Long friendId;
+    private Long friendshipId;
     private FriendStatusEnum status;
 }

@@ -19,7 +19,7 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
     @Query(value = """
             SELECT new com.spring.boot.social.vm.AccountFriendshipVm(
                         new com.spring.boot.social.vm.AccountVm(a.id,a.firstName,a.lastName,null)
-                                    ,f.friend.id
+                                    ,fs.id
                                     ,fsT.status
                                     )
             FROM Account a

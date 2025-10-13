@@ -33,7 +33,7 @@ public class FriendShipController {
             @ApiResponse(responseCode = "409", description = "Friendship already exists")
     })
     @PostMapping("/create-friendship")
-    public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam Long friendshipId) {
+    public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendshipId) {
         return new SuccessDto<>(
                 ResponseEntity.created(URI.create("/create-friendship")).body(friendshipService.createFriendShipStatus(friendshipId))
         );
@@ -46,7 +46,7 @@ public class FriendShipController {
             @ApiResponse(responseCode = "404", description = "Friendship not found")
     })
     @PutMapping("/update-friendship")
-    public SuccessDto<ResponseEntity<String>> updateFriendship(@RequestParam Long id, @RequestParam String status) {
+    public SuccessDto<ResponseEntity<String>> updateFriendship(@RequestParam("friendship_id") Long id, @RequestParam String status) {
         friendshipService.updateFriendshipStatus(id, status);
         return new SuccessDto<>(
                 ResponseEntity.ok("Friendship updated successfully")
@@ -60,7 +60,7 @@ public class FriendShipController {
             @ApiResponse(responseCode = "404", description = "Friendship not found")
     })
     @DeleteMapping("/remove-friendship")
-    public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam Long friendshipId) {
+    public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam("friendship_id") Long friendshipId) {
         friendshipService.removeFriendShipStatusByFriendId(friendshipId);
         return new SuccessDto<>(
                 ResponseEntity.ok("Successfully Deleted")
