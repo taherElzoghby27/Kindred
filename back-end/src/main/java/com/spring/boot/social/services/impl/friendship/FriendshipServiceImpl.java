@@ -24,6 +24,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     private final AccountService accountService;
 
     @Override
+    @Transactional(propagation = Propagation.MANDATORY)
     public FriendShipDto createFriendShip(Long friendId) {
         //current account
         Account account = accountService.getCurrentAccount();

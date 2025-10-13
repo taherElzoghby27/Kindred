@@ -15,7 +15,6 @@ export class HeaderComponent implements OnInit {
   }
 
   searchPosts(content: string): void {
-    console.log('content', content);
     this.sharedService.changeMessage(content);
   }
 }

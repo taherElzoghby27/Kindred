@@ -27,7 +27,6 @@ export class MainPageComponent implements OnInit {
   editId: number;
   page = 1;
   limit = 10;
-  searchKey!: string;
 
   constructor(private postService: PostService,
               private reactionService: ReactionService,
@@ -40,9 +39,6 @@ export class MainPageComponent implements OnInit {
 
   ngOnInit(): void {
     this.sharedService.currentMessage.subscribe(msg => {
-      console.log('11');
-      console.log(msg);
-      this.searchKey = msg;
       if (msg === '') {
         this.getAllPosts();
       } else {
