@@ -25,7 +25,7 @@ public class AccountDetails extends BaseEntity<String> {
     private LocalDateTime birthday;
     private String bio;
     private String profilePictureUrl;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Account account;
 }

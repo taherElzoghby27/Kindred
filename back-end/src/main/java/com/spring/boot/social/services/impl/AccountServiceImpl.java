@@ -9,11 +9,17 @@ import com.spring.boot.social.entity.security.Account;
 import com.spring.boot.social.entity.security.AccountDetails;
 import com.spring.boot.social.repositories.AccountRepo;
 import com.spring.boot.social.services.AccountService;
+import com.spring.boot.social.utils.PaginationHelper;
 import com.spring.boot.social.utils.SecurityUtils;
+import com.spring.boot.social.vm.AccountFriendshipVm;
+import com.spring.boot.social.vm.GeneralResponseVm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -175,6 +181,18 @@ public class AccountServiceImpl implements AccountService {
     public Account getAccount(Long accountId) {
         AccountDto accountDto = getAccountById(accountId);
         return AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
+    }
+
+    @Override
+    public GeneralResponseVm<AccountFriendshipVm> getUsers(int page, int size) {
+        AccountDto accountDto = SecurityUtils.getCurrentAccount();
+        Pageable pageable = PaginationHelper.getPageable(page, size);
+        Page<AccountFriendshipVm> accounts = accountRepo.findAccountsWithFriendShip(accountDto.getId(), pageable);
+        if (accounts.isEmpty()) {
+            throw new NotFoundResourceException("account.not_found");
+        }
+        List<AccountFriendshipVm> accountsResult = accounts.getContent();
+        return new GeneralResponseVm<>(accountsResult, accounts.getNumber() + 1, accounts.getSize());
     }
 
     private boolean checkAccountByUsername(String username) {

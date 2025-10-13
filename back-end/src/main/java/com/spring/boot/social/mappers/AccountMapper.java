@@ -5,6 +5,7 @@ import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.entity.security.Account;
 import com.spring.boot.social.entity.security.AccountDetails;
 import com.spring.boot.social.vm.AccountResponseVm;
+import com.spring.boot.social.vm.AccountVm;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -19,6 +20,8 @@ public interface AccountMapper {
     Account toAccount(AccountDto accountDto);
 
     AccountResponseVm toAccountResponseVm(AccountDto accountDto);
+
+    AccountVm toAccountVm(Account account);
 
     @Mapping(source = "accountId", target = "account", ignore = true)
     AccountDetails toAccountDetails(AccountDetailsDto accountDetailsDto);

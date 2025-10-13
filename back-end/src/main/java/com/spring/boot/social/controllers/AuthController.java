@@ -5,7 +5,9 @@ import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.AuthService;
+import com.spring.boot.social.vm.AccountFriendshipVm;
 import com.spring.boot.social.vm.AccountResponseVm;
+import com.spring.boot.social.vm.GeneralResponseVm;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RequestMapping("/auth")
 @RestController
@@ -80,5 +83,20 @@ public class AuthController {
     @PutMapping("/update-account")
     public SuccessDto<ResponseEntity<AccountDto>> updateAccount(@RequestBody AccountDto accountDto) {
         return new SuccessDto<>(ResponseEntity.ok(accountService.updateAccount(accountDto)));
+    }
+
+    @Operation(summary = "get all accounts", description = "get all accounts with relationships")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "get accounts successfully",
+                    content = @Content(schema = @Schema(implementation = AccountDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "Account not found")
+    })
+    @GetMapping("/all-account")
+    public SuccessDto<ResponseEntity<GeneralResponseVm<AccountFriendshipVm>>> getUsers(
+            @RequestParam int page,
+            @RequestParam int size
+    ) {
+        return new SuccessDto<>(ResponseEntity.ok(accountService.getUsers(page, size)));
     }
 }
