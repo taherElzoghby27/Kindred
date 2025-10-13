@@ -4,6 +4,8 @@ import {RequestSignUp} from '../../model/request-sign-up';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {RequestLogin} from '../../model/request-login';
+import {AccountFriendshipVm} from '../../model/account-friendship-vm';
+import {GeneralResponse} from '../../model/general-response';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +43,17 @@ export class AuthService {
   login(requestLoginModel: RequestLogin): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}login`, requestLoginModel).pipe(
       map(response => response)
+    );
+  }
+
+  getUsers(page: number, size: number): Observable<GeneralResponse<AccountFriendshipVm>> {
+    return this.http.get<any>(`${this.baseUrl}sign-up`, {
+      params: {
+        page: page.toString(),
+        size: size.toString(),
+      }
+    }).pipe(
+      map(response => response.data.body)
     );
   }
 
