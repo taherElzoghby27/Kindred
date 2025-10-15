@@ -3,6 +3,6 @@ import {AccountVm} from './account-vm';
 
 export class AccountFriendshipVm {
   account: AccountVm;
-  friendId: number;
+  friendshipId: number;
   status: FriendshipStatus;
 }

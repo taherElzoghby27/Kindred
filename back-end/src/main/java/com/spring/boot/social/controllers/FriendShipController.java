@@ -33,9 +33,9 @@ public class FriendShipController {
             @ApiResponse(responseCode = "409", description = "Friendship already exists")
     })
     @PostMapping("/create-friendship")
-    public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendshipId) {
+    public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendId) {
         return new SuccessDto<>(
-                ResponseEntity.created(URI.create("/create-friendship")).body(friendshipService.createFriendShipStatus(friendshipId))
+                ResponseEntity.created(URI.create("/create-friendship")).body(friendshipService.createFriendShipStatus(friendId))
         );
     }
 
@@ -46,7 +46,9 @@ public class FriendShipController {
             @ApiResponse(responseCode = "404", description = "Friendship not found")
     })
     @PutMapping("/update-friendship")
-    public SuccessDto<ResponseEntity<String>> updateFriendship(@RequestParam("friendship_id") Long id, @RequestParam String status) {
+    public SuccessDto<ResponseEntity<String>> updateFriendship(
+            @RequestParam("friendship_id") Long id,
+            @RequestParam String status) {
         friendshipService.updateFriendshipStatus(id, status);
         return new SuccessDto<>(
                 ResponseEntity.ok("Friendship updated successfully")

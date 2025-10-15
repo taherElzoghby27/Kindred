@@ -14,9 +14,9 @@ export class FriendshipService {
   }
 
   requestFriend(friendId: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}create-friendship`, {
+    return this.http.post<any>(`${this.baseUrl}create-friendship`, null, {
       params: {
-        friend_id: friendId.toString(),
+        friend_id: friendId.toString()
       }
     }).pipe(
       map(response => response)

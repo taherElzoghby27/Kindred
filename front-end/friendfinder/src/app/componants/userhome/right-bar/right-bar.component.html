@@ -2,40 +2,15 @@
         ================================================= -->
 <div class="col-md-2 static">
   <div class="suggestions" id="sticky-sidebar">
-    <h4 class="grey">Who to Follow</h4>
-    <div class="follow-user">
-      <img src="assets/images/users/user-11.jpg" alt="" class="profile-photo-sm pull-left" />
-      <div>
-        <h5><a href="timeline.html">Diana Amber</a></h5>
-        <a href="#" class="text-green">Add friend</a>
-      </div>
-    </div>
-    <div class="follow-user">
-      <img src="assets/images/users/user-12.jpg" alt="" class="profile-photo-sm pull-left" />
-      <div>
-        <h5><a href="timeline.html">Cris Haris</a></h5>
-        <a href="#" class="text-green">Add friend</a>
-      </div>
-    </div>
-    <div class="follow-user">
-      <img src="assets/images/users/user-13.jpg" alt="" class="profile-photo-sm pull-left" />
-      <div>
-        <h5><a href="timeline.html">Brian Walton</a></h5>
-        <a href="#" class="text-green">Add friend</a>
-      </div>
-    </div>
-    <div class="follow-user">
-      <img src="assets/images/users/user-14.jpg" alt="" class="profile-photo-sm pull-left" />
-      <div>
-        <h5><a href="timeline.html">Olivia Steward</a></h5>
-        <a href="#" class="text-green">Add friend</a>
-      </div>
-    </div>
-    <div class="follow-user">
-      <img src="assets/images/users/user-15.jpg" alt="" class="profile-photo-sm pull-left" />
-      <div>
-        <h5><a href="timeline.html">Sophia Page</a></h5>
-        <a href="#" class="text-green">Add friend</a>
+    <h4 class="grey">Add Friends</h4>
+    <div *ngFor="let user of users.data">
+      <div class="follow-user" *ngIf="user.account.id!=currentUserId()">
+        <img [src]="unKnownImage" alt="" class="profile-photo-sm pull-left"/>
+        <div>
+          <h5><a href="timeline.html">{{ user.account.firstName + " " + user.account.lastName }}</a></h5>
+          <button class="text-green" *ngIf="user.status!=null"> {{ user.status }}</button>
+          <button class="text-green" *ngIf="user.status==null" (click)="requestFriend(user.account.id)"> Add Friend</button>
+        </div>
       </div>
     </div>
   </div>
