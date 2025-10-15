@@ -10,6 +10,7 @@
           <h5><a href="timeline.html">{{ user.ac2_username}}</a></h5>
           <button class="text-green" *ngIf="user.status!=null"> {{ user.status }}</button>
           <button class="text-green" *ngIf="user.status==null" (click)="requestFriend(user.ac2_id)"> Add Friend</button>
+          <button class="text-green" *ngIf="user.status=='PENDING'" (click)="removeRequestFriend(user.ac2_id)"> Remove Request</button>
         </div>
       </div>
     </div>

@@ -53,8 +53,16 @@ export class RightBarComponent implements OnInit {
     return this.authService.getAccountId();
   }
 
-  removeRequestFriend(): void {
-
+  removeRequestFriend(friendId: number): void {
+    this.friendshipService.removeFriendShip(friendId).subscribe(
+      result => {
+        const userFriendship = this.users.data.find(u => u.ac2_id === friendId);
+        userFriendship.status = null;
+      },
+      errors => {
+        this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
+      }
+    );
   }
 
   updateRequestFriend(): void {

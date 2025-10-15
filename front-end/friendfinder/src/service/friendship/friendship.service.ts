@@ -34,10 +34,10 @@ export class FriendshipService {
     );
   }
 
-  removeFriendShip(friendshipId: number): Observable<any> {
+  removeFriendShip(friendId: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}remove-friendship`, {
       params: {
-        friendship_id: friendshipId.toString(),
+        friend_id: friendId.toString(),
       }
     }).pipe(
       map(response => response)
