@@ -62,8 +62,8 @@ public class FriendShipController {
             @ApiResponse(responseCode = "404", description = "Friendship not found")
     })
     @DeleteMapping("/remove-friendship")
-    public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam("friendship_id") Long friendshipId) {
-        friendshipService.removeFriendShipStatusByFriendId(friendshipId);
+    public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam("friend_id") Long friendId) {
+        friendshipService.removeFriendShipStatusByFriendId(friendId);
         return new SuccessDto<>(
                 ResponseEntity.ok("Successfully Deleted")
         );

@@ -4,12 +4,12 @@
   <div class="suggestions" id="sticky-sidebar">
     <h4 class="grey">Add Friends</h4>
     <div *ngFor="let user of users.data">
-      <div class="follow-user" *ngIf="user.account.id!=currentUserId()">
+      <div class="follow-user" >
         <img [src]="unKnownImage" alt="" class="profile-photo-sm pull-left"/>
         <div>
-          <h5><a href="timeline.html">{{ user.account.firstName + " " + user.account.lastName }}</a></h5>
+          <h5><a href="timeline.html">{{ user.ac2_username}}</a></h5>
           <button class="text-green" *ngIf="user.status!=null"> {{ user.status }}</button>
-          <button class="text-green" *ngIf="user.status==null" (click)="requestFriend(user.account.id)"> Add Friend</button>
+          <button class="text-green" *ngIf="user.status==null" (click)="requestFriend(user.ac2_id)"> Add Friend</button>
         </div>
       </div>
     </div>

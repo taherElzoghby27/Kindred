@@ -40,7 +40,7 @@ export class RightBarComponent implements OnInit {
   requestFriend(friendId: number): void {
     this.friendshipService.requestFriend(friendId).subscribe(
       result => {
-        const userFriendship = this.users.data.find(u => u.account.id === friendId);
+        const userFriendship = this.users.data.find(u => u.ac2_id === friendId);
         userFriendship.status = FriendshipStatus.PENDING;
       },
       errors => {

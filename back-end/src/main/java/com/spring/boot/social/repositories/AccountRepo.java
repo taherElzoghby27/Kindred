@@ -21,16 +21,20 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
                         a1.id,a1.username,a2.id,a2.username,f.id,fstatus.status
                                     )
             FROM Account a1 join Account a2 on a1.id=:account_id and a1.id!=a2.id
-            left join Friendship f on f.account.id=a1.id and f.friend.id=a2.id
+            left join Friendship f on
+            (f.account.id=a1.id and f.friend.id=a2.id) or (f.friend.id=a1.id and f.account.id=a2.id)
             left join FriendshipStatus fs on fs.friendship.id=f.id
             left join FriendStatus fstatus on fstatus.id=fs.status.id
+            WHERE (f.account.id = a1.id AND f.friend.id !=a1.id) OR f.id IS null
             """,
             countQuery = """
                     SELECT count(a1)
                     FROM Account a1 join Account a2 on a1.id=:account_id and a1.id!=a2.id
-                    left join Friendship f on f.account.id=a1.id and f.friend.id=a2.id
+                    left join Friendship f on
+                    (f.account.id=a1.id and f.friend.id=a2.id) or (f.friend.id=a1.id and f.account.id=a2.id)
                     left join FriendshipStatus fs on fs.friendship.id=f.id
                     left join FriendStatus fstatus on fstatus.id=fs.status.id
+                    WHERE (f.account.id = a1.id AND f.friend.id !=a1.id) OR f.id IS null
                     """)
     Page<AccountFriendshipVm> findAccountsWithFriendShip(@Param("account_id") Long accountId, Pageable pageable);
 }
