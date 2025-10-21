@@ -47,7 +47,7 @@ public class ReactionController {
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
             @ApiResponse(responseCode = "404", description = "Reaction not found")
     })
-    @DeleteMapping("/delete-react")
+    @DeleteMapping
     @PreAuthorize("isAuthenticated()")
     public SuccessDto<ResponseEntity<String>> deleteReact(@Valid @RequestParam("post_id") Long postId) {
         reactionPostService.removeReaction(postId);

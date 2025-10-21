@@ -66,7 +66,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "404", description = "Account not found")
     })
-    @PostMapping("/add-account-details")
+    @PostMapping
     public SuccessDto<ResponseEntity<AccountDto>> addAccountDetails(@Valid @RequestBody AccountDetailsDto accountDetailsDto) {
         return new SuccessDto<>(
                 ResponseEntity.created(URI.create("/add-account-details")).body(accountService.addAccountDetails(accountDetailsDto))
@@ -80,7 +80,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "404", description = "Account not found")
     })
-    @PutMapping("/update-account")
+    @PutMapping
     public SuccessDto<ResponseEntity<AccountDto>> updateAccount(@RequestBody AccountDto accountDto) {
         return new SuccessDto<>(ResponseEntity.ok(accountService.updateAccount(accountDto)));
     }
@@ -92,7 +92,7 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "404", description = "Account not found")
     })
-    @GetMapping("/all-account")
+    @GetMapping
     public SuccessDto<ResponseEntity<GeneralResponseVm<AccountFriendshipVm>>> getUsers(
             @RequestParam int page,
             @RequestParam int size

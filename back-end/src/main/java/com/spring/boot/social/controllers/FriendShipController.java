@@ -32,7 +32,7 @@ public class FriendShipController {
             @ApiResponse(responseCode = "400", description = "Invalid friendship ID"),
             @ApiResponse(responseCode = "409", description = "Friendship already exists")
     })
-    @PostMapping("/create-friendship")
+    @PostMapping
     public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendId) {
         return new SuccessDto<>(
                 ResponseEntity.created(URI.create("/create-friendship")).body(friendshipService.createFriendShipStatus(friendId))
@@ -45,7 +45,7 @@ public class FriendShipController {
             @ApiResponse(responseCode = "400", description = "Invalid input data"),
             @ApiResponse(responseCode = "404", description = "Friendship not found")
     })
-    @PutMapping("/update-friendship")
+    @PutMapping
     public SuccessDto<ResponseEntity<String>> updateFriendship(
             @RequestParam("friendship_id") Long id,
             @RequestParam String status) {
@@ -61,7 +61,7 @@ public class FriendShipController {
             @ApiResponse(responseCode = "400", description = "Invalid friendship ID"),
             @ApiResponse(responseCode = "404", description = "Friendship not found")
     })
-    @DeleteMapping("/remove-friendship")
+    @DeleteMapping
     public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam("friend_id") Long friendId) {
         friendshipService.removeFriendShipStatusByFriendId(friendId);
         return new SuccessDto<>(
@@ -75,8 +75,8 @@ public class FriendShipController {
                     content = @Content(schema = @Schema(implementation = FriendshipStatusDto.class))),
             @ApiResponse(responseCode = "400", description = "Invalid status parameter")
     })
-    @GetMapping("/all-friendships")
-    public SuccessDto<ResponseEntity<List<FriendshipStatusDto>>> getFriendshipStatusByStatus(@RequestParam String status) {
+    @GetMapping("/{status}")
+    public SuccessDto<ResponseEntity<List<FriendshipStatusDto>>> getFriendshipStatusByStatus(@PathVariable String status) {
         return new SuccessDto<>(
                 ResponseEntity.ok(friendshipService.getFriendshipStatusByStatus(status))
         );

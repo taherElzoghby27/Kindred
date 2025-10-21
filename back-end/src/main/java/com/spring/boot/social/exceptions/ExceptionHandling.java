@@ -42,7 +42,6 @@ public class ExceptionHandling {
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ExceptionDto> handleNoResourceFound(NoResourceFoundException exception) {
-        log.error("NoResourceFoundException -> {}", exception.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ExceptionDto(
                         HttpStatus.NOT_FOUND.value(),

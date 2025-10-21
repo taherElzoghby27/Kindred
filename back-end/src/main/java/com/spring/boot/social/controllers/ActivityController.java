@@ -49,7 +49,7 @@ public class ActivityController {
             }
             )
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/get-activities")
+    @GetMapping
     public SuccessDto<ResponseEntity<List<ActivityDto>>> getActivities() {
         return new SuccessDto<>(ResponseEntity.ok(activityService.getAllActivities()));
     }

@@ -36,7 +36,7 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Post not found")
     })
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/create-comment")
+    @PostMapping
     public SuccessDto<ResponseEntity<CommentResponseVm>> createComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
         return new SuccessDto<>(
                 ResponseEntity.created(URI.create("/create-comment")).body(commentService.createComment(commentRequestVm))
@@ -52,7 +52,7 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
     @PreAuthorize("isAuthenticated()")
-    @PutMapping("/update-comment")
+    @PutMapping
     public SuccessDto<ResponseEntity<CommentResponseVm>> updateComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
         return new SuccessDto<>(
                 ResponseEntity.ok(commentService.updateComment(commentRequestVm))
@@ -67,7 +67,7 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
     @PreAuthorize("isAuthenticated()")
-    @DeleteMapping("/delete-comment")
+    @DeleteMapping
     public SuccessDto<ResponseEntity<String>> deleteComment(@Valid @RequestParam("comment_id") Long commentId) {
         commentService.deleteComment(commentId);
         return new SuccessDto<>(
@@ -84,7 +84,7 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Post not found")
     })
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/get-comments")
+    @GetMapping
     public SuccessDto<ResponseEntity<GeneralResponseVm<CommentResponseVm>>> getComments(
             @Valid @RequestParam("post_id") Long postId,
             @RequestParam int page,
