@@ -134,7 +134,6 @@
       }
     }
   },
-  "defaultProject": "friendfinder",
   "cli": {
     "analytics": false
   }
