@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comment_post", schema = "kindred")
+@Table(name = "comment_post")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter

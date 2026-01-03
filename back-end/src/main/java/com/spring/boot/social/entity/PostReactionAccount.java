@@ -9,7 +9,6 @@ import lombok.Setter;
 
 @Entity
 @Table(
-        schema = "kindred",
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {
                         "account_id",

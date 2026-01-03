@@ -6,23 +6,28 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
-    user: kindred
-    password: kindred
-    url: jdbc:oracle:thin:@//localhost:1521/orcl
+    user: system
+    password: hr
+    url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
     driver-class-name: oracle.jdbc.OracleDriver
+    schemas: KINDRED
+    default-schema: KINDRED
   messages:
     basename: i18n/messages
   application:
     name: social
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@//localhost:1521/orcl
-    username: kindred
-    password: kindred
+    url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
+    username: system
+    password: hr
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        default_schema: KINDRED
 
 server:
   port: 7070

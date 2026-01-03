@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Table(
-        schema = "kindred",
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {
                         "username",

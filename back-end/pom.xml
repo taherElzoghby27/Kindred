@@ -153,12 +153,12 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>10.17.0</version>
                 <configuration>
-                    <user>kindred</user>
-                    <url>jdbc:oracle:thin:@//localhost:1521/orcl</url>
+                    <user>system</user>
+                    <url>jdbc:oracle:thin:@//localhost:1521/XEPDB1</url>
                     <driver>oracle.jdbc.OracleDriver</driver>
-                    <password>kindred</password>
+                    <password>hr</password>
                     <schemas>
-                        <schema>kindred</schema>
+                        <schema>KINDRED</schema>
                     </schemas>
                 </configuration>
             </plugin>

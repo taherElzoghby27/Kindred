@@ -10,7 +10,6 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(schema = "kindred")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
