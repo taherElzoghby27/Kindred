@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class GeneralResponse {\n  constructor(data, page, size) {\n    this.data = data;\n    this.page = page;\n    this.size = size;\n  }\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

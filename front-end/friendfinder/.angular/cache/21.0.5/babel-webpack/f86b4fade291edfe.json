@@ -1,0 +1,1 @@
+{"ast":null,"code":"import { CommonModule } from '@angular/common';\nstandalone: true, imports;\n[CommonModule], selector;\n'app-friends', templateUrl;\n'./friends.component.html', styleUrls;\n['./friends.component.css'];\nexport class FriendsComponent {\n  constructor() {}\n  ngOnInit() {}\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

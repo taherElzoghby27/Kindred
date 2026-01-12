@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class PostRequest {\n  constructor(id = null, content, media) {\n    this.id = id;\n    this.content = content;\n    this.media = media;\n  }\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
