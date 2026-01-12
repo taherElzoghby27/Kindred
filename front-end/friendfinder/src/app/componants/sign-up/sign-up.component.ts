@@ -46,20 +46,21 @@ export class SignUpComponent {
     const requestSignupModel = new RequestSignUp(
       this.signupData.username, this.signupData.email, this.signupData.password
     );
-    this.authService.signUp(requestSignupModel).subscribe(
-      response => {
+    this.authService.signUp(requestSignupModel).subscribe({
+      next: response => {
         this.errorBackend = false;
         this.resetErrorFields();
         sessionStorage.setItem('account_id', response.data.body.id);
         sessionStorage.setItem('token', response.data.body.token);
         sessionStorage.setItem('userName', response.data.body.username);
         this.router.navigateByUrl('mainpage');
-      }, errors => {
+      }, error: errors => {
         this.errorBackend = true;
         this.resetErrorFields();
         this.errorMessageAr = errors.error.bundleMessage.message_ar;
         this.errorMessageEn = errors.error.bundleMessage.message_en;
-      });
+      }
+    });
   }
 
   validation(username: string, email: string, password: string, confirmPassword: string): boolean {

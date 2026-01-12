@@ -1,18 +1,18 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {GeneralResponse} from '../../model/general-response';
-import {PostResponse} from '../../model/post-response';
-import {CommentRequestVm} from '../../model/comment-request-vm';
-import {CommentResponseVm} from '../../model/comment-response-vm';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { GeneralResponse } from '../../model/general-response';
+import { PostResponse } from '../../model/post-response';
+import { CommentRequestVm } from '../../model/comment-request-vm';
+import { CommentResponseVm } from '../../model/comment-response-vm';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommentService {
 
-  baseUrl = ' http://localhost:7070/comments/';
+  baseUrl = 'http://localhost:7070/comments';
 
   constructor(private http: HttpClient) {
   }
@@ -22,13 +22,13 @@ export class CommentService {
       content: commentRequestVm.content,
       post_id: commentRequestVm.postId,
     };
-    return this.http.post<any>(`${this.baseUrl}create-comment`, body).pipe(
+    return this.http.post<any>(`${this.baseUrl}`, body).pipe(
       map(response => response.data.body)
     );
   }
 
   getComments(postId: number, page: number, pageSize: number): Observable<GeneralResponse<CommentResponseVm>> {
-    return this.http.get<any>(`${this.baseUrl}get-comments`, {
+    return this.http.get<any>(`${this.baseUrl}`, {
       params: {
         page: page.toString(),
         page_size: pageSize.toString(),
@@ -40,7 +40,7 @@ export class CommentService {
   }
 
   deleteComment(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}delete-comment`, {
+    return this.http.delete<any>(`${this.baseUrl}`, {
       params: {
         comment_id: id.toString()
       }
@@ -50,11 +50,7 @@ export class CommentService {
   }
 
   getPost(id: number): Observable<PostResponse> {
-    return this.http.get<PostResponse>(`${this.baseUrl}get-post`, {
-      params: {
-        id: id.toString()
-      }
-    }).pipe(
+    return this.http.get<PostResponse>(`http://localhost:7070/posts/${id}`).pipe(
       map(response => response)
     );
   }
@@ -65,7 +61,7 @@ export class CommentService {
       content: commentRequestVm.content,
       post_id: commentRequestVm.postId,
     };
-    return this.http.put<any>(`${this.baseUrl}update-comment`, body).pipe(
+    return this.http.put<any>(`${this.baseUrl}`, body).pipe(
       map(response => response)
     );
   }

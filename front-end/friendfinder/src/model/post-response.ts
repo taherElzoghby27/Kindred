@@ -1,4 +1,4 @@
-import {AccountVm} from './account-vm';
+import { AccountVm } from './account-vm';
 
 export class PostResponse {
   id: number;
@@ -9,4 +9,10 @@ export class PostResponse {
   liked: number;
   createdDate: string;
   account: AccountVm;
+  // Pre-calculated fields for performance
+  timeAgo?: string;
+  isImage?: boolean;
+  isVideo?: boolean;
+  isMine?: boolean;
+  fullMediaUrl?: string;
 }

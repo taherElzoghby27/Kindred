@@ -7,28 +7,20 @@
 </div>
 
 <!-- 🟩 Dialog Content -->
-<mat-dialog-content
-  class="dialog-content max-h-[60vh] overflow-y-auto"
-  infiniteScroll
-  [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="300"
-  [scrollWindow]="false"
-  (scrolled)="onScroll()">
+<mat-dialog-content class="dialog-content max-h-[60vh] overflow-y-auto" infiniteScroll [infiniteScrollDistance]="2"
+  [infiniteScrollThrottle]="300" [scrollWindow]="false" (scrolled)="onScroll()">
 
   <div class="comments-container space-y-4">
 
     <!-- Single Comment -->
     <div *ngFor="let comment of comments?.data"
-         class="comment-item p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition">
+      class="comment-item p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition">
 
       <!-- Header -->
       <div class="comment-header flex justify-between items-start mb-2">
         <div class="flex items-center space-x-3">
-          <img
-            [src]="unKnownImage"
-            [alt]="comment.account?.firstName || 'User avatar'"
-            class="avatar w-10 h-10 rounded-full object-cover"
-          />
+          <img [src]="unKnownImage" [alt]="comment.account?.firstName || 'User avatar'"
+            class="avatar w-10 h-10 rounded-full object-cover" />
           <div class="comment-info">
             <span class="author-name font-medium" *ngIf="comment.account != null">
               {{ comment.account?.firstName }} {{ comment.account?.lastName }}
@@ -43,40 +35,26 @@
         </div>
         <!-- 🗑️ Delete Button (only for current user's comments) -->
         <!-- Edit Button -->
-        <button
-          *ngIf="isCurrentUserComment(comment)"
-          mat-icon-button
-          color="primary"
-          (click)="startEdit(comment)"
-          [disabled]="editingCommentId === comment.id"
-          aria-label="Edit comment"
-        >
+        <button *ngIf="isCurrentUserComment(comment)" mat-icon-button color="primary" (click)="startEdit(comment)"
+          [disabled]="editingCommentId === comment.id" aria-label="Edit comment">
           <mat-icon>edit</mat-icon>
         </button>
 
         <!-- Delete Button -->
-        <button
-          *ngIf="isCurrentUserComment(comment)"
-          mat-icon-button
-          color="warn"
-          (click)="confirmDelete(comment.id)"
-          aria-label="Delete comment"
-        >
+        <button *ngIf="isCurrentUserComment(comment)" mat-icon-button color="warn" (click)="confirmDelete(comment.id)"
+          aria-label="Delete comment">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
 
       <!-- Content -->
       <div class="comment-content text-gray-800 whitespace-pre-line"
-           *ngIf="editingCommentId==null||editingCommentId!==comment.id">
+        *ngIf="editingCommentId==null||editingCommentId!==comment.id">
         {{ comment.content }}
       </div>
       <div class="post-text" *ngIf="editingCommentId!=null&&editingCommentId===comment.id">
-              <textarea
-                [(ngModel)]="comment.content"
-                class="edit-textarea"
-                [placeholder]="comment.content==null?'what\'s in your mind':comment.content"
-                rows="4">
+        <textarea [(ngModel)]="comment.content" class="edit-textarea"
+          [placeholder]="comment.content==null?'what\'s in your mind':comment.content" rows="4">
               </textarea>
         <div class="edit-actions">
           <button class="btn-cancel" (click)="cancelEdit()">
@@ -100,32 +78,18 @@
 <mat-dialog-actions class="dialog-actions flex items-start gap-3 pt-3 border-t mt-3">
 
   <!-- Avatar -->
-  <img
-    [src]="unKnownImage"
-    [alt]="getCurrentUser()"
-    class="avatar-small w-9 h-9 rounded-full object-cover mt-1"
-  />
+  <img [src]="unKnownImage" [alt]="getCurrentUser()" class="avatar-small w-9 h-9 rounded-full object-cover mt-1" />
 
   <!-- Input -->
   <mat-form-field appearance="outline" class="comment-input flex-1">
     <mat-label>Write a comment...</mat-label>
-    <textarea
-      matInput
-      [(ngModel)]="newComment"
-      rows="2"
-      (keydown.enter)="$event.ctrlKey && addComment()"
-      placeholder="Press Ctrl + Enter to post"
-    ></textarea>
+    <textarea matInput [(ngModel)]="newComment" rows="2" (keydown.enter)="$event.ctrlKey && addComment()"
+      placeholder="Press Ctrl + Enter to post"></textarea>
   </mat-form-field>
 
   <!-- Post Button -->
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="addComment()"
-    [disabled]="!newComment?.trim()"
-    class="post-button h-fit mt-1"
-  >
+  <button mat-raised-button color="primary" (click)="addComment()" [disabled]="!newComment?.trim()"
+    class="post-button h-fit mt-1">
     Post
   </button>
 

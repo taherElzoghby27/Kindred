@@ -33,13 +33,14 @@ export class PublishComponent {
       return;
     }
     const post = new PostRequest(null, this.content, this.file == null ? '' : this.file.name);
-    this.postService.createPost(post).subscribe(
-      success => {
+    this.postService.createPost(post).subscribe({
+      next: success => {
         this.showSnackBar('Published', SnackbarPanelClass.Success);
         this.clearData();
-      }, errors => {
+      }, error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
-      });
+      }
+    });
   }
 
   validateFields(): boolean {

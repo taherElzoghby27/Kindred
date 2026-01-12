@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   getUsers(page: number, size: number): Observable<GeneralResponse<AccountFriendshipVm>> {
-    return this.http.get<any>(`${this.baseUrl}all-account`, {
+    return this.http.get<any>(`${this.baseUrl}`, {
       params: {
         page: page.toString(),
         size: size.toString(),

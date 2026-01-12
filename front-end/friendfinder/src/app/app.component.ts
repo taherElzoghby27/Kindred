@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './componants/header/header.component';
 import { RouterModule } from '@angular/router';
-import { FooterComponent } from './componants/footer/footer.component';
+
 import { AuthService } from '../service/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, HeaderComponent, RouterModule, FooterComponent],
+  imports: [CommonModule, HeaderComponent, RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

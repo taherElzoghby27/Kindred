@@ -1,20 +1,20 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {FriendshipStatus} from '../../enum/friendship-status.enum';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { FriendshipStatus } from '../../enum/friendship-status.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FriendshipService {
-  baseUrl = 'http://localhost:7070/friendship/';
+  baseUrl = 'http://localhost:7070/friendship';
 
   constructor(private http: HttpClient) {
   }
 
   requestFriend(friendId: number): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}create-friendship`, null, {
+    return this.http.post<any>(`${this.baseUrl}`, null, {
       params: {
         friend_id: friendId.toString()
       }
@@ -24,7 +24,7 @@ export class FriendshipService {
   }
 
   updateFriendShip(friendshipId: number, status: FriendshipStatus): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}update-friendship`, {
+    return this.http.put<any>(`${this.baseUrl}`, null, {
       params: {
         friendship_id: friendshipId.toString(),
         status: status.toString(),
@@ -35,7 +35,7 @@ export class FriendshipService {
   }
 
   removeFriendShip(friendId: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}remove-friendship`, {
+    return this.http.delete<any>(`${this.baseUrl}`, {
       params: {
         friend_id: friendId.toString(),
       }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { PostService } from '../../../../service/post/post.service';
 import { PostResponse } from '../../../../model/post-response';
 import { ReactionService } from '../../../../service/reaction/reaction.service';
@@ -13,30 +13,27 @@ import { AuthService } from '../../../../service/auth/auth.service';
 import { SharedService } from '../../../../service/shared.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { LeftBarComponent } from '../left-bar/left-bar.component';
 import { RightBarComponent } from '../right-bar/right-bar.component';
 import { PublishComponent } from '../publish/publish.component';
-import { FriendsComponent } from '../friends/friends.component';
-import { CoolImagesComponent } from '../cool-images/cool-images.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { Subscription } from 'rxjs';
 
 @Component({
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    InfiniteScrollModule,
     LeftBarComponent,
     RightBarComponent,
     PublishComponent,
-    FriendsComponent,
-    CoolImagesComponent
+    InfiniteScrollModule
   ],
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
 })
-export class MainPageComponent implements OnInit {
+export class MainPageComponent implements OnInit, OnDestroy {
 
 
   postsResponse: GeneralResponse<PostResponse>;
@@ -46,24 +43,34 @@ export class MainPageComponent implements OnInit {
   editId: number;
   page = 1;
   limit = 10;
+  dropdownTop = 0;
+  dropdownRight = 0;
+  private messageSubscription: Subscription;
 
   constructor(private postService: PostService,
     private reactionService: ReactionService,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private authService: AuthService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private cdr: ChangeDetectorRef
   ) {
   }
 
   ngOnInit(): void {
-    this.sharedService.currentMessage.subscribe(msg => {
+    this.messageSubscription = this.sharedService.currentMessage.subscribe(msg => {
       if (msg === '') {
         this.getAllPosts();
       } else {
         this.searchByContent(msg);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
   }
 
   getBaseUrlForMedia(): string {
@@ -130,24 +137,27 @@ export class MainPageComponent implements OnInit {
 
   savePostEdit(postResponse: PostResponse): void {
     const post = new PostRequest(postResponse.id, postResponse.content, postResponse.media);
-    this.postService.updatePost(post).subscribe(
-      success => {
+    this.postService.updatePost(post).subscribe({
+      next: success => {
+        this.processPost(postResponse);
         this.closeDropdown();
         this.showSnackBar('Updated', SnackbarPanelClass.Success);
-      }, errors => {
+      }, error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
-      });
+      }
+    });
   }
 
   onDeletePost(post: PostResponse): void {
-    this.postService.deletePost(post.id).subscribe(
-      success => {
+    this.postService.deletePost(post.id).subscribe({
+      next: success => {
         this.removePostLocal(post.id);
         this.closeDropdown();
         this.showSnackBar('Deleted', SnackbarPanelClass.Success);
-      }, errors => {
+      }, error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
-      });
+      }
+    });
   }
 
   removePostLocal(postId: number): void {
@@ -164,33 +174,43 @@ export class MainPageComponent implements OnInit {
   }
 
   getAllPosts(): void {
-    this.postService.getAllPosts(this.page, this.limit).subscribe(
-      response => {
+    console.log('MainPage: Fetching all posts...');
+    this.postService.getAllPosts(this.page, this.limit).subscribe({
+      next: response => {
+        console.log('MainPage: Posts received:', response.data.length);
+        response.data.forEach(post => this.processPost(post));
         if (this.page === 1) {
           this.postsResponse = response;
         } else {
           this.postsResponse.data.push(...response.data);
         }
+        this.cdr.detectChanges();
       },
-      errors => {
+      error: errors => {
+        console.error('MainPage: Error fetching posts:', errors);
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    );
+    });
   }
 
   searchByContent(content: string): void {
-    this.postService.searchByContent(this.page, this.limit, content).subscribe(
-      response => {
+    console.log('MainPage: Searching for:', content);
+    this.postService.searchByContent(this.page, this.limit, content).subscribe({
+      next: response => {
+        console.log('MainPage: Search results received:', response.data.length);
+        response.data.forEach(post => this.processPost(post));
         if (this.page === 1) {
           this.postsResponse = response;
         } else {
           this.postsResponse.data.push(...response.data);
         }
+        this.cdr.detectChanges();
       },
-      errors => {
+      error: errors => {
+        console.error('MainPage: Error searching posts:', errors);
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    );
+    });
   }
 
   // Toggle like functionality
@@ -204,29 +224,29 @@ export class MainPageComponent implements OnInit {
   }
 
   makeReact(reactionRequestVm: ReactionRequestVm): void {
-    this.reactionService.makeReact(reactionRequestVm).subscribe(
-      response => {
+    this.reactionService.makeReact(reactionRequestVm).subscribe({
+      next: response => {
         const postFounded = this.postsResponse.data.find(p => p.id === reactionRequestVm.postId);
         postFounded.liked = 1;
         postFounded.reactionsCount++;
       },
-      errors => {
+      error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    );
+    });
   }
 
   removeReact(postId: number): void {
-    this.reactionService.removeReact(postId).subscribe(
-      response => {
+    this.reactionService.removeReact(postId).subscribe({
+      next: response => {
         const postFounded = this.postsResponse.data.find(p => p.id === postId);
         postFounded.liked = 0;
         postFounded.reactionsCount--;
       },
-      errors => {
+      error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    );
+    });
   }
 
 
@@ -251,5 +271,18 @@ export class MainPageComponent implements OnInit {
       verticalPosition: 'bottom', // or 'top'
       panelClass: [snackType]
     });
+  }
+
+  processPost(post: PostResponse): void {
+    if (!post) return;
+    post.timeAgo = this.getTimeAgo(post.createdDate);
+    post.isImage = post.media ? this.isImage(post.media) : false;
+    post.isVideo = post.media ? this.isVideo(post.media) : false;
+    post.isMine = this.isCurrentUserPost(post);
+    post.fullMediaUrl = post.media ? this.getFullMediaPost(post.media) : null;
+  }
+
+  trackByPost(index: number, post: PostResponse): number {
+    return post.id;
   }
 }

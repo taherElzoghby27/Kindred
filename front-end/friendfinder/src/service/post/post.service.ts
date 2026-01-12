@@ -1,29 +1,29 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {PostRequest} from '../../model/post-request';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {PostResponse} from '../../model/post-response';
-import {GeneralResponse} from '../../model/general-response';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PostRequest } from '../../model/post-request';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { PostResponse } from '../../model/post-response';
+import { GeneralResponse } from '../../model/general-response';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
-  baseUrl = 'http://localhost:7070/posts/';
+  baseUrl = 'http://localhost:7070/posts';
   baseUrlMedia = 'assets/images/post-images/';
 
   constructor(private http: HttpClient) {
   }
 
   createPost(postRequest: PostRequest): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}create-post`, postRequest).pipe(
+    return this.http.post<any>(`${this.baseUrl}`, postRequest).pipe(
       map(response => response)
     );
   }
 
   getAllPosts(page: number, pageSize: number): Observable<GeneralResponse<PostResponse>> {
-    return this.http.get<any>(`${this.baseUrl}get-all-posts`, {
+    return this.http.get<any>(`${this.baseUrl}/all-posts`, {
       params: {
         page: page.toString(),
         page_size: pageSize.toString(),
@@ -34,7 +34,7 @@ export class PostService {
   }
 
   searchByContent(page: number, pageSize: number, content: string): Observable<GeneralResponse<PostResponse>> {
-    return this.http.get<any>(`${this.baseUrl}get-all-posts-by-content`, {
+    return this.http.get<any>(`${this.baseUrl}/posts-with-content`, {
       params: {
         page: page.toString(),
         page_size: pageSize.toString(),
@@ -46,7 +46,7 @@ export class PostService {
   }
 
   getMyPosts(page: number, pageSize: number): Observable<GeneralResponse<PostResponse>> {
-    return this.http.get<any>(`${this.baseUrl}get-my-posts`, {
+    return this.http.get<any>(`${this.baseUrl}/my-posts`, {
       params: {
         page: page.toString(),
         page_size: pageSize.toString(),
@@ -57,7 +57,7 @@ export class PostService {
   }
 
   deletePost(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}delete-post`, {
+    return this.http.delete<any>(`${this.baseUrl}`, {
       params: {
         id: id.toString()
       }
@@ -67,17 +67,13 @@ export class PostService {
   }
 
   getPost(id: number): Observable<PostResponse> {
-    return this.http.get<PostResponse>(`${this.baseUrl}get-post`, {
-      params: {
-        id: id.toString()
-      }
-    }).pipe(
+    return this.http.get<PostResponse>(`${this.baseUrl}/${id}`).pipe(
       map(response => response)
     );
   }
 
   updatePost(postRequest: PostRequest): Observable<any> {
-    return this.http.put<any>(`${this.baseUrl}update-post`, postRequest).pipe(
+    return this.http.put<any>(`${this.baseUrl}`, postRequest).pipe(
       map(response => response)
     );
   }

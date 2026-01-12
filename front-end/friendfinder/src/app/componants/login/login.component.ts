@@ -39,20 +39,21 @@ export class LoginComponent {
     const requestLoginModel = new RequestLogin(
       this.signInData.email, this.signInData.password
     );
-    this.authService.login(requestLoginModel).subscribe(
-      response => {
+    this.authService.login(requestLoginModel).subscribe({
+      next: response => {
         this.errorBackend = false;
         this.resetErrorFields();
         sessionStorage.setItem('account_id', response.data.body.id);
         sessionStorage.setItem('token', response.data.body.token);
         sessionStorage.setItem('userName', response.data.body.username);
         this.router.navigateByUrl('mainpage');
-      }, errors => {
+      }, error: errors => {
         this.errorBackend = true;
         this.resetErrorFields();
         this.errorMessageAr = errors.error.bundleMessage.message_ar;
         this.errorMessageEn = errors.error.bundleMessage.message_en;
-      });
+      }
+    });
   }
 
   validation(email: string, password: string): boolean {

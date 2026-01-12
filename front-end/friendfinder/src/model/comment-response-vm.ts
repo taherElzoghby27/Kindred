@@ -1,4 +1,4 @@
-import {AccountVm} from './account-vm';
+import { AccountVm } from './account-vm';
 
 export class CommentResponseVm {
   id!: number;
@@ -8,6 +8,10 @@ export class CommentResponseVm {
   updatedDate!: Date;
   createdDate!: Date;
   account?: AccountVm;
+
+  // Pre-calculated fields for performance
+  timeAgo?: string;
+  isMine?: boolean;
 
   constructor(
     id: number,

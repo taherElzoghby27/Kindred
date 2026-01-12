@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommentService } from '../../../../service/comment/comment.service';
@@ -50,7 +50,8 @@ export class DialogCommentsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -70,28 +71,34 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   getAllComments(): void {
-    this.commentService.getComments(this.data.post_id, this.page, this.limit).subscribe(
-      comments => {
+    console.log('DialogComments: Fetching comments for post:', this.data.post_id);
+    this.commentService.getComments(this.data.post_id, this.page, this.limit).subscribe({
+      next: comments => {
+        console.log('DialogComments: Comments received:', comments.data.length);
+        comments.data.forEach(comment => this.processComment(comment));
         if (this.page === 1) {
           this.comments = comments;
         } else {
           this.comments.data.push(...comments.data);
         }
+        this.cdr.detectChanges();
       },
-      errors => {
+      error: errors => {
+        console.error('DialogComments: Error fetching comments:', errors);
       }
-    );
+    });
   }
 
   // Add new comment
   addComment(): void {
-    if (this.newComment.trim()) {
+    if (this.newComment?.trim()) {
       const comment = new CommentRequestVm(
         this.newComment.trim(),
         this.data.post_id,
       );
-      this.commentService.createComment(comment).subscribe(
-        response => {
+      this.commentService.createComment(comment).subscribe({
+        next: response => {
+          this.processComment(response);
           if (this.comments == null) {
             this.comments = new GeneralResponse<CommentResponseVm>([], 1, 10);
           }
@@ -99,10 +106,10 @@ export class DialogCommentsComponent implements OnInit {
           this.newComment = '';
           this.countComments++;
         },
-        errors => {
+        error: errors => {
           this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
         },
-      );
+      });
     }
   }
 
@@ -147,14 +154,25 @@ export class DialogCommentsComponent implements OnInit {
       commentResponse.post_id,
       commentResponse.id,
     );
-    this.commentService.updateComment(comment).subscribe(
-      response => {
+    this.commentService.updateComment(comment).subscribe({
+      next: response => {
+        this.processComment(commentResponse);
         this.cancelEdit();
       },
-      errors => {
+      error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       },
-    );
+    });
+  }
+
+  processComment(comment: CommentResponseVm): void {
+    if (!comment) return;
+    comment.timeAgo = this.getTimeAgo(comment.createdDate);
+    comment.isMine = this.isCurrentUserComment(comment);
+  }
+
+  trackByComment(index: number, comment: CommentResponseVm): number {
+    return comment.id;
   }
 
   getTimeAgo(input: string | Date): string {

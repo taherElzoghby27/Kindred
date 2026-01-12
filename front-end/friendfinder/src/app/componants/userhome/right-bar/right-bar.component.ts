@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FriendshipService } from '../../../../service/friendship/friendship.service';
 import { AuthService } from '../../../../service/auth/auth.service';
@@ -22,7 +22,8 @@ export class RightBarComponent implements OnInit {
   constructor(
     private friendshipService: FriendshipService,
     private authService: AuthService,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -30,26 +31,30 @@ export class RightBarComponent implements OnInit {
   }
 
   getUsers(): void {
-    this.authService.getUsers(1, 10).subscribe(
-      result => {
+    console.log('RightBar: Fetching users...');
+    this.authService.getUsers(1, 10).subscribe({
+      next: result => {
+        console.log('RightBar: Users received:', result.data.length);
         this.users = result;
+        this.cdr.detectChanges();
       },
-      errors => {
+      error: errors => {
+        console.error('RightBar: Error fetching users:', errors);
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    );
+    });
   }
 
   requestFriend(friendId: number): void {
-    this.friendshipService.requestFriend(friendId).subscribe(
-      result => {
+    this.friendshipService.requestFriend(friendId).subscribe({
+      next: result => {
         const userFriendship = this.users.data.find(u => u.ac2_id === friendId);
         userFriendship.status = FriendshipStatus.PENDING;
       },
-      errors => {
+      error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    );
+    });
   }
 
   currentUserId(): string {
@@ -57,15 +62,15 @@ export class RightBarComponent implements OnInit {
   }
 
   removeRequestFriend(friendId: number): void {
-    this.friendshipService.removeFriendShip(friendId).subscribe(
-      result => {
+    this.friendshipService.removeFriendShip(friendId).subscribe({
+      next: result => {
         const userFriendship = this.users.data.find(u => u.ac2_id === friendId);
         userFriendship.status = null;
       },
-      errors => {
+      error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    );
+    });
   }
 
   updateRequestFriend(): void {
@@ -78,6 +83,10 @@ export class RightBarComponent implements OnInit {
       verticalPosition: 'bottom', // or 'top'
       panelClass: [snackType]
     });
+  }
+
+  trackByUser(index: number, user: AccountFriendshipVm): number {
+    return user.ac2_id;
   }
 
 }
