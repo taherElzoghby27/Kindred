@@ -1,17 +1,35 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {CommentService} from '../../../../service/comment/comment.service';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {GeneralResponse} from '../../../../model/general-response';
-import {CommentResponseVm} from '../../../../model/comment-response-vm';
-import {AuthService} from '../../../../service/auth/auth.service';
-import {ActivatedRoute} from '@angular/router';
-import {CommentRequestVm} from '../../../../model/comment-request-vm';
-import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { Component, Inject, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CommentService } from '../../../../service/comment/comment.service';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { GeneralResponse } from '../../../../model/general-response';
+import { CommentResponseVm } from '../../../../model/comment-response-vm';
+import { AuthService } from '../../../../service/auth/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { CommentRequestVm } from '../../../../model/comment-request-vm';
+import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 // @ts-ignore
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    InfiniteScrollModule
+  ],
   selector: 'app-dialog-comments',
   templateUrl: './dialog-comments.component.html',
   styleUrls: ['./dialog-comments.component.css'],
@@ -28,11 +46,11 @@ export class DialogCommentsComponent implements OnInit {
   limit = 10;
 
   constructor(private commentService: CommentService,
-              public dialogRef: MatDialogRef<DialogCommentsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private authService: AuthService,
-              private activatedRoute: ActivatedRoute,
-              private snackBar: MatSnackBar) {
+    public dialogRef: MatDialogRef<DialogCommentsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar) {
   }
 
   ngOnInit(): void {
@@ -65,7 +83,7 @@ export class DialogCommentsComponent implements OnInit {
     );
   }
 
-// Add new comment
+  // Add new comment
   addComment(): void {
     if (this.newComment.trim()) {
       const comment = new CommentRequestVm(

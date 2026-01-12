@@ -29,7 +29,7 @@ export class PostService {
         page_size: pageSize.toString(),
       }
     }).pipe(
-      map(response => response.data.body)
+      map((response: any) => response.data.body)
     );
   }
 
@@ -41,7 +41,7 @@ export class PostService {
         content: content.toString(),
       }
     }).pipe(
-      map(response => response.data.body)
+      map((response: any) => response.data.body)
     );
   }
 
@@ -52,7 +52,7 @@ export class PostService {
         page_size: pageSize.toString(),
       }
     }).pipe(
-      map(response => response.data.body)
+      map((response: any) => response.data.body)
     );
   }
 

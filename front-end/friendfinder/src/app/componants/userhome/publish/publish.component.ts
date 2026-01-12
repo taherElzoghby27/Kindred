@@ -1,10 +1,14 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {PostService} from '../../../../service/post/post.service';
-import {PostRequest} from '../../../../model/post-request';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PostService } from '../../../../service/post/post.service';
+import { PostRequest } from '../../../../model/post-request';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   selector: 'app-publish',
   templateUrl: './publish.component.html',
   styleUrls: ['./publish.component.css']

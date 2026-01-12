@@ -1,18 +1,37 @@
-import {Component, OnInit} from '@angular/core';
-import {PostService} from '../../../../service/post/post.service';
-import {PostResponse} from '../../../../model/post-response';
-import {ReactionService} from '../../../../service/reaction/reaction.service';
-import {ReactionRequestVm, ReactionType} from '../../../../model/reaction-request-vm';
-import {GeneralResponse} from '../../../../model/general-response';
-import {MatDialog} from '@angular/material/dialog';
-import {DialogCommentsComponent} from '../dialog-comments/dialog-comments.component';
-import {PostRequest} from '../../../../model/post-request';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
-import {AuthService} from '../../../../service/auth/auth.service';
-import {SharedService} from '../../../../service/shared.service';
+import { Component, OnInit } from '@angular/core';
+import { PostService } from '../../../../service/post/post.service';
+import { PostResponse } from '../../../../model/post-response';
+import { ReactionService } from '../../../../service/reaction/reaction.service';
+import { ReactionRequestVm, ReactionType } from '../../../../model/reaction-request-vm';
+import { GeneralResponse } from '../../../../model/general-response';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogCommentsComponent } from '../dialog-comments/dialog-comments.component';
+import { PostRequest } from '../../../../model/post-request';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
+import { AuthService } from '../../../../service/auth/auth.service';
+import { SharedService } from '../../../../service/shared.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { LeftBarComponent } from '../left-bar/left-bar.component';
+import { RightBarComponent } from '../right-bar/right-bar.component';
+import { PublishComponent } from '../publish/publish.component';
+import { FriendsComponent } from '../friends/friends.component';
+import { CoolImagesComponent } from '../cool-images/cool-images.component';
 
 @Component({
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    InfiniteScrollModule,
+    LeftBarComponent,
+    RightBarComponent,
+    PublishComponent,
+    FriendsComponent,
+    CoolImagesComponent
+  ],
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
@@ -29,11 +48,11 @@ export class MainPageComponent implements OnInit {
   limit = 10;
 
   constructor(private postService: PostService,
-              private reactionService: ReactionService,
-              public dialog: MatDialog,
-              private snackBar: MatSnackBar,
-              private authService: AuthService,
-              private sharedService: SharedService
+    private reactionService: ReactionService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private authService: AuthService,
+    private sharedService: SharedService
   ) {
   }
 
@@ -214,7 +233,7 @@ export class MainPageComponent implements OnInit {
   comments(postId: number): void {
     const dialogRef = this.dialog.open(DialogCommentsComponent, {
       width: '600px',
-      data: {post_id: postId}
+      data: { post_id: postId }
     });
 
     dialogRef.afterClosed().subscribe(result => {

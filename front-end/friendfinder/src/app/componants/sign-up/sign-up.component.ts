@@ -1,9 +1,14 @@
-import {Component} from '@angular/core';
-import {AuthService} from '../../../service/auth/auth.service';
-import {Router} from '@angular/router';
-import {RequestSignUp} from '../../../model/request-sign-up';
+
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../../service/auth/auth.service';
+import { Router, RouterModule } from '@angular/router';
+import { RequestSignUp } from '../../../model/request-sign-up';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule, FormsModule, RouterModule],
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']

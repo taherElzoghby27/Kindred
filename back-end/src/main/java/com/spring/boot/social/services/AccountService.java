@@ -6,8 +6,6 @@ import com.spring.boot.social.entity.security.Account;
 import com.spring.boot.social.vm.AccountFriendshipVm;
 import com.spring.boot.social.vm.GeneralResponseVm;
 
-import java.util.List;
-
 public interface AccountService {
     AccountDto createAccount(AccountDto accountDto);
 

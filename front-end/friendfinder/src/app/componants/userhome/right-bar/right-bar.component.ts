@@ -1,13 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {FriendshipService} from '../../../../service/friendship/friendship.service';
-import {AuthService} from '../../../../service/auth/auth.service';
-import {GeneralResponse} from '../../../../model/general-response';
-import {AccountFriendshipVm} from '../../../../model/account-friendship-vm';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
-import {FriendshipStatus} from '../../../../enum/friendship-status.enum';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FriendshipService } from '../../../../service/friendship/friendship.service';
+import { AuthService } from '../../../../service/auth/auth.service';
+import { GeneralResponse } from '../../../../model/general-response';
+import { AccountFriendshipVm } from '../../../../model/account-friendship-vm';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
+import { FriendshipStatus } from '../../../../enum/friendship-status.enum';
 
 @Component({
+  standalone: true,
+  imports: [CommonModule],
   selector: 'app-right-bar',
   templateUrl: './right-bar.component.html',
   styleUrls: ['./right-bar.component.css']
