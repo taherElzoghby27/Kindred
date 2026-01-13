@@ -12,14 +12,7 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Table(
-        uniqueConstraints = @UniqueConstraint(
-                columnNames = {
-                        "username",
-                        "email"
-                }
-        )
-)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"username", "email"}))
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -30,10 +23,7 @@ public class Account extends BaseEntity<String> {
     private String username;
     @Column(nullable = false, unique = true)
     private String email;
-    @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{7,}$",
-            message = "error.password"
-    )
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{7,}$", message = "error.password")
     @Column(nullable = false)
     private String password;
     @Column(nullable = false)

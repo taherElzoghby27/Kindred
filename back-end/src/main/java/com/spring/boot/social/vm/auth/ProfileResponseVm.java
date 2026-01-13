@@ -17,7 +17,7 @@ public class ProfileResponseVm {
     private String firstName;
     @JsonProperty("last_name")
     private String lastName;
-    private double friends;
+    private Long friends;
     private Long enabled;
     @JsonProperty("account_details")
     private ProfileDetailsVm accountDetails;
