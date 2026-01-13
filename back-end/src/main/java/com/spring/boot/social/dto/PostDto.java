@@ -1,7 +1,7 @@
 package com.spring.boot.social.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.spring.boot.social.vm.AccountVm;
+import com.spring.boot.social.vm.auth.AccountVm;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

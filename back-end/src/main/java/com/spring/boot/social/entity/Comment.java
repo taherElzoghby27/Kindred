@@ -1,6 +1,5 @@
 package com.spring.boot.social.entity;
 
-import com.spring.boot.social.entity.security.Account;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;

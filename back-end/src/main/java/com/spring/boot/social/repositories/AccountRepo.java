@@ -1,6 +1,6 @@
 package com.spring.boot.social.repositories;
 
-import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.vm.AccountFriendshipVm;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

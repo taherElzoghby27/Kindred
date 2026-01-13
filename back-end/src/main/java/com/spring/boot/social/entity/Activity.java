@@ -1,6 +1,5 @@
 package com.spring.boot.social.entity;
 
-import com.spring.boot.social.entity.security.Account;
 import com.spring.boot.social.utils.enums.ActivityType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

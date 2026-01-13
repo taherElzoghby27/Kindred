@@ -1,12 +1,10 @@
 package com.spring.boot.social.services.impl;
 
-import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.AccountMapper;
-import com.spring.boot.social.entity.security.Account;
-import com.spring.boot.social.entity.security.AccountDetails;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.repositories.AccountRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.utils.PaginationHelper;
@@ -66,7 +64,6 @@ public class AccountServiceImpl implements AccountService {
         AccountDto oldAccountDto = updateAccountModel(accountDto);
         //map accountDto to account
         Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(oldAccountDto);
-        account.getAccountDetails().setAccount(account);
         //save in db
         account = accountRepo.save(account);
         oldAccountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
@@ -83,56 +80,28 @@ public class AccountServiceImpl implements AccountService {
         if (Objects.nonNull(accountDto.getLastName())) {
             oldAccountDto.setLastName(accountDto.getLastName());
         }
-        if (Objects.nonNull(accountDto.getAccountDetails())) {
-            updateAccountDetails(accountDto, oldAccountDto);
+        if (Objects.nonNull(accountDto.getAge())) {
+            oldAccountDto.setAge(accountDto.getAge());
+        }
+        if (Objects.nonNull(accountDto.getAddress())) {
+            oldAccountDto.setAddress(accountDto.getAddress());
+        }
+        if (Objects.nonNull(accountDto.getBio())) {
+            oldAccountDto.setBio(accountDto.getBio());
+        }
+        if (Objects.nonNull(accountDto.getBirthday())) {
+            oldAccountDto.setBirthday(accountDto.getBirthday());
+        }
+        if (Objects.nonNull(accountDto.getFullName())) {
+            oldAccountDto.setFullName(accountDto.getFullName());
+        }
+        if (Objects.nonNull(accountDto.getPhoneNumber())) {
+            oldAccountDto.setPhoneNumber(accountDto.getPhoneNumber());
+        }
+        if (Objects.nonNull(accountDto.getProfilePictureUrl())) {
+            oldAccountDto.setProfilePictureUrl(accountDto.getProfilePictureUrl());
         }
         return oldAccountDto;
-    }
-
-    private static void updateAccountDetails(AccountDto accountDto, AccountDto oldAccountDto) {
-        AccountDetailsDto oldAccountDetailsDto = oldAccountDto.getAccountDetails();
-        AccountDetailsDto accountDetailsDto = accountDto.getAccountDetails();
-        if (Objects.nonNull(accountDetailsDto.getAge())) {
-            oldAccountDetailsDto.setAge(accountDetailsDto.getAge());
-        }
-        if (Objects.nonNull(accountDetailsDto.getAddress())) {
-            oldAccountDetailsDto.setAddress(accountDetailsDto.getAddress());
-        }
-        if (Objects.nonNull(accountDetailsDto.getBio())) {
-            oldAccountDetailsDto.setBio(accountDetailsDto.getBio());
-        }
-        if (Objects.nonNull(accountDetailsDto.getBirthday())) {
-            oldAccountDetailsDto.setBirthday(accountDetailsDto.getBirthday());
-        }
-        if (Objects.nonNull(accountDetailsDto.getFullName())) {
-            oldAccountDetailsDto.setFullName(accountDetailsDto.getFullName());
-        }
-        if (Objects.nonNull(accountDetailsDto.getPhoneNumber())) {
-            oldAccountDetailsDto.setPhoneNumber(accountDetailsDto.getPhoneNumber());
-        }
-        if (Objects.nonNull(accountDetailsDto.getProfilePictureUrl())) {
-            oldAccountDetailsDto.setProfilePictureUrl(accountDetailsDto.getProfilePictureUrl());
-        }
-        oldAccountDto.setAccountDetails(oldAccountDetailsDto);
-    }
-
-    @Override
-    public AccountDto addAccountDetails(AccountDetailsDto accountDetailsDto) {
-        //get account from context
-        AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        //get account by id
-        accountDto = getAccountById(accountDto.getId());
-        if (Objects.nonNull(accountDetailsDto.getId())) {
-            throw new BadRequestException("empty.account_details_id_must_null");
-        }
-        Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
-        AccountDetails accountDetails = AccountMapper.ACCOUNT_MAPPER.toAccountDetails(accountDetailsDto);
-        //add account details to account
-        account.setAccountDetails(accountDetails);
-        accountDetails.setAccount(account);
-        account = accountRepo.save(account);
-        accountDto = AccountMapper.ACCOUNT_MAPPER.toAccountDto(account);
-        return accountDto;
     }
 
     @Override

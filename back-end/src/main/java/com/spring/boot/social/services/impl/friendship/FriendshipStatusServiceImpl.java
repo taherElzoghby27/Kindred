@@ -11,7 +11,7 @@ import com.spring.boot.social.mappers.FriendshipStatusMapper;
 import com.spring.boot.social.entity.friendship.FriendStatus;
 import com.spring.boot.social.entity.friendship.Friendship;
 import com.spring.boot.social.entity.friendship.FriendshipStatus;
-import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.repositories.FriendShipStatusRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
@@ -54,12 +54,7 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
         friendshipStatus.setStatus(status);
         friendshipStatus = friendshipStatusRepo.save(friendshipStatus);
         //add log
-        activityService.logActivity(
-                new RequestActivityVm(
-                        "sent friend request to " + friendShipDto.getFriend().getUsername(),
-                        ActivityType.FRIENDSHIP_REQUEST_SENT
-                )
-        );
+        activityService.logActivity(new RequestActivityVm("sent friend request to " + friendShipDto.getFriend().getUsername(), ActivityType.FRIENDSHIP_REQUEST_SENT));
         return FriendshipStatusMapper.INSTANCE.toFriendshipStatusDto(friendshipStatus);
     }
 
@@ -133,15 +128,9 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
             case REJECTED:
                 removeFriendShipStatusById(statusFriendship.getId());
                 //add log
-                activityService.logActivity(
-                        new RequestActivityVm(
-                                "rejected friend request with " + statusFriendship.getFriendship().getAccount().getUsername(),
-                                ActivityType.FRIENDSHIP_REJECTED
-                        )
-                );
+                activityService.logActivity(new RequestActivityVm("rejected friend request with " + statusFriendship.getFriendship().getAccount().getUsername(), ActivityType.FRIENDSHIP_REJECTED));
                 break;
         }
-
     }
 
     @Override
@@ -149,7 +138,10 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
         Account account = accountService.getCurrentAccount();
         //get status
         FriendStatusDto friendStatusDto = friendStatusService.getStatus(FriendStatusEnum.valueOf(status));
-        List<FriendshipStatus> friendshipStatuses = friendshipStatusRepo.findAllByAccountIdAndStatus(account.getId(), friendStatusDto.getStatus());
+        List<FriendshipStatus> friendshipStatuses = friendshipStatusRepo.findAllByAccountIdAndStatus(
+                account.getId(),
+                friendStatusDto.getStatus()
+        );
         if (friendshipStatuses.isEmpty()) {
             throw new NotFoundResourceException("no.friendships");
         }
@@ -163,20 +155,10 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
         //add log
         switch (statusFriend.getStatus()) {
             case ACCEPTED:
-                activityService.logActivity(
-                        new RequestActivityVm(
-                                "Accepted friend request with " + statusFriendship.getFriendship().getAccount().getUsername(),
-                                ActivityType.FRIENDSHIP_ACCEPTED
-                        )
-                );
+                activityService.logActivity(new RequestActivityVm("Accepted friend request with " + statusFriendship.getFriendship().getAccount().getUsername(), ActivityType.FRIENDSHIP_ACCEPTED));
                 break;
             case BLOCKED:
-                activityService.logActivity(
-                        new RequestActivityVm(
-                                "blocked " + statusFriendship.getFriendship().getAccount().getUsername(),
-                                ActivityType.FRIENDSHIP_BLOCKED
-                        )
-                );
+                activityService.logActivity(new RequestActivityVm("blocked " + statusFriendship.getFriendship().getAccount().getUsername(), ActivityType.FRIENDSHIP_BLOCKED));
                 break;
         }
     }

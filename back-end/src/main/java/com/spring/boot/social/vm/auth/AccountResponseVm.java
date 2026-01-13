@@ -1,4 +1,4 @@
-package com.spring.boot.social.vm;
+package com.spring.boot.social.vm.auth;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;

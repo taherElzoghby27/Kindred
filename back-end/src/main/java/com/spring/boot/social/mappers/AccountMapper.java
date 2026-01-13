@@ -1,11 +1,9 @@
 package com.spring.boot.social.mappers;
 
-import com.spring.boot.social.dto.AccountDetailsDto;
 import com.spring.boot.social.dto.AccountDto;
-import com.spring.boot.social.entity.security.Account;
-import com.spring.boot.social.entity.security.AccountDetails;
-import com.spring.boot.social.vm.AccountResponseVm;
-import com.spring.boot.social.vm.AccountVm;
+import com.spring.boot.social.entity.Account;
+import com.spring.boot.social.vm.auth.AccountResponseVm;
+import com.spring.boot.social.vm.auth.AccountVm;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -22,15 +20,4 @@ public interface AccountMapper {
     AccountResponseVm toAccountResponseVm(AccountDto accountDto);
 
     AccountVm toAccountVm(Account account);
-
-    @Mapping(source = "accountId", target = "account", ignore = true)
-    AccountDetails toAccountDetails(AccountDetailsDto accountDetailsDto);
-
-    @Mapping(source = "account", target = "accountId", qualifiedByName = "accountToId")
-    AccountDetailsDto toAccountDetailsDto(AccountDetails accountDetails);
-
-    @Named("accountToId")
-    default Long accountToId(Account account) {
-        return account == null ? null : account.getId();
-    }
 }

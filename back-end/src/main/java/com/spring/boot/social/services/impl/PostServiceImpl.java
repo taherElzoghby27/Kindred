@@ -6,7 +6,7 @@ import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.PostMapper;
 import com.spring.boot.social.entity.Post;
-import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.repositories.PostRepo;
 import com.spring.boot.social.repositories.ReactionPostRepo;
 import com.spring.boot.social.services.AccountService;
