@@ -40,15 +40,18 @@ public class FriendShipController {
     }
 
     @Operation(summary = "Update Friendship", description = "Update friendship status")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Friendship updated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "404", description = "Friendship not found")
-    })
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "Friendship updated successfully"),
+                    @ApiResponse(responseCode = "400", description = "Invalid input data"),
+                    @ApiResponse(responseCode = "404", description = "Friendship not found")
+            }
+    )
     @PutMapping
     public SuccessDto<ResponseEntity<String>> updateFriendship(
             @RequestParam("friendship_id") Long id,
-            @RequestParam String status) {
+            @RequestParam String status
+    ) {
         friendshipService.updateFriendshipStatus(id, status);
         return new SuccessDto<>(
                 ResponseEntity.ok("Friendship updated successfully")
@@ -78,7 +81,9 @@ public class FriendShipController {
     @GetMapping("/{status}")
     public SuccessDto<ResponseEntity<List<FriendshipStatusDto>>> getFriendshipStatusByStatus(@PathVariable String status) {
         return new SuccessDto<>(
-                ResponseEntity.ok(friendshipService.getFriendshipStatusByStatus(status))
+                ResponseEntity.ok(
+                        friendshipService.getFriendshipStatusByStatus(status)
+                )
         );
     }
 }

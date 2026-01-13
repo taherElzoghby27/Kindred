@@ -16,7 +16,10 @@ public interface FriendShipRepo extends JpaRepository<Friendship, Long> {
              where (:accountId=f.account.id and :friendId=f.friend.id)
              or (:accountId=f.friend.id and :friendId=f.account.id)
             """)
-    Optional<Friendship> findFriendshipBetweenAccounts(@Param("accountId") Long accountId, @Param("friendId") Long friendId);
+    Optional<Friendship> findFriendshipBetweenAccounts(
+            @Param("accountId") Long accountId,
+            @Param("friendId") Long friendId
+    );
 
     @Modifying
     @Query(value = "delete from Friendship f where f.id=:id")

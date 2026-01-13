@@ -36,7 +36,9 @@ public class Account extends BaseEntity<String> {
     )
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private String firstName;
+    @Column(nullable = false)
     private String lastName;
     //0 or 1
     private Long enabled;

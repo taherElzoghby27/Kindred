@@ -21,7 +21,8 @@ public interface FriendShipStatusRepo extends JpaRepository<FriendshipStatus, Lo
 
     @Query(value = """
             select f from FriendshipStatus f
-            where f.friendship.friend.id=:accountId and  :status = f.status.status
+            where (f.friendship.account.id=:accountId or f.friendship.friend.id=:accountId)
+                        and  :status = f.status.status
             """)
     List<FriendshipStatus> findAllByAccountIdAndStatus(@Param("accountId") Long accountId, @Param("status") FriendStatusEnum status);
 }

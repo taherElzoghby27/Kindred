@@ -6,10 +6,10 @@ import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.AuthService;
 import com.spring.boot.social.vm.AccountFriendshipVm;
-import com.spring.boot.social.vm.AccountResponseVm;
+import com.spring.boot.social.vm.auth.AccountResponseVm;
 import com.spring.boot.social.vm.GeneralResponseVm;
+import com.spring.boot.social.vm.auth.LoginRequestVm;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.List;
 
 @RequestMapping("/auth")
 @RestController
@@ -48,14 +47,17 @@ public class AuthController {
     @Operation(summary = "User Login", description = "Authenticate user and get access token")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login successful",
-                    content = @Content(schema = @Schema(implementation = AccountResponseVm.class))),
+                    content = @Content(
+                            schema = @Schema(implementation = AccountResponseVm.class)
+                    )
+            ),
             @ApiResponse(responseCode = "401", description = "Invalid credentials"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @PostMapping("/login")
-    public SuccessDto<ResponseEntity<AccountResponseVm>> login(@Valid @RequestBody AccountDto accountDto) {
+    public SuccessDto<ResponseEntity<AccountResponseVm>> login(@Valid @RequestBody LoginRequestVm loginRequestVm) {
         return new SuccessDto<>(
-                ResponseEntity.ok(authService.login(accountDto))
+                ResponseEntity.ok(authService.login(loginRequestVm))
         );
     }
 

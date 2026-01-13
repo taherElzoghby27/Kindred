@@ -6,7 +6,8 @@ import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.AuthService;
-import com.spring.boot.social.vm.AccountResponseVm;
+import com.spring.boot.social.vm.auth.AccountResponseVm;
+import com.spring.boot.social.vm.auth.LoginRequestVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,12 +21,12 @@ public class AuthServiceImpl implements AuthService {
     private final TokenHandler tokenHandler;
 
     @Override
-    public AccountResponseVm login(AccountDto accountDto) {
-        if (Objects.isNull(accountDto.getPassword())) {
+    public AccountResponseVm login(LoginRequestVm loginRequestVm) {
+        if (Objects.isNull(loginRequestVm.getPassword())) {
             throw new BadRequestException("empty.password");
         }
-        AccountDto accountExist = accountService.getAccountByEmail(accountDto.getEmail());
-        if (!passwordEncoder.matches(accountDto.getPassword(), accountExist.getPassword())) {
+        AccountDto accountExist = accountService.getAccountByEmail(loginRequestVm.getEmail());
+        if (!passwordEncoder.matches(loginRequestVm.getPassword(), accountExist.getPassword())) {
             throw new BadRequestException("wrong.password");
         }
         return getAccountResponseVm(accountExist);
