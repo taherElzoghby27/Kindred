@@ -1,5 +1,6 @@
 package com.spring.boot.social.vm.auth;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -15,6 +16,11 @@ public class AccountVm {
     @Schema(description = "Last name of the user", example = "Doe")
     private String lastName;
 
-    @Schema(description = "Additional account details")
-    private AccountDetailsVm accountDetails;
+    @Schema(description = "User's full name", example = "John Doe")
+    @JsonProperty("full_name")
+    private String fullName;
+
+    @Schema(description = "User's profile picture URL", example = "https://example.com/profile.jpg")
+    @JsonProperty("profile_picture_url")
+    private String profilePictureUrl;
 }

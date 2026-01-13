@@ -1,7 +1,7 @@
-package com.spring.boot.social.entity.security;
+package com.spring.boot.social.entity;
 
-import com.spring.boot.social.entity.*;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -28,12 +29,25 @@ public class Account extends BaseEntity<String> {
     private String password;
     @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false)
+    @Column()
     private String lastName;
+    @Min(value = 16, message = "error.age")
+    @Column()
+    private Long age;
+    @Column()
+    private String phoneNumber;
+    @Column()
+    private String address;
+    @Column()
+    private String fullName;
+    @Column()
+    private LocalDateTime birthday;
+    @Column()
+    private String bio;
+    @Column()
+    private String profilePictureUrl;
     //0 or 1
     private Long enabled;
-    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
-    private AccountDetails accountDetails;
     @OneToMany(mappedBy = "account")
     private List<Post> posts;
     @OneToMany(mappedBy = "account")

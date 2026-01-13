@@ -11,7 +11,7 @@ import com.spring.boot.social.mappers.FriendshipStatusMapper;
 import com.spring.boot.social.entity.friendship.FriendStatus;
 import com.spring.boot.social.entity.friendship.Friendship;
 import com.spring.boot.social.entity.friendship.FriendshipStatus;
-import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.repositories.FriendShipStatusRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;

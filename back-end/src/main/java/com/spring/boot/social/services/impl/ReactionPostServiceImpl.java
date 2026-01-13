@@ -9,7 +9,7 @@ import com.spring.boot.social.mappers.ReactionMapper;
 import com.spring.boot.social.entity.Post;
 import com.spring.boot.social.entity.PostReactionAccount;
 import com.spring.boot.social.entity.Reaction;
-import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.repositories.ReactionPostRepo;
 import com.spring.boot.social.services.*;
 import com.spring.boot.social.utils.enums.ActivityType;

@@ -1,6 +1,6 @@
 package com.spring.boot.social.mappers;
 
-import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.vm.auth.ProfileResponseVm;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

@@ -53,4 +53,16 @@ public class ProfileController {
                 ResponseEntity.ok(profileService.getProfile())
         );
     }
+
+    @Operation(summary = "Update Profile", description = "Update existing user account information")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account updated successfully",
+                    content = @Content(schema = @Schema(implementation = AccountDto.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid input data"),
+            @ApiResponse(responseCode = "404", description = "Account not found")
+    })
+    @PutMapping
+    public SuccessDto<ResponseEntity<AccountDto>> updateAccount(@Valid @RequestBody AccountDto accountDto) {
+        return new SuccessDto<>(ResponseEntity.ok(profileService.updateProfile(accountDto)));
+    }
 }

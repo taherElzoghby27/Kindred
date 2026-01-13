@@ -1,6 +1,7 @@
 package com.spring.boot.social.services.impl;
 
-import com.spring.boot.social.entity.security.Account;
+import com.spring.boot.social.dto.AccountDto;
+import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.ProfileMapper;
 import com.spring.boot.social.repositories.ProfileRepo;
@@ -30,5 +31,10 @@ public class ProfileServiceImpl implements ProfileService {
         ProfileResponseVm profileResponseVm = ProfileMapper.PROFILE_MAPPER.toProfileResponseVm(acc.get());
         profileResponseVm.setFriends(friends);
         return profileResponseVm;
+    }
+
+    @Override
+    public AccountDto updateProfile(AccountDto accountDto) {
+        return accountService.updateAccount(accountDto);
     }
 }
