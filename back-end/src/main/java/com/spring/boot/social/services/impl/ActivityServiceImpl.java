@@ -25,7 +25,8 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public List<ActivityDto> getAllActivities() {
-        List<Activity> activities = activityRepo.findAll();
+        Account account = accountService.getCurrentAccount();
+        List<Activity> activities = activityRepo.findActivitiesByAccountId(account.getId());
         if (activities.isEmpty()) {
             throw new NotFoundResourceException("no_activities");
         }

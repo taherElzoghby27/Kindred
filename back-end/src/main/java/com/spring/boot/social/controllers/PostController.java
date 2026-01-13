@@ -93,7 +93,7 @@ public class PostController {
     @Operation(summary = "Get Post", description = "Retrieve a specific post by ID")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Post retrieved successfully", content = @Content(schema = @Schema(implementation = PostDto.class))), @ApiResponse(responseCode = "400", description = "Invalid post ID"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/{id}")
+    @GetMapping("/post/{id}")
     public SuccessDto<ResponseEntity<PostDto>> getPost(@PathVariable Long id) {
         return new SuccessDto<>(ResponseEntity.ok(postService.getPost(id)));
     }
@@ -101,7 +101,7 @@ public class PostController {
     @Operation(summary = "Update Post", description = "Update an existing post")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Post updated successfully", content = @Content(schema = @Schema(implementation = PostDto.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PreAuthorize("isAuthenticated()")
-    @PutMapping
+    @PutMapping("/update")
     public SuccessDto<ResponseEntity<PostDto>> updatePost(@Valid @RequestBody PostRequestVm postRequestVm) {
         return new SuccessDto<>(ResponseEntity.ok(postService.updatePost(postRequestVm)));
     }
