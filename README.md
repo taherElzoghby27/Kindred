@@ -16,16 +16,16 @@ this project captures the core features of a large-scale social media app.
 
 ## 🔑 Key Features
 
-* 🔑 **Authentication**: Email/username login with JWT & refresh tokens
+* 🔑 **Authentication**: Email/username login with JWT 
 * 🧑‍🤝‍🧑 **Profiles**: Avatars, bios, cover photos, featured content
-* 📝 **Posts**: Text, images, videos, links, polls; edit/delete; scheduled posts
-* 💬 **Comments & Threads**: Replies, mentions, rich text
+* 📝 **Posts**: Text, images, videos, links; edit/delete;
+* 💬 **Comments & Threads**: Replies, rich text
 * 👍 **Reactions**: Like, Love, Celebrate, and more
 * 🔁 **Share**: Repost with or without commentary
-* 👥 **Friends & Follows**: Requests, mutuals, close friends lists
+* 👥 **Friends**: Requests, mutuals, close friends lists
 * 🔔 **Notifications (Real-time)**: Push for reactions, comments, tags, requests
-* 🧭 **Explore & Search**: People, posts, pages, groups, hashtags
-* 🛡️ **Privacy Controls**: Audience selection, block/mute, activity visibility
+* 🧭 **Explore & Search**: People, posts, hashtags
+* 🛡️ **Privacy Controls**: activity visibility
 
 ---
 
@@ -51,7 +51,6 @@ this project captures the core features of a large-scale social media app.
 * `Spring Data JPA`
 * `Hibernate`
 * `JWT Authentication`
-* `Redis` (for caching & real-time counters)
 * `Flyway` (DB migrations)
 * `Maven`
 
@@ -68,7 +67,7 @@ this project captures the core features of a large-scale social media app.
 * `Oracle` (primary data store)
 * `Docker` (containerization)
 * `Swagger` (API docs)
-* `Postman / Insomnia` (API testing)
+* `Postman` (API testing)
 
 ---
 
