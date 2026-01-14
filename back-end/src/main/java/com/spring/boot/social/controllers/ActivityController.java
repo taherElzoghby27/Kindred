@@ -27,27 +27,7 @@ public class ActivityController {
     private final ActivityService activityService;
 
     @Operation(summary = "Get all activities", description = "Retrieve all activities for a specific account")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "activities retrieved successfully",
-                            content = @Content(
-                                    schema = @Schema(
-                                            implementation = CommentResponseVm.class
-                                    )
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "401",
-                            description = "Unauthorized"
-                    ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "activities not found"
-                    )
-            }
-            )
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "activities retrieved successfully", content = @Content(schema = @Schema(implementation = CommentResponseVm.class))), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "activities not found")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public SuccessDto<ResponseEntity<List<ActivityDto>>> getActivities() {

@@ -4,9 +4,6 @@ import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.ReactionPostService;
 import com.spring.boot.social.vm.ReactionRequestVm;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,12 +24,7 @@ public class ReactionController {
 
 
     @Operation(summary = "Add Reaction", description = "Add a reaction to a post")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Reaction added successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "Post not found")
-    })
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Reaction added successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PostMapping("/reaction-request")
     @PreAuthorize("isAuthenticated()")
     public SuccessDto<ResponseEntity<String>> reactionRequest(@Valid @RequestBody ReactionRequestVm reactionRequestVm) {
@@ -41,13 +33,8 @@ public class ReactionController {
     }
 
     @Operation(summary = "Remove Reaction", description = "Remove a reaction from a post")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Reaction removed successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "Reaction not found")
-    })
-    @DeleteMapping
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Reaction removed successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Reaction not found")})
+    @DeleteMapping("/delete")
     @PreAuthorize("isAuthenticated()")
     public SuccessDto<ResponseEntity<String>> deleteReact(@Valid @RequestParam("post_id") Long postId) {
         reactionPostService.removeReaction(postId);
