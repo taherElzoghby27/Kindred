@@ -53,31 +53,10 @@ public class PostController {
     }
 
     @Operation(summary = "search by content on Posts", description = "Retrieve all posts with pagination based on content")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Posts retrieved successfully",
-                            content = @Content(
-                                    schema = @Schema(
-                                            implementation = GeneralResponseVm.class
-                                    )
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Invalid pagination parameters"
-                    ),
-                    @ApiResponse(
-                            responseCode = "401", description = "Unauthorized"
-                    )
-            }
-            )
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Posts retrieved successfully", content = @Content(schema = @Schema(implementation = GeneralResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid pagination parameters"), @ApiResponse(responseCode = "401", description = "Unauthorized")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/posts-with-content")
-    public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getPostsByContent(@RequestParam int page,
-                                                                                    @RequestParam("page_size") int pageSize,
-                                                                                    @RequestParam String content) {
+    public SuccessDto<ResponseEntity<GeneralResponseVm<PostDto>>> getPostsByContent(@RequestParam int page, @RequestParam("page_size") int pageSize, @RequestParam String content) {
         return new SuccessDto<>(ResponseEntity.ok(postService.searchByContent(page, pageSize, content)));
     }
 

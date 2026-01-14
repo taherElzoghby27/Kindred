@@ -44,35 +44,10 @@ public class AuthController {
     }
 
 
-    @Operation(
-            summary = "get all accounts",
-            description = "get all accounts with relationships"
-    )
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "get accounts successfully",
-                            content = @Content(
-                                    schema = @Schema(
-                                            implementation = AccountDto.class
-                                    )
-                            )
-                    ), @ApiResponse(
-                            responseCode = "400",
-                            description = "Invalid input data"
-            ),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Account not found"
-                    )
-            }
-            )
+    @Operation(summary = "get all accounts", description = "get all accounts with relationships")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "get accounts successfully", content = @Content(schema = @Schema(implementation = AccountDto.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "404", description = "Account not found")})
     @GetMapping
-    public SuccessDto<ResponseEntity<GeneralResponseVm<AccountFriendshipVm>>> getUsers(
-            @RequestParam int page,
-            @RequestParam int size
-    ) {
+    public SuccessDto<ResponseEntity<GeneralResponseVm<AccountFriendshipVm>>> getUsers(@RequestParam int page, @RequestParam int size) {
         return new SuccessDto<>(ResponseEntity.ok(accountService.getUsers(page, size)));
     }
 }
