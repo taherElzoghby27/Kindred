@@ -49,8 +49,6 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction))
                 .orElseGet(() -> createNewReactionWithPost(account, post, reaction));
         reactionPostRepo.save(postReactionAccount);
-        //add liked in post
-        //postService.makeItLiked(post.getId());
         //add log
         activityService.logActivity(new RequestActivityVm("react on " + post.getContent(), ActivityType.REACTION_ADDED));
     }
@@ -81,8 +79,7 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Account account = accountService.getCurrentAccount();
 
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(postId, account.getId());
-        result.map(rPA -> removeProcess(postId, rPA))
-                .orElseThrow(() -> new NotFoundResourceException("reaction.not.found"));
+        result.map(rPA -> removeProcess(postId, rPA)).orElseThrow(() -> new NotFoundResourceException("reaction.not.found"));
     }
 
 
