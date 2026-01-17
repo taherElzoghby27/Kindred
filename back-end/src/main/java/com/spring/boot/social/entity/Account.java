@@ -56,4 +56,6 @@ public class Account extends BaseEntity<String> {
     private List<Activity> activities;
     @OneToMany(mappedBy = "account")
     private List<PostReactionAccount> postsReactionsAccounts;
+    @OneToMany(mappedBy = "recipient")
+    private List<Notification> notifications;
 }
