@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,8 @@ public class ReactionController {
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Reaction added successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PostMapping("/reaction-request")
     @PreAuthorize("isAuthenticated()")
+    @MessageMapping("/react")
+    @SendTo("/notification/react")
     public SuccessDto<ResponseEntity<String>> reactionRequest(@Valid @RequestBody ReactionRequestVm reactionRequestVm) {
         reactionPostService.reactionRequest(reactionRequestVm);
         return new SuccessDto<>(ResponseEntity.created(URI.create("/reaction-request")).body("Success"));
