@@ -27,9 +27,6 @@ public class AOPNotification {
         notificationRequestVm.setType(NotificationType.LIKE);
         notificationRequestVm.setReferenceId(postReactionAccountVm.getPost().getId());
         notificationRequestVm.setRecipientId(postReactionAccountVm.getPost().getAccount().getId());
-        System.out.println("sender id "+postReactionAccountVm.getAccount().getId());
-        System.out.println("post id "+postReactionAccountVm.getPost().getId());
-        System.out.println("recipient id "+postReactionAccountVm.getPost().getAccount().getId());
         notificationService.saveNotification(notificationRequestVm);
     }
 }
