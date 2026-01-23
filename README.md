@@ -53,6 +53,7 @@ this project captures the core features of a large-scale social media app.
 * `JWT Authentication`
 * `Flyway` (DB migrations)
 * `Maven`
+* `websocket`
 
 ### 🎨 Frontend
 
