@@ -37,7 +37,7 @@ public class ReactionController {
             System.out.println("receiver: "+result.getPost().getAccount().getUsername());
             simpMessagingTemplate.convertAndSendToUser(
                     result.getPost().getAccount().getUsername(),
-                    "/notification/react",
+                    "/notification/post",
                     result
             );
         }

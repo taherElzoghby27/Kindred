@@ -14,7 +14,6 @@ public interface CommentMapper {
 
     CommentDto toCommentDto(Comment comment);
 
-    @Mapping(qualifiedByName = "postToId", source = "post", target = "postId")
     CommentResponseVm toCommentResponseVm(Comment comment);
 
     @Mapping(source = "postId", target = "post", ignore = true)

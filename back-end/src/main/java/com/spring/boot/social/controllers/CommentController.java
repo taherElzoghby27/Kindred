@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +27,7 @@ import java.net.URI;
 public class CommentController {
 
     private final CommentService commentService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
 
     @Operation(summary = "Create Comment", description = "Create a new comment on a post")
@@ -33,7 +35,15 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public SuccessDto<ResponseEntity<CommentResponseVm>> createComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
-        return new SuccessDto<>(ResponseEntity.created(URI.create("/create-comment")).body(commentService.createComment(commentRequestVm)));
+        CommentResponseVm result = commentService.createComment(commentRequestVm);
+        if (result.getPost() != null && result.getPost().getAccount() != null) {
+            simpMessagingTemplate.convertAndSendToUser(
+                    result.getPost().getAccount().getUsername(),
+                    "/notification/post",
+                    result
+            );
+        }
+        return new SuccessDto<>(ResponseEntity.created(URI.create("/create-comment")).body(result));
     }
 
     @Operation(summary = "Update Comment", description = "Update an existing comment")
