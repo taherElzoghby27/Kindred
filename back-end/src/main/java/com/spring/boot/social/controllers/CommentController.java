@@ -39,7 +39,7 @@ public class CommentController {
         if (result.getPost() != null && result.getPost().getAccount() != null) {
             simpMessagingTemplate.convertAndSendToUser(
                     result.getPost().getAccount().getUsername(),
-                    "/notification/post",
+                    "/listener/notification",
                     result
             );
         }

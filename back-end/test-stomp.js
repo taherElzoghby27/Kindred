@@ -6,7 +6,7 @@ const { Client } = require('@stomp/stompjs');
 
 // ==== CONFIGURATION ====
 const WS_URL = 'ws://localhost:7070/web-socket-kindred';
-const JWT = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhaG1lZE1vaGFtZWQ4OTdAZ21haWwuY29tIiwiaWF0IjoxNzY5Mjg5MDI1LCJleHAiOjE3NzE4ODEwMjV9.xJEi5WzQoj-kuCJnvyUn64J_7h7De8d2cljU0SHe198'; // Paste your Bearer token here, e.g., 'Bearer eyJhbGciOiJIUzI1NiJ9...'
+const JWT = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhaG1lZE1vaGFtZWQ4OTdAZ21haWwuY29tIiwiaWF0IjoxNzY5MjkyMjg1LCJleHAiOjE3NzE4ODQyODV9.yGV7lXe0bWg7FOARaVPaDCMZg2Xn9Jwjxk0fIu7g2CE'; // Paste your Bearer token here, e.g., 'Bearer eyJhbGciOiJIUzI1NiJ9...'
 // =======================
 
 const connectHeaders = {};
@@ -23,10 +23,10 @@ const client = new Client({
 
 client.onConnect = (frame) => {
     console.log('Connected to STOMP broker.');
-    client.subscribe('/user/notification/post', (message) => {
-        console.log('Received on /user/notification/post:', message.body);
+    client.subscribe('/user/listener/notification', (message) => {
+        console.log('Received on /user/listener/notification:', message.body);
     });
-    console.log('Subscribed to /user/notification/post');
+    console.log('Subscribed to /user/listener/notification');
     console.log('Press Ctrl+C to exit.');
 };
 

@@ -4,7 +4,6 @@ import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.dto.friendship.FriendshipStatusDto;
 import com.spring.boot.social.services.friendship.FriendshipStatusService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -24,12 +24,22 @@ import java.util.List;
 public class FriendShipController {
 
     private final FriendshipStatusService friendshipService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Operation(summary = "Create Friendship", description = "Create a new friendship request")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Friendship created successfully", content = @Content(schema = @Schema(implementation = FriendshipStatusDto.class))), @ApiResponse(responseCode = "400", description = "Invalid friendship ID"), @ApiResponse(responseCode = "409", description = "Friendship already exists")})
     @PostMapping
     public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendId) {
-        return new SuccessDto<>(ResponseEntity.created(URI.create("/create-friendship")).body(friendshipService.createFriendShipStatus(friendId)));
+        FriendshipStatusDto result = friendshipService.createFriendShipStatus(friendId);
+        if (result.getFriendship() != null && result.getFriendship().getAccount() != null && result.getFriendship().getFriend() != null) {
+            //send with socket
+            simpMessagingTemplate.convertAndSendToUser(
+                    result.getFriendship().getFriend().getUsername(),
+                    "/listener/notification",
+                    result
+            );
+        }
+        return new SuccessDto<>(ResponseEntity.created(URI.create("/create-friendship")).body(result));
     }
 
     @Operation(summary = "Update Friendship", description = "Update friendship status")
