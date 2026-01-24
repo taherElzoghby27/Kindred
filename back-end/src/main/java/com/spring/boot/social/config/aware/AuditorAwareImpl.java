@@ -17,6 +17,7 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         // Check if user is authenticated and principal is AccountDto
         if (authentication != null && authentication.isAuthenticated() &&
             authentication.getPrincipal() instanceof AccountDto) {
+            System.out.println("Principal name: "+authentication.getName());
 
             AccountDto acc = (AccountDto) authentication.getPrincipal();
             return Optional.ofNullable(acc.getUsername());

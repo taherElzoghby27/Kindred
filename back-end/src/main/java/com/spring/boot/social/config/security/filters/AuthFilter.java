@@ -56,7 +56,11 @@ public class AuthFilter extends OncePerRequestFilter {
 //            ).toList();
             //5- encapsulate user data , used to store details about an authenticated user after authentication is complete.
             //Stored in the SecurityContextHolder to represent the authenticated user for the duration of the request.
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userValidated, userValidated.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_USER")));
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                    userValidated,
+                    userValidated.getPassword(),
+                    List.of(new SimpleGrantedAuthority("ROLE_USER"))
+            );
             //6- The SecurityContextHolder stores UsernamePasswordAuthenticationToken to make the authenticated user’s details available throughout the request.
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             //7- Continue with the filter chain
@@ -95,6 +99,6 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getRequestURI().contains("auth/login") || request.getRequestURI().contains("auth/sign-up") || request.getRequestURI().contains("/v3/api-docs") || request.getRequestURI().contains("/swagger-ui") || request.getRequestURI().contains("/swagger-ui.html");
+        return request.getRequestURI().contains("auth/login") || request.getRequestURI().contains("auth/sign-up") || request.getRequestURI().contains("/v3/api-docs") || request.getRequestURI().contains("/swagger-ui") || request.getRequestURI().contains("/swagger-ui.html") || request.getRequestURI().contains("/web-socket-kindred");
     }
 }
