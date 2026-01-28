@@ -1,5 +1,6 @@
 package com.spring.boot.social.entity;
 
+import com.spring.boot.social.entity.chat.ChatParticipant;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -58,4 +59,6 @@ public class Account extends BaseEntity<String> {
     private List<PostReactionAccount> postsReactionsAccounts;
     @OneToMany(mappedBy = "recipient")
     private List<Notification> notifications;
+    @OneToOne(mappedBy = "account")
+    private ChatParticipant chatParticipant;
 }
