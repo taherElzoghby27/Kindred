@@ -13,6 +13,7 @@ import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.repositories.ReactionPostRepo;
 import com.spring.boot.social.services.*;
 import com.spring.boot.social.utils.enums.ActivityType;
+import com.spring.boot.social.vm.PostReactionAccountVm;
 import com.spring.boot.social.vm.ReactionRequestVm;
 import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class ReactionPostServiceImpl implements ReactionPostService {
 
     @Transactional
     @Override
-    public void reactionRequest(ReactionRequestVm reactionRequestVm) {
+    public PostReactionAccountVm reactionRequest(ReactionRequestVm reactionRequestVm) {
         //get account
         Account account = accountService.getCurrentAccount();
         //get post
@@ -46,11 +47,11 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction
-        postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction))
-                .orElseGet(() -> createNewReactionWithPost(account, post, reaction));
-        reactionPostRepo.save(postReactionAccount);
+        postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction)).orElseGet(() -> createNewReactionWithPost(account, post, reaction));
+        postReactionAccount = reactionPostRepo.save(postReactionAccount);
         //add log
         activityService.logActivity(new RequestActivityVm("react on " + post.getContent(), ActivityType.REACTION_ADDED));
+        return ReactionMapper.INSTANCE.toPostReactionAccountVm(postReactionAccount);
     }
 
     protected PostReactionAccount updateReaction(PostReactionAccount postReactionAccount, Reaction reaction) {

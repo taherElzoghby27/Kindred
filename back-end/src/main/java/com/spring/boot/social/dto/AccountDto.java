@@ -1,6 +1,7 @@
 package com.spring.boot.social.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -13,6 +14,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @Setter
@@ -21,10 +23,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Account information for user registration and updates")
-public class AccountDto {
+public class AccountDto implements Principal {
     @Schema(description = "Unique identifier for the account", example = "1553453")
     private Long id;
-
     @Schema(description = "Username for the account", example = "john_doe")
     private String username;
 
@@ -75,4 +76,9 @@ public class AccountDto {
     @Schema(description = "User's profile picture URL", example = "https://example.com/profile.jpg")
     @JsonProperty("profile_picture_url")
     private String profilePictureUrl;
+
+    @Override
+    public String getName() {
+        return this.username;
+    }
 }

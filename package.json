@@ -1,0 +1,23 @@
+{
+  "name": "Kindred",
+  "version": "1.0.0",
+  "description": "### Built with **Spring Boot** & **Angular**",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taherElzoghby27/Kindred.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taherElzoghby27/Kindred/issues"
+  },
+  "homepage": "https://github.com/taherElzoghby27/Kindred#readme",
+  "dependencies": {
+    "stompit": "^1.0.0"
+  }
+}

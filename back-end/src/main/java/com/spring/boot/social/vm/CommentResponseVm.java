@@ -1,7 +1,7 @@
 package com.spring.boot.social.vm;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.vm.auth.AccountVm;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 public class CommentResponseVm {
     private Long id;
     private String content;
-    @JsonProperty("post_id")
-    private Long postId;
+    private PostDto post;
     private AccountVm account;
     private String createdBy;
     private LocalDateTime updatedDate;

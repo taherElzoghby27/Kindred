@@ -37,5 +37,5 @@ public class PostDto {
     //private List<CommentResponseVm> comments;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Schema(description = "Account information of the post creator")
-    private AccountVm account;
+    private AccountDto account;
 }

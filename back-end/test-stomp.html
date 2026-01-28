@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STOMP Test for /notification/react</title>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 1rem; }
+        #log { background: #f5f5f5; padding: 0.5rem; height: 300px; overflow-y: scroll; border: 1px solid #ccc; white-space: pre-wrap; }
+        input, button { margin-top: 0.5rem; }
+    </style>
+</head>
+<body>
+<h2>STOMP Test: /notification/react</h2>
+
+<label>WebSocket URL (e.g., ws://localhost:8080/web-socket-kindred)</label><br>
+<input id="wsUrl" value="ws://localhost:7070/web-socket-kindred" style="width: 400px;"><br>
+
+<label>JWT (Bearer token, optional)</label><br>
+<input id="jwt" placeholder="Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0YWhlckVsem9naGJ5MjM0QGdtYWlsLmNvbSIsImlhdCI6MTc2ODgwNDAzNCwiZXhwIjoxNzcxMzk2MDM0fQ.AqFbBBRHQzeavrAHlKKjcI8BpZlezSofG_uyU52JCMU" style="width: 400px;"><br>
+
+<button onclick="connect()">Connect & Subscribe</button>
+<button onclick="disconnect()">Disconnect</button>
+<button onclick="clearLog()">Clear Log</button>
+
+<h3>Log</h3>
+<div id="log"></div>
+
+<script>
+    let client = null;
+
+    function log(msg) {
+        const logEl = document.getElementById('log');
+        logEl.textContent += new Date().toISOString() + ' ' + msg + '\n';
+        logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function connect() {
+        if (client && client.connected) {
+            log('Already connected.');
+            return;
+        }
+        const wsUrl = document.getElementById('wsUrl').value.trim();
+        const jwt = document.getElementById('jwt').value.trim();
+        if (!wsUrl) {
+            log('WebSocket URL required.');
+            return;
+        }
+
+        const headers = jwt ? { Authorization: jwt } : {};
+
+        client = new StompJs.Client({
+            brokerURL: wsUrl,
+            connectHeaders: headers,
+            debug: (str) => log('[DEBUG] ' + str),
+            reconnectDelay: 5000,
+            heartbeatIncoming: 4000,
+            heartbeatOutgoing: 4000,
+        });
+
+        client.onConnect = (frame) => {
+            log('Connected to STOMP broker.');
+            client.subscribe('/notification/react', (message) => {
+                log('Received on /notification/react: ' + message.body);
+            });
+            log('Subscribed to /notification/react');
+        };
+
+        client.onStompError = (frame) => {
+            log('STOMP error: ' + frame.headers['message']);
+        };
+
+        client.onWebSocketError = (event) => {
+            log('WebSocket error: ' + event);
+        };
+
+        client.onWebSocketClose = (event) => {
+            log('WebSocket closed: ' + event);
+        };
+
+        client.activate();
+    }
+
+    function disconnect() {
+        if (client) {
+            client.deactivate();
+            log('Disconnected.');
+        }
+    }
+
+    function clearLog() {
+        document.getElementById('log').textContent = '';
+    }
+</script>
+</body>
+</html>

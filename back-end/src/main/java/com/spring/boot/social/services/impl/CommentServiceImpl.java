@@ -93,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
         CommentResponseVm commentResponseVm = getCommentByIdBasedOnAccount(commentId);
         commentRepo.deleteByCommentId(commentId);
         //decrement commentsCount num in post
-        postService.decrementCommentCount(commentResponseVm.getPostId());
+        postService.decrementCommentCount(commentResponseVm.getPost().getId());
     }
 
     @Override
