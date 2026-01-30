@@ -59,6 +59,6 @@ public class Account extends BaseEntity<String> {
     private List<PostReactionAccount> postsReactionsAccounts;
     @OneToMany(mappedBy = "recipient")
     private List<Notification> notifications;
-    @OneToOne(mappedBy = "account")
-    private ChatParticipant chatParticipant;
+    @OneToMany(mappedBy = "account")
+    private List<ChatParticipant> chatParticipants;
 }

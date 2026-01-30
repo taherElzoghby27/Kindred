@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"chat_id", "account_id"}))
+//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"chat_id", "account_id"}))
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -18,7 +18,7 @@ public class ChatParticipant extends BaseEntity<String> {
     @ManyToOne
     @JoinColumn(name = "chat_id")
     private Chat chat;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 }
