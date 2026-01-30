@@ -15,4 +15,5 @@ public class MessageDto {
     private boolean seen;
     private ChatDto chat;
     private AccountVm account;
+    private AccountVm receiver;
 }

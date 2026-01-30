@@ -6,8 +6,11 @@ import com.spring.boot.social.entity.chat.Chat;
 import com.spring.boot.social.entity.chat.ChatParticipant;
 import com.spring.boot.social.entity.chat.Message;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
+import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.mappers.ChatMapper;
+import com.spring.boot.social.mappers.MessageMapper;
 import com.spring.boot.social.repositories.chat.ChatRepo;
+import com.spring.boot.social.repositories.chat.MessageRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.chat.ChatService;
 import com.spring.boot.social.vm.chat.ChatResponseVm;
@@ -24,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
     private final ChatRepo chatRepo;
+    private final MessageRepo messageRepo;
     private final AccountService accountService;
 
     @Override
@@ -58,11 +62,14 @@ public class ChatServiceImpl implements ChatService {
         List<Message> messages = chat.getMessages();
         //create message
         createMessage(messageRequestVm.getText(), message, chat, currentAccount);
+        message = messageRepo.save(message);
         messages.add(message);
         chat.setMessages(messages);
         chat.setLastMessageAt(LocalDateTime.now());
         chatRepo.save(chat);
-        return new MessageDto();
+        MessageDto messageDto = MessageMapper.INSTANCE.toMessageDto(message);
+        messageDto.setReceiver(AccountMapper.ACCOUNT_MAPPER.toAccountVm(receiverAccount));
+        return messageDto;
     }
 
     private void createMessage(String txt, Message message, Chat chat, Account currentAccount) {
