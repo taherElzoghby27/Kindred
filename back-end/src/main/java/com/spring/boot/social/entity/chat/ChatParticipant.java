@@ -3,10 +3,7 @@ package com.spring.boot.social.entity.chat;
 import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 //@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"chat_id", "account_id"}))
@@ -14,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class ChatParticipant extends BaseEntity<String> {
     @ManyToOne
     @JoinColumn(name = "chat_id")

@@ -49,7 +49,9 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public MessageDto sendMessage(MessageRequestVm messageRequestVm) {
+        //sender
         Account currentAccount = accountService.getCurrentAccount();
+        //receiver
         Account receiverAccount = accountService.getAccount(messageRequestVm.getReceiverId());
         if (Objects.isNull(receiverAccount)) {
             throw new NotFoundResourceException("account.not_found");
@@ -62,6 +64,7 @@ public class ChatServiceImpl implements ChatService {
         List<Message> messages = chat.getMessages();
         //create message
         createMessage(messageRequestVm.getText(), message, chat, currentAccount);
+        //save message
         message = messageRepo.save(message);
         messages.add(message);
         chat.setMessages(messages);
