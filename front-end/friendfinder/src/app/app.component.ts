@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './componants/header/header.component';
 import { RouterModule } from '@angular/router';
 
 import { AuthService } from '../service/auth/auth.service';
@@ -8,7 +7,7 @@ import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, HeaderComponent, RouterModule],
+  imports: [CommonModule, RouterModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
