@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-//@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"chat_id", "account_id"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"chat_id", "account_id"}))
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter

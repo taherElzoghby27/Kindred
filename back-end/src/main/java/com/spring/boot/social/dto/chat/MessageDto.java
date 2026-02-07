@@ -1,14 +1,12 @@
 package com.spring.boot.social.dto.chat;
 import com.spring.boot.social.vm.auth.AccountVm;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class MessageDto {
     private Long id;
     private String text;

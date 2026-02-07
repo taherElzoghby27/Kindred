@@ -133,6 +133,7 @@ public class AccountServiceImpl implements AccountService {
         if (Objects.isNull(email)) {
             throw new BadRequestException("empty.email");
         }
+        System.out.println("email: " + email);
         Optional<Account> result = accountRepo.findByEmail(email);
         if (result.isEmpty()) {
             throw new NotFoundResourceException("account.not_found");
@@ -148,8 +149,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getAccount(Long accountId) {
-        AccountDto accountDto = getAccountById(accountId);
-        return AccountMapper.ACCOUNT_MAPPER.toAccount(accountDto);
+        return accountRepo.findById(accountId).orElseThrow(() -> new NotFoundResourceException("account.not_found"));
+    }
+
+    @Override
+    public Account getAccount(String userName) {
+        return accountRepo.findByUsername(userName).orElseThrow(() -> new NotFoundResourceException("account.not_found"));
     }
 
     @Override

@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import java.util.List;
 @Getter
 @Builder
 public class Chat extends BaseEntity<String> {
-    private LocalDateTime lastMessageAt;
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
     private List<ChatParticipant> chatParticipants = new ArrayList<>();
     @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)

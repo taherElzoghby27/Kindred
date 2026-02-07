@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +30,7 @@ public class ChatRepoTest {
 
     @BeforeEach
     public void setUp() {
-        chat = Chat.builder().lastMessageAt(LocalDateTime.parse("2007-12-03T10:15:30")).build();
+        chat = Chat.builder().build();
     }
 
     @Test
@@ -45,48 +43,21 @@ public class ChatRepoTest {
     }
 
     @Test
-    public void givenChat_whenSaveIt_thenLastMessageAtEquals() {
-        //Arrange
-        //Act
-        Chat foundChat = chatRepo.save(chat);
-        //Assert
-        Assertions.assertEquals(foundChat.getLastMessageAt(), chat.getLastMessageAt());
-    }
-
-    @Test
     public void givenParticipantsToChat_whenSaveIt_thenReflectInDb() {
         //Arrange
-        Account account = Account.builder()
-                .username("taher")
-                .email("taher@gmail.com")
-                .firstName("Taher")
-                .age(23L)
-                .bio("test")
-                .password("test12-pass")
-                .build();
+        Account account = Account.builder().username("taher").email("taher@gmail.com").firstName("Taher").age(23L).bio("test").password("test12-pass").build();
         ChatParticipant participant1 = ChatParticipant.builder().chat(chat).account(account).build();
         chat.setChatParticipants(List.of(participant1));
         //Act
         Chat foundChat = chatRepo.save(chat);
         //Assert
-        Assertions.assertAll(
-                "equals",
-                () -> Assertions.assertEquals(1, foundChat.getChatParticipants().size()),
-                () -> Assertions.assertEquals(account.getEmail(), foundChat.getChatParticipants().get(0).getAccount().getEmail())
-        );
+        Assertions.assertAll("equals", () -> Assertions.assertEquals(1, foundChat.getChatParticipants().size()), () -> Assertions.assertEquals(account.getEmail(), foundChat.getChatParticipants().get(0).getAccount().getEmail()));
     }
 
     @Test
     public void givenParticipantsToChat_whenSaveIt_thenReflectInDbChatParticipantSide() {
         //Arrange
-        Account account = Account.builder()
-                .username("taher")
-                .email("taher@gmail.com")
-                .firstName("Taher")
-                .age(23L)
-                .bio("test")
-                .password("test12-pass")
-                .build();
+        Account account = Account.builder().username("taher").email("taher@gmail.com").firstName("Taher").age(23L).bio("test").password("test12-pass").build();
         ChatParticipant participant1 = ChatParticipant.builder().chat(chat).account(account).build();
         chat.setChatParticipants(List.of(participant1));
         //Act
@@ -99,46 +70,20 @@ public class ChatRepoTest {
     @Test
     public void givenMessageToChat_whenSaveIt_thenReflectInDb() {
         //Arrange
-        Account account = Account.builder()
-                .username("taher")
-                .email("taher@gmail.com")
-                .firstName("Taher")
-                .age(23L)
-                .bio("test")
-                .password("test12-pass")
-                .build();
-        Message message = Message.builder()
-                .text("welcome guys")
-                .account(account)
-                .account(account)
-                .build();
+        Account account = Account.builder().username("taher").email("taher@gmail.com").firstName("Taher").age(23L).bio("test").password("test12-pass").build();
+        Message message = Message.builder().text("welcome guys").sender(account).sender(account).build();
         chat.setMessages(List.of(message));
         //Act
         Chat foundChat = chatRepo.save(chat);
         //Assert
-        Assertions.assertAll(
-                "equals",
-                () -> Assertions.assertEquals(1, foundChat.getMessages().size()),
-                () -> Assertions.assertEquals(message.getText(), foundChat.getMessages().get(0).getText())
-        );
+        Assertions.assertAll("equals", () -> Assertions.assertEquals(1, foundChat.getMessages().size()), () -> Assertions.assertEquals(message.getText(), foundChat.getMessages().get(0).getText()));
     }
 
     @Test
     public void givenMessageToChat_whenSaveIt_thenReflectInDbMessageSide() {
         //Arrange
-        Account account = Account.builder()
-                .username("taher")
-                .email("taher@gmail.com")
-                .firstName("Taher")
-                .age(23L)
-                .bio("test")
-                .password("test12-pass")
-                .build();
-        Message message = Message.builder()
-                .text("welcome guys")
-                .account(account)
-                .account(account)
-                .build();
+        Account account = Account.builder().username("taher").email("taher@gmail.com").firstName("Taher").age(23L).bio("test").password("test12-pass").build();
+        Message message = Message.builder().text("welcome guys").sender(account).sender(account).build();
         chat.setMessages(List.of(message));
         //Act
         Chat foundChat = chatRepo.save(chat);
@@ -150,20 +95,8 @@ public class ChatRepoTest {
     @Test
     public void givenChat_whenDeleteIt_thenMessagesAndParticipantsDeleted() {
         //Arrange
-        //Arrange
-        Account account = Account.builder()
-                .username("taher")
-                .email("taher@gmail.com")
-                .firstName("Taher")
-                .age(23L)
-                .bio("test")
-                .password("test12-pass")
-                .build();
-        Message message = Message.builder()
-                .text("welcome guys")
-                .account(account)
-                .account(account)
-                .build();
+        Account account = Account.builder().username("taher").email("taher@gmail.com").firstName("Taher").age(23L).bio("test").password("test12-pass").build();
+        Message message = Message.builder().text("welcome guys").sender(account).sender(account).build();
         chat.setMessages(List.of(message));
         ChatParticipant participant1 = ChatParticipant.builder().chat(chat).account(account).build();
         chat.setChatParticipants(List.of(participant1));
@@ -171,9 +104,6 @@ public class ChatRepoTest {
         //Act
         chatRepo.deleteById(foundChat.getId());
         //Assert
-        Assertions.assertAll("deleted",
-                () -> Assertions.assertEquals(Optional.empty(), messageRepo.findById(foundChat.getMessages().get(0).getId())),
-                () -> Assertions.assertEquals(Optional.empty(), chatParticipantRepo.findById(foundChat.getChatParticipants().get(0).getId()))
-        );
+        Assertions.assertAll("deleted", () -> Assertions.assertEquals(Optional.empty(), messageRepo.findById(foundChat.getMessages().get(0).getId())), () -> Assertions.assertEquals(Optional.empty(), chatParticipantRepo.findById(foundChat.getChatParticipants().get(0).getId())));
     }
 }

@@ -4,6 +4,7 @@ import com.spring.boot.social.dto.chat.MessageDto;
 import com.spring.boot.social.services.chat.ChatService;
 import com.spring.boot.social.vm.chat.ChatResponseVm;
 import com.spring.boot.social.vm.chat.MessageRequestVm;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,8 +18,9 @@ public class ChatController {
     private final ChatService chatService;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    @MessageMapping("/message")
-    public ResponseEntity<MessageDto> sendMessage(@RequestBody MessageRequestVm messageRequestVm) {
+    //@MessageMapping("/message")
+    @PatchMapping
+    public ResponseEntity<MessageDto> sendMessage(@Valid @RequestBody MessageRequestVm messageRequestVm) {
         MessageDto result = chatService.sendMessage(messageRequestVm);
         if (result.getAccount() != null && result.getAccount().getUsername() != null) {
             // Notify Sender

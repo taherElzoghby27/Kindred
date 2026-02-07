@@ -1,12 +1,8 @@
 package com.spring.boot.social.vm.chat;
 
 import com.spring.boot.social.dto.chat.ChatParticipantDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +10,9 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class ChatResponseVm {
     private Long id;
-    private LocalDateTime lastMessageAt;
     private List<ChatParticipantDto> chatParticipants = new ArrayList<>();
     private List<MessageResponseVm> messages = new ArrayList<>();
 }

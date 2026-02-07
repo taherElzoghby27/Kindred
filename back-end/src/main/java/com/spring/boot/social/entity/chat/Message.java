@@ -20,5 +20,5 @@ public class Message extends BaseEntity<String> {
     private Chat chat;
     @ManyToOne
     @JoinColumn(name = "sender_id")
-    private Account account;
+    private Account sender;
 }

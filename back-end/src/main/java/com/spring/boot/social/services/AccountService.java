@@ -1,4 +1,5 @@
 package com.spring.boot.social.services;
+
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.entity.Account;
 import com.spring.boot.social.vm.AccountFriendshipVm;
@@ -18,6 +19,8 @@ public interface AccountService {
     Account getCurrentAccount();
 
     Account getAccount(Long accountId);
+
+    Account getAccount(String userName);
 
     GeneralResponseVm<AccountFriendshipVm> getUsers(int page, int size);
 }
