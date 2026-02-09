@@ -1,8 +1,8 @@
-import {AccountDetailsVm} from './account-details-vm';
+import { AccountDetailsVm } from './account-details-vm';
 
 export class AccountVm {
-  id: number;
-  firstName: string;
-  lastName: string;
+  id?: number;
+  firstName?: string;
+  lastName?: string;
   accountDetails?: AccountDetailsVm;
 }

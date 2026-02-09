@@ -1,0 +1,117 @@
+<div class="post-content relative">
+  <!-- Post Header -->
+  <div class="post-header flex justify-between items-start mb-3">
+    <!-- Author Info -->
+    <div class="flex items-center gap-3">
+      <img ngSrc="unKnownImage" alt="user" class="profile-photo-md" />
+      <div class="author-info">
+        <a href="timeline.html" class="profile-link font-semibold text-gray-800 hover:underline">
+          {{ post.account.firstName }} {{ post.account.lastName }}
+        </a>
+        <p class="post-time text-sm text-gray-500">{{ post.timeAgo }}</p>
+      </div>
+    </div>
+    <!-- Dropdown positioned at top right -->
+    @if (post.isMine) {
+    <div>
+      <button class="btn-options text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100"
+        (click)="toggleDropdown($event)">
+        <i class="fa fa-ellipsis-h"></i>
+      </button>
+
+      <div #dropdown hidden class="fixed bg-white rounded-lg shadow-xl border border-gray-200 z-[9999] w-48">
+        <div class="py-1">
+          <button (click)="onEditPostC(post); closeDropdown()"
+            class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3">
+            <i class="fa fa-edit text-blue-500"></i>
+            <span>Edit Post</span>
+          </button>
+          <div class="border-t border-gray-200 my-1"></div>
+          <button (click)="onDeletePostC(post); closeDropdown()"
+            class="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 flex items-center gap-3">
+            <i class="fa fa-trash"></i>
+            <span>Delete Post</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+
+
+  <!-- Post Text -->
+  @if (post.content && !(edit && editId === post.id)) {
+  <div class="post-text">
+    <p>{{ post.content }}</p>
+  </div>
+  }
+
+  <!-- Post Text - Edit Mode -->
+  @if (edit && editId === post.id) {
+  <div class="post-text">
+    <textarea [(ngModel)]="post.content" class="edit-textarea"
+      [placeholder]="post.content==null?'what\'s in your mind':post.content" rows="4">
+              </textarea>
+    <div class="edit-actions">
+      <button class="btn-cancel" (click)="closeDropdownC()">
+        Cancel
+      </button>
+      <button class="btn-save" (click)="savePostEditC(post)">
+        Save Changes
+      </button>
+    </div>
+  </div>
+  }
+  <!-- Post Image -->
+  @if (post.media) {
+  <div class="post-media-container">
+    <!-- Image -->
+    @if (post.isImage) {
+    <img [src]="post.fullMediaUrl" alt="post-image" class="post-image" />
+    }
+    <!-- Video -->
+    @if (post.isVideo) {
+    <video [src]="post.fullMediaUrl" controls class="post-video"></video>
+    }
+  </div>
+  }
+
+
+  <!-- Post Stats -->
+  @if (post.reactionsCount > 0 || post.commentsCount > 0) {
+  <div class="post-stats">
+    @if (post.reactionsCount > 0) {
+    <div class="reactions">
+      <div class="reaction-icons">
+        <i class="fa fa-thumbs-up"></i>
+        <i class="fa fa-heart"></i>
+        <i class="fa fa-laugh"></i>
+      </div>
+      <span class="reaction-count">{{ post.reactionsCount }}</span>
+    </div>
+    }
+    @if (post.commentsCount > 0) {
+    <div class="comments-count">
+      <button class="comments-link" (click)="commentsC(post.id)">
+        {{ post.commentsCount }} comment{{ post.commentsCount !== 1 ? 's' : '' }}
+      </button>
+    </div>
+    }
+  </div>
+  }
+  <!-- Post Actions -->
+  <div class="post-actions">
+    <button class="action-btn like-btn" [class.liked]="post.liked" (click)="toggleLikeC(post)">
+      <i class="fa fa-thumbs-up"></i>
+      <span>{{ post.liked ? 'Liked' : 'Like' }}</span>
+    </button>
+    <button class="action-btn comment-btn" (click)="commentsC(post.id)">
+      <i class="fa fa-comment"></i>
+      <span>Comment</span>
+    </button>
+    <button class="action-btn share-btn">
+      <i class="fa fa-share"></i>
+      <span>Share</span>
+    </button>
+  </div>
+</div>

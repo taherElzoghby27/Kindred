@@ -42,7 +42,8 @@ export class PublishComponent {
       }, error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
       }
-    });
+    }
+    );
   }
 
   validateFields(): boolean {

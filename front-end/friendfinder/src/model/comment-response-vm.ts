@@ -1,12 +1,12 @@
 import { AccountVm } from './account-vm';
 
 export class CommentResponseVm {
-  id!: number;
-  content!: string;
-  post_id!: number;
-  createdBy!: string;
-  updatedDate!: Date;
-  createdDate!: Date;
+  id?: number;
+  content?: string;
+  postId?: number;
+  createdBy?: string;
+  updatedDate?: Date;
+  createdDate?: Date;
   account?: AccountVm;
 
   // Pre-calculated fields for performance
@@ -14,17 +14,17 @@ export class CommentResponseVm {
   isMine?: boolean;
 
   constructor(
-    id: number,
-    content: string,
-    post_id: number,
-    createdBy: string,
-    updatedDate: Date,
-    createdDate: Date,
+    id?: number,
+    content?: string,
+    postId?: number,
+    createdBy?: string,
+    updatedDate?: Date,
+    createdDate?: Date,
     account?: AccountVm,
   ) {
     this.id = id;
     this.content = content;
-    this.post_id = post_id;
+    this.postId = postId;
     this.createdBy = createdBy;
     this.updatedDate = updatedDate;
     this.createdDate = createdDate;

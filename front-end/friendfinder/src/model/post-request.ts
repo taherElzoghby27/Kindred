@@ -1,10 +1,10 @@
 export class PostRequest {
-  id: number | null;
+  id?: number;
   content?: string;
   media?: string;
 
   constructor(
-    id: number | null = null,
+    id?: number,
     content?: string,
     media?: string
   ) {

@@ -1,24 +1,26 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { PostService } from '../../../../service/post/post.service';
-import { PostResponse } from '../../../../model/post-response';
-import { ReactionService } from '../../../../service/reaction/reaction.service';
-import { ReactionRequestVm, ReactionType } from '../../../../model/reaction-request-vm';
-import { GeneralResponse } from '../../../../model/general-response';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogCommentsComponent } from '../dialog-comments/dialog-comments.component';
-import { PostRequest } from '../../../../model/post-request';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
-import { AuthService } from '../../../../service/auth/auth.service';
-import { SharedService } from '../../../../service/shared.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { LeftBarComponent } from '../left-bar/left-bar.component';
-import { RightBarComponent } from '../right-bar/right-bar.component';
-import { PublishComponent } from '../publish/publish.component';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { Subscription } from 'rxjs';
-import { HeaderComponent } from "../../header/header.component";
+import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import {PostService} from '../../../../service/post/post.service';
+import {PostResponse} from '../../../../model/post-response';
+import {ReactionService} from '../../../../service/reaction/reaction.service';
+import {ReactionRequestVm, ReactionType} from '../../../../model/reaction-request-vm';
+import {GeneralResponse} from '../../../../model/general-response';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogCommentsComponent} from '../dialog-comments/dialog-comments.component';
+import {PostRequest} from '../../../../model/post-request';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
+import {AuthService} from '../../../../service/auth/auth.service';
+import {SharedService} from '../../../../service/shared.service';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {LeftBarComponent} from '../left-bar/left-bar.component';
+import {RightBarComponent} from '../right-bar/right-bar.component';
+import {PublishComponent} from '../publish/publish.component';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {Subscription} from 'rxjs';
+import {HeaderComponent} from "../../header/header.component";
+import {Post} from '../post/post';
+import {snakeToCamel} from '../../../../utils/data-mapper';
 
 @Component({
   standalone: true,
@@ -29,8 +31,9 @@ import { HeaderComponent } from "../../header/header.component";
     RightBarComponent,
     PublishComponent,
     InfiniteScrollModule,
-    HeaderComponent
-],
+    HeaderComponent,
+    Post
+  ],
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']
@@ -38,24 +41,22 @@ import { HeaderComponent } from "../../header/header.component";
 export class MainPageComponent implements OnInit, OnDestroy {
 
 
-  postsResponse: GeneralResponse<PostResponse>;
+  postsResponse: GeneralResponse<PostResponse> = new GeneralResponse<PostResponse>([], 0, 0);
   isDropdownOpen = false;
-  unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
+
   edit = false;
-  editId: number;
+  editId: number = -1;
   page = 1;
   limit = 10;
-  dropdownTop = 0;
-  dropdownRight = 0;
-  private messageSubscription: Subscription;
+  private messageSubscription?: Subscription;
 
   constructor(private postService: PostService,
-    private reactionService: ReactionService,
-    public dialog: MatDialog,
-    private snackBar: MatSnackBar,
-    private authService: AuthService,
-    private sharedService: SharedService,
-    private cdr: ChangeDetectorRef
+              private reactionService: ReactionService,
+              public dialog: MatDialog,
+              private snackBar: MatSnackBar,
+              private authService: AuthService,
+              private sharedService: SharedService,
+              private cdr: ChangeDetectorRef
   ) {
   }
 
@@ -134,7 +135,8 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   onEditPost(post: PostResponse): void {
     this.edit = true;
-    this.editId = post.id;
+    if (post.id)
+      this.editId = post.id;
   }
 
   savePostEdit(postResponse: PostResponse): void {
@@ -151,9 +153,11 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   onDeletePost(post: PostResponse): void {
+    if (!post.id) return;
     this.postService.deletePost(post.id).subscribe({
       next: success => {
-        this.removePostLocal(post.id);
+        if (post.id)
+          this.removePostLocal(post.id);
         this.closeDropdown();
         this.showSnackBar('Deleted', SnackbarPanelClass.Success);
       }, error: errors => {
@@ -163,6 +167,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   removePostLocal(postId: number): void {
+    if (!this.postsResponse.data) return;
     this.postsResponse.data = this.postsResponse.data.filter(p => p.id !== postId);
   }
 
@@ -172,6 +177,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   isCurrentUserPost(post: PostResponse): boolean {
+    if (!post.account?.id) return false;
     return post.account?.id.toString() === this.authService.getAccountId();
   }
 
@@ -179,12 +185,13 @@ export class MainPageComponent implements OnInit, OnDestroy {
     console.log('MainPage: Fetching all posts...');
     this.postService.getAllPosts(this.page, this.limit).subscribe({
       next: response => {
-        console.log('MainPage: Posts received:', response.data.length);
-        response.data.forEach(post => this.processPost(post));
+        const camelResponse = snakeToCamel(response);
+        camelResponse.data.forEach((post: PostResponse) => this.processPost(post));
         if (this.page === 1) {
-          this.postsResponse = response;
+          this.postsResponse = camelResponse;
         } else {
-          this.postsResponse.data.push(...response.data);
+          if (!this.postsResponse.data) this.postsResponse.data = [];
+          this.postsResponse.data.push(...camelResponse.data);
         }
         this.cdr.detectChanges();
       },
@@ -199,12 +206,14 @@ export class MainPageComponent implements OnInit, OnDestroy {
     console.log('MainPage: Searching for:', content);
     this.postService.searchByContent(this.page, this.limit, content).subscribe({
       next: response => {
-        console.log('MainPage: Search results received:', response.data.length);
-        response.data.forEach(post => this.processPost(post));
+        const camelResponse = snakeToCamel(response);
+        console.log('MainPage: Search results received:', camelResponse.data.length);
+        camelResponse.data.forEach((post: PostResponse) => this.processPost(post));
         if (this.page === 1) {
-          this.postsResponse = response;
+          this.postsResponse = camelResponse;
         } else {
-          this.postsResponse.data.push(...response.data);
+          if (!this.postsResponse.data) this.postsResponse.data = [];
+          this.postsResponse.data.push(...camelResponse.data);
         }
         this.cdr.detectChanges();
       },
@@ -217,6 +226,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
 
   // Toggle like functionality
   toggleLike(post: PostResponse): void {
+    if (!post.id) return;
     if (post.liked) {
       this.removeReact(post.id);
     } else {
@@ -228,9 +238,12 @@ export class MainPageComponent implements OnInit, OnDestroy {
   makeReact(reactionRequestVm: ReactionRequestVm): void {
     this.reactionService.makeReact(reactionRequestVm).subscribe({
       next: response => {
-        const postFounded = this.postsResponse.data.find(p => p.id === reactionRequestVm.postId);
-        postFounded.liked = 1;
-        postFounded.reactionsCount++;
+        const postFounded = this.postsResponse.data?.find(p => p.id === reactionRequestVm.postId);
+        if (postFounded) {
+          postFounded.liked = 1;
+          if (!postFounded.reactionsCount) postFounded.reactionsCount = 0;
+          postFounded.reactionsCount++;
+        }
       },
       error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
@@ -241,9 +254,12 @@ export class MainPageComponent implements OnInit, OnDestroy {
   removeReact(postId: number): void {
     this.reactionService.removeReact(postId).subscribe({
       next: response => {
-        const postFounded = this.postsResponse.data.find(p => p.id === postId);
-        postFounded.liked = 0;
-        postFounded.reactionsCount--;
+        const postFounded = this.postsResponse.data?.find(p => p.id === postId);
+        if (postFounded) {
+          postFounded.liked = 0;
+          if (!postFounded.reactionsCount) postFounded.reactionsCount = 0;
+          postFounded.reactionsCount--;
+        }
       },
       error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
@@ -255,13 +271,14 @@ export class MainPageComponent implements OnInit, OnDestroy {
   comments(postId: number): void {
     const dialogRef = this.dialog.open(DialogCommentsComponent, {
       width: '600px',
-      data: { post_id: postId }
+      data: {post_id: postId}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         console.log('Name:', result.countComments);
-        const postFounded = this.postsResponse.data.find(p => p.id === result.postId);
+        const postFounded = this.postsResponse.data?.find(p => p.id === result.postId);
+        if (!postFounded) return;
         postFounded.commentsCount += result.countComments;
       }
     });
@@ -276,15 +293,17 @@ export class MainPageComponent implements OnInit, OnDestroy {
   }
 
   processPost(post: PostResponse): void {
+    console.log('MainPage: Processing post:', post);
     if (!post) return;
-    post.timeAgo = this.getTimeAgo(post.createdDate);
+    post.timeAgo = this.getTimeAgo(post.createdDate ?? '');
     post.isImage = post.media ? this.isImage(post.media) : false;
     post.isVideo = post.media ? this.isVideo(post.media) : false;
     post.isMine = this.isCurrentUserPost(post);
-    post.fullMediaUrl = post.media ? this.getFullMediaPost(post.media) : null;
+    if (!post.fullMediaUrl) post.fullMediaUrl = '';
+    post.fullMediaUrl = post.media ? this.getFullMediaPost(post.media) : '';
   }
 
   trackByPost(index: number, post: PostResponse): number {
-    return post.id;
+    return post.id ?? -1;
   }
 }

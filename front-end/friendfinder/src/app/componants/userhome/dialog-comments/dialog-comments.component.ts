@@ -15,6 +15,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CommentRequestVm } from '../../../../model/comment-request-vm';
 import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { snakeToCamel } from 'src/utils/data-mapper';
 
 
 // @ts-ignore
@@ -35,9 +36,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./dialog-comments.component.css'],
 })
 export class DialogCommentsComponent implements OnInit {
-  comments: GeneralResponse<CommentResponseVm>;
+  comments: GeneralResponse<CommentResponseVm> = new GeneralResponse([], 1, 10);
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
-  newComment: string;
+  newComment: string | null = null;
   countComments = 0;
   // Edit state
   editingCommentId: number | null = null;
@@ -74,11 +75,13 @@ export class DialogCommentsComponent implements OnInit {
     console.log('DialogComments: Fetching comments for post:', this.data.post_id);
     this.commentService.getComments(this.data.post_id, this.page, this.limit).subscribe({
       next: comments => {
-        console.log('DialogComments: Comments received:', comments.data.length);
+        comments = snakeToCamel(comments);
+        if (!comments.data) comments.data = [];
         comments.data.forEach(comment => this.processComment(comment));
         if (this.page === 1) {
           this.comments = comments;
         } else {
+          if (!this.comments.data) this.comments.data = [];
           this.comments.data.push(...comments.data);
         }
         this.cdr.detectChanges();
@@ -102,6 +105,7 @@ export class DialogCommentsComponent implements OnInit {
           if (this.comments == null) {
             this.comments = new GeneralResponse<CommentResponseVm>([], 1, 10);
           }
+          if (!this.comments.data) this.comments.data = [];
           this.comments.data.push(response);
           this.newComment = '';
           this.countComments++;
@@ -120,6 +124,7 @@ export class DialogCommentsComponent implements OnInit {
   confirmDelete(commentId: number): void {
     this.commentService.deleteComment(commentId).subscribe({
       next: () => {
+        if (!this.comments.data) return;
         this.comments.data = this.comments.data.filter(
           (c: any) => c.id !== commentId
         );
@@ -145,13 +150,13 @@ export class DialogCommentsComponent implements OnInit {
 
   cancelEdit(): void {
     this.editingCommentId = null;
-    this.editedContent = null;
+    this.editedContent = '';
   }
 
   saveEdit(commentResponse: CommentResponseVm): void {
     const comment = new CommentRequestVm(
       commentResponse.content,
-      commentResponse.post_id,
+      commentResponse.postId,
       commentResponse.id,
     );
     this.commentService.updateComment(comment).subscribe({
@@ -167,12 +172,12 @@ export class DialogCommentsComponent implements OnInit {
 
   processComment(comment: CommentResponseVm): void {
     if (!comment) return;
-    comment.timeAgo = this.getTimeAgo(comment.createdDate);
+    comment.timeAgo = this.getTimeAgo(comment.createdDate ?? '');
     comment.isMine = this.isCurrentUserComment(comment);
   }
 
   trackByComment(index: number, comment: CommentResponseVm): number {
-    return comment.id;
+    return comment.id ?? -1;
   }
 
   getTimeAgo(input: string | Date): string {
