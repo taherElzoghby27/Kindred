@@ -18,6 +18,7 @@ import { RightBarComponent } from '../right-bar/right-bar.component';
 import { PublishComponent } from '../publish/publish.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { Subscription } from 'rxjs';
+import { HeaderComponent } from "../../header/header.component";
 
 @Component({
   standalone: true,
@@ -27,8 +28,9 @@ import { Subscription } from 'rxjs';
     LeftBarComponent,
     RightBarComponent,
     PublishComponent,
-    InfiniteScrollModule
-  ],
+    InfiniteScrollModule,
+    HeaderComponent
+],
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.css']

@@ -1,13 +1,11 @@
 package com.spring.boot.social.entity;
 
+import com.spring.boot.social.entity.chat.ChatParticipant;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
+@Builder
 public class Account extends BaseEntity<String> {
     @Size(min = 12, max = 50, message = "length.username")
     @Column(nullable = false, unique = true, length = 50)
@@ -58,4 +57,6 @@ public class Account extends BaseEntity<String> {
     private List<PostReactionAccount> postsReactionsAccounts;
     @OneToMany(mappedBy = "recipient")
     private List<Notification> notifications;
+    @OneToMany(mappedBy = "account")
+    private List<ChatParticipant> chatParticipants;
 }

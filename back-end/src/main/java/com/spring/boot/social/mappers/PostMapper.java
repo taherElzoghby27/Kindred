@@ -4,7 +4,6 @@ import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.entity.Post;
 import com.spring.boot.social.vm.PostRequestVm;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
@@ -14,7 +13,6 @@ public interface PostMapper {
 
     Post toPost(PostDto postDto);
 
-    @Mapping(source = "media", target = "media", ignore = true)
     Post toPost(PostRequestVm postRequestVm);
 
     PostDto toPostDto(Post post);

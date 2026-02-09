@@ -39,6 +39,7 @@ public class ActivityServiceImpl implements ActivityService {
             throw new BadRequestException("activity.not.empty");
         }
         Account account = accountService.getCurrentAccount();
+        account = accountService.getAccount(account.getUsername());
         Activity activity = ActivityMapper.INSTANCE.toActivity(requestActivityVm);
         activity.setAccount(account);
         activityRepo.save(activity);

@@ -1,57 +1,46 @@
 <!-- Post Create Box ================================================= -->
 <div class="create-post">
-  <div class="row">
-    <div class="col-md-7 col-sm-7">
+  <form #myForm="ngForm" (ngSubmit)="publish(); $event.preventDefault()">
+    <div class="content-column">
       <div class="form-group">
-        <img src="assets/images/users/user-1.jpg" alt="" class="profile-photo-md"/>
-        <textarea
-          [(ngModel)]="content"
-          name="texts"
-          id="exampleTextarea"
-          cols="30"
-          rows="1"
-          class="form-control"
-          placeholder="Write what you wish">
-        </textarea>
-      </div>
-    </div>
+        <img [src]="photo" alt="" class="profile-photo-md" />
 
-    <div class="col-md-5 col-sm-5">
+        <textarea [(ngModel)]="content" name="texts" id="exampleTextarea" rows="4" class="form-control"
+          placeholder="Write something">
+          </textarea>
+      </div>
       <div class="tools">
-        <ul class="publishing-tools list-inline">
-          <!-- Single Media Icon -->
-          <li>
-            <button type="button" class="btn btn-link p-0" (click)="onMediaClick()">
-              <i class="ion-images" style="font-size:20px;"></i>
-            </button>
-            <input
-              type="file"
-              #mediaInput
-              accept="image/*,video/*"
-              style="display:none;"
-              (change)="onMediaSelected($event)"
-            />
-          </li>
-        </ul>
-        <button class="btn btn-primary pull-right" (click)="publish()">Publish</button>
+        <!-- Single Media Icon -->
+        <button type="button" class="btn btn-link p-0" (click)="onMediaClick()">
+          <i class="ion-images" style="font-size:20px;"></i>
+        </button>
+        <input type="file" #mediaInput accept="image/*,video/*" style="display:none;"
+          (change)="onMediaSelected($event)" />
+        <app-button text="Publish" type="submit" (onClick)="publish()" cla></app-button>
       </div>
     </div>
-  </div>
+  </form>
 
   <!-- Preview Section -->
-  <div *ngIf="loading" class="mt-2 text-center">
+  @if (loading) {
+  <div class="mt-2 text-center">
     <div class="spinner-border text-primary" role="status">
       <span class="sr-only">Loading...</span>
     </div>
     <p>Loading media...</p>
   </div>
-  <div *ngIf="errorMessage!==''&&errorMessage!=null" class="mt-2 text-center">
+  }
+
+  @if (errorMessage!==''&&errorMessage!=null) {
+  <div class="mt-2 text-center">
     <p>{{ errorMessage }}</p>
   </div>
-
-  <div *ngIf="!loading && previewUrl" class="mt-2">
-    <img *ngIf="isImage" [src]="previewUrl" alt="preview" class="img-thumbnail" style="max-height:150px;"/>
+  }
+  @if (!loading && previewUrl) {
+  <div class="mt-2">
+    <img *ngIf="isImage" [src]="previewUrl" alt="preview" class="img-thumbnail" style="max-height:150px;" />
     <video *ngIf="!isImage" [src]="previewUrl" controls style="max-height:200px; max-width:100%;"></video>
   </div>
+  }
 </div>
 <!-- Post Create Box End -->

@@ -5,10 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../service/auth/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { RequestSignUp } from '../../../model/request-sign-up';
+import { Button } from "../general/button/button";
+import { AuthRedirect } from "../general/auth-redirect/auth-redirect";
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, Button, AuthRedirect],
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.css']
