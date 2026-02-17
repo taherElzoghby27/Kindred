@@ -28,6 +28,16 @@ import java.util.Objects;
 @Slf4j
 public class ExceptionHandling {
 
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<ExceptionDto> handleConflictException(ConflictException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ExceptionDto(
+                        HttpStatus.CONFLICT.value(),
+                        BundleTranslationService.getBundleMessageWithArAndEn(exception.getMessage()),
+                        HttpStatus.CONFLICT.getReasonPhrase()
+                )
+        );
+    }
 
     @ExceptionHandler(NotFoundResourceException.class)
     public ResponseEntity<ExceptionDto> handleNotFoundResource(NotFoundResourceException exception) {
