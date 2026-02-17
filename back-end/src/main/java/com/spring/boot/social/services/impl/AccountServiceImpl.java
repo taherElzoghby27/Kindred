@@ -2,6 +2,7 @@ package com.spring.boot.social.services.impl;
 
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.exceptions.BadRequestException;
+import com.spring.boot.social.exceptions.ConflictException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.AccountMapper;
 import com.spring.boot.social.entity.Account;
@@ -52,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
         }
         //check account if exist
         if (checkAccountByUsername(accountDto.getUsername())) {
-            throw new NotFoundResourceException("account_already_exist");
+            throw new ConflictException("account_already_exist");
         }
         if (Objects.isNull(accountDto.getUsername())) {
             throw new NotFoundResourceException("empty.username");

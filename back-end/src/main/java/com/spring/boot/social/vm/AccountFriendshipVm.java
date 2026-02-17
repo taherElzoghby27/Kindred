@@ -2,7 +2,6 @@ package com.spring.boot.social.vm;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
