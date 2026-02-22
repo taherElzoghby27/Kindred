@@ -35,9 +35,8 @@ public class AccountDto implements Principal {
     private String email;
 
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{7,}$", message = "error.password")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(description = "Password must be at least 7 characters long and include: " + "• one uppercase letter, " + "• one lowercase letter, " + "• one digit, " + "• and one special character.", example = "MyPass123!", requiredMode = Schema.RequiredMode.REQUIRED)
-
     private String password;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long enabled;

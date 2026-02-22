@@ -16,8 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
@@ -30,10 +32,36 @@ public class AuthController {
     private final AccountService accountService;
 
     @Operation(summary = "User Registration", description = "Register a new user account")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "User created successfully", content = @Content(schema = @Schema(implementation = AccountResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "409", description = "User already exists")})
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "User created successfully",
+                            content = @Content(
+                                    schema = @Schema(
+                                            implementation = AccountResponseVm.class
+                                    )
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid input data"
+                    ),
+                    @ApiResponse(
+                            responseCode = "409",
+                            description = "User already exists"
+                    )
+            }
+    )
     @PostMapping("/sign-up")
+    @ResponseStatus(HttpStatus.CREATED)
     public SuccessDto<ResponseEntity<AccountResponseVm>> signUp(@Valid @RequestBody AccountDto accountDto) {
-        return new SuccessDto<>(ResponseEntity.created(URI.create("/sign-up")).body(authService.signup(accountDto)));
+        AccountResponseVm accountCreated = authService.signup(accountDto);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(accountCreated.getId())
+                .toUri();
+        return new SuccessDto<>(ResponseEntity.created(location).body(accountCreated));
     }
 
     @Operation(summary = "User Login", description = "Authenticate user and get access token")

@@ -11,6 +11,8 @@ import com.spring.boot.social.vm.auth.LoginRequestVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Objects;
 
 @Service
@@ -42,6 +44,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public AccountResponseVm signup(AccountDto accountDto) {
         validationForSignUp(accountDto);
         accountDto = accountService.createAccount(accountDto);

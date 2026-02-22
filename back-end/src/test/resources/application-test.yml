@@ -10,9 +10,12 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
-        default_schema: KINDRED
+        default_schema: TEST
   sql:
     init:
       mode: always
   flyway:
     enabled: false
+token:
+  secret: mysuperlongsecretk334eythatismorethan32chars
+  time: 30d
