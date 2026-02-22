@@ -32,7 +32,7 @@ public class LoginRequestVm {
             regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z\\d]).{7,}$",
             message = "error.password"
     )
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Schema(
             description = "Password must be at least 7 characters long and include: "
                     + "• one uppercase letter, "
