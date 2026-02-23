@@ -55,7 +55,7 @@ public class TokenHandler {
                 String email = claims.getSubject();
                 Date expirationDate = claims.getExpiration();
                 Date issuedDate = claims.getIssuedAt();
-                AccountDto accountDto = accountService.getAccountByEmail(email);
+                AccountDto accountDto = accountService.getAccountDtoByEmail(email);
                 boolean valid = expirationDate.after(new Date()) && issuedDate.before(expirationDate) && Objects.nonNull(accountDto);
                 return valid ? accountDto : null;
             }

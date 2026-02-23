@@ -35,7 +35,7 @@ public class FriendshipServiceImpl implements FriendshipService {
             throw new BadRequestException("two.accounts.must.be.diff");
         }
         //get friend
-        Account friend = accountService.getAccount(friendId);
+        Account friend = accountService.getAccountById(friendId);
         Optional<Friendship> result = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());
         if (result.isPresent()) {
             throw new NotFoundResourceException("friendship.already.exist");
@@ -58,7 +58,7 @@ public class FriendshipServiceImpl implements FriendshipService {
             throw new BadRequestException("empty.account_id");
         }
         //get friend
-        Account friend = accountService.getAccount(friendId);
+        Account friend = accountService.getAccountById(friendId);
         Optional<Friendship> result = friendshipRepo.findFriendshipBetweenAccounts(account.getId(), friend.getId());
         if (result.isEmpty()) {
             throw new NotFoundResourceException("friendship.not.exist");

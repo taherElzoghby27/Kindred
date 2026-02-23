@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
         //get current account
         Account account = accountService.getCurrentAccount();
         if (Objects.nonNull(account.getUsername())) {
-            account = accountService.getAccount(account.getUsername());
+            account = accountService.getAccountByUsername(account.getUsername());
         }
         Post post = PostMapper.POST_INSTANCE.toPost(postRequestVm);
         //set account to post

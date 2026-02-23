@@ -55,7 +55,7 @@ public class AuthServiceTest {
     // 13- login with existed email and password will be login
     @Test
     public void givenCorrectCredentials_whenLogin_thenSuccess() {
-        when(accountService.getAccountByEmail(loginRequest.getEmail())).thenReturn(accountDto);
+        when(accountService.getAccountDtoByEmail(loginRequest.getEmail())).thenReturn(accountDto);
         when(passwordEncoder.matches(loginRequest.getPassword(), accountDto.getPassword())).thenReturn(true);
         when(tokenHandler.generateToken(any(AccountDto.class))).thenReturn("fake-token");
 
@@ -68,7 +68,7 @@ public class AuthServiceTest {
     // 14- login with wrong password will error
     @Test
     public void givenWrongPassword_whenLogin_thenThrowException() {
-        when(accountService.getAccountByEmail(loginRequest.getEmail())).thenReturn(accountDto);
+        when(accountService.getAccountDtoByEmail(loginRequest.getEmail())).thenReturn(accountDto);
         when(passwordEncoder.matches(loginRequest.getPassword(), accountDto.getPassword())).thenReturn(false);
 
         Assertions.assertThrows(BadRequestException.class, () -> authService.login(loginRequest));
@@ -77,7 +77,7 @@ public class AuthServiceTest {
     // 15- login with wrong email will error
     @Test
     public void givenWrongEmail_whenLogin_thenThrowException() {
-        when(accountService.getAccountByEmail(loginRequest.getEmail())).thenThrow(new NotFoundResourceException("account.not_found"));
+        when(accountService.getAccountDtoByEmail(loginRequest.getEmail())).thenThrow(new NotFoundResourceException("account.not_found"));
 
         Assertions.assertThrows(NotFoundResourceException.class, () -> authService.login(loginRequest));
     }

@@ -56,7 +56,7 @@ public class ChatServiceImpl implements ChatService {
         //sender
         Account senderAccount = accountService.getCurrentAccount();
         //receiver
-        Account receiverAccount = accountService.getAccount(messageRequestVm.getReceiverId());
+        Account receiverAccount = accountService.getAccountById(messageRequestVm.getReceiverId());
         validate(receiverAccount);
         //create chat and 2 participants if not exist and get chat if exist
         Chat chat = getChat(messageRequestVm.getChatId(), senderAccount, receiverAccount);

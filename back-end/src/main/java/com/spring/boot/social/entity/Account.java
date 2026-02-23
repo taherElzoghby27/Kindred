@@ -16,7 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-@Builder
 public class Account extends BaseEntity<String> {
     @Size(min = 12, max = 50, message = "length.username")
     @Column(nullable = false, unique = true, length = 50)

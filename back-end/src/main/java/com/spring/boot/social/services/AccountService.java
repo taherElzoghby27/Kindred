@@ -10,17 +10,17 @@ public interface AccountService {
 
     AccountDto updateAccount(AccountDto accountDto);
 
-    AccountDto getAccountById(Long id);
+    AccountDto getAccountDtoById(Long id);
 
-    AccountDto getAccountByUsername(String username);
+    AccountDto getAccountDtoByUsername(String username);
 
-    AccountDto getAccountByEmail(String email);
+    AccountDto getAccountDtoByEmail(String email);
 
     Account getCurrentAccount();
 
-    Account getAccount(Long accountId);
+    Account getAccountById(Long accountId);
 
-    Account getAccount(String userName);
+    Account getAccountByUsername(String userName);
 
     GeneralResponseVm<AccountFriendshipVm> getUsers(int page, int size);
 }

@@ -47,7 +47,10 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction
-        postReactionAccount = result.map(reactionAccount -> updateReaction(reactionAccount, reaction)).orElseGet(() -> createNewReactionWithPost(account, post, reaction));
+        postReactionAccount = result.map(
+                reactionAccount -> updateReaction(reactionAccount, reaction)
+                )
+                .orElseGet(() -> createNewReactionWithPost(account, post, reaction));
         postReactionAccount = reactionPostRepo.save(postReactionAccount);
         //add log
         activityService.logActivity(new RequestActivityVm("react on " + post.getContent(), ActivityType.REACTION_ADDED));

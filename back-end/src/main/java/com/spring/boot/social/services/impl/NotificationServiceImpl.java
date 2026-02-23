@@ -24,7 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = NotificationMapper.INSTANCE.toNotification(notificationRequestVm);
         notification.setRead(false);
         //get recipient by id
-        Account recipient = accountService.getAccount(notificationRequestVm.getRecipientId());
+        Account recipient = accountService.getAccountById(notificationRequestVm.getRecipientId());
         notification.setRecipient(recipient);
         //save notification in db
         notificationRepo.save(notification);

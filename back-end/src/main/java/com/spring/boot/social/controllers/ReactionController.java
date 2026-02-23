@@ -41,7 +41,7 @@ public class ReactionController {
                     result
             );
         }
-        return new SuccessDto<>(ResponseEntity.created(URI.create("/reaction-request")).body(result));
+        return new SuccessDto<>(ResponseEntity.ok(result));
     }
 
     @Operation(summary = "Remove Reaction", description = "Remove a reaction from a post")

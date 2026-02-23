@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
         if (Objects.isNull(loginRequestVm.getPassword())) {
             throw new BadRequestException("empty.password");
         }
-        AccountDto accountExist = accountService.getAccountByEmail(loginRequestVm.getEmail());
+        AccountDto accountExist = accountService.getAccountDtoByEmail(loginRequestVm.getEmail());
         if (!passwordEncoder.matches(loginRequestVm.getPassword(), accountExist.getPassword())) {
             throw new BadRequestException("wrong.password");
         }

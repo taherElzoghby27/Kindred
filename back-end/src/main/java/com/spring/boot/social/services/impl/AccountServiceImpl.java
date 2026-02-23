@@ -76,7 +76,7 @@ public class AccountServiceImpl implements AccountService {
     private AccountDto updateAccountModel(AccountDto accountDto) {
         AccountDto currentAccountDto = SecurityUtils.getCurrentAccount();
         //check account if exist
-        AccountDto oldAccountDto = getAccountById(currentAccountDto.getId());
+        AccountDto oldAccountDto = getAccountDtoById(currentAccountDto.getId());
         if (Objects.nonNull(accountDto.getFirstName())) {
             oldAccountDto.setFirstName(accountDto.getFirstName());
         }
@@ -108,7 +108,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getAccountById(Long id) {
+    public AccountDto getAccountDtoById(Long id) {
         if (Objects.isNull(id)) {
             throw new BadRequestException("empty.account_id");
         }
@@ -120,7 +120,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getAccountByUsername(String username) {
+    public AccountDto getAccountDtoByUsername(String username) {
         if (Objects.isNull(username)) {
             throw new BadRequestException("empty.username");
         }
@@ -132,7 +132,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getAccountByEmail(String email) {
+    public AccountDto getAccountDtoByEmail(String email) {
         if (Objects.isNull(email)) {
             throw new BadRequestException("empty.email");
         }
@@ -147,16 +147,22 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getCurrentAccount() {
         AccountDto accountDto = SecurityUtils.getCurrentAccount();
-        return getAccount(accountDto.getId());
+        return getAccountByUsername(accountDto.getUsername());
     }
 
     @Override
-    public Account getAccount(Long accountId) {
+    public Account getAccountById(Long accountId) {
+        if (accountId == null) {
+            throw new BadRequestException("empty.account_id");
+        }
         return accountRepo.findById(accountId).orElseThrow(() -> new NotFoundResourceException("account.not_found"));
     }
 
     @Override
-    public Account getAccount(String userName) {
+    public Account getAccountByUsername(String userName) {
+        if (userName == null) {
+            throw new BadRequestException("empty.username");
+        }
         return accountRepo.findByUsername(userName).orElseThrow(() -> new NotFoundResourceException("account.not_found"));
     }
 

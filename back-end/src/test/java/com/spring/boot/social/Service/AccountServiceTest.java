@@ -136,53 +136,53 @@ public class AccountServiceTest {
 
     // 6- get account by existed id will success
     @Test
-    public void givenExistedId_whenGetAccountById_thenSuccess() {
+    public void givenExistedId_whenGetAccountByIdDtoById_thenSuccess() {
         when(accountRepo.findById(1L)).thenReturn(Optional.of(account));
 
-        AccountDto result = accountService.getAccountById(1L);
+        AccountDto result = accountService.getAccountDtoById(1L);
         Assertions.assertEquals(1L, result.getId());
     }
 
     // 7- get account by new id will empty (throws exception)
     @Test
-    public void givenNewId_whenGetAccountById_thenThrowException() {
+    public void givenNewId_whenGetAccountByIdDtoById_thenThrowException() {
         when(accountRepo.findById(99L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundResourceException.class, () -> accountService.getAccountById(99L));
+        Assertions.assertThrows(NotFoundResourceException.class, () -> accountService.getAccountDtoById(99L));
     }
 
     // 8- get account by existed username will success
     @Test
-    public void givenExistedUsername_whenGetAccountByUsername_thenSuccess() {
+    public void givenExistedUsername_whenGetAccountByIdDtoByUsername_thenSuccess() {
         when(accountRepo.findByUsername("testuser123456")).thenReturn(Optional.of(account));
 
-        AccountDto result = accountService.getAccountByUsername("testuser123456");
+        AccountDto result = accountService.getAccountDtoByUsername("testuser123456");
         Assertions.assertEquals("testuser123456", result.getUsername());
     }
 
     // 9- get account by new username will empty (throws exception)
     @Test
-    public void givenNewUsername_whenGetAccountByUsername_thenThrowException() {
+    public void givenNewUsername_whenGetAccountByIdDtoByUsername_thenThrowException() {
         when(accountRepo.findByUsername("newuser")).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundResourceException.class, () -> accountService.getAccountByUsername("newuser"));
+        Assertions.assertThrows(NotFoundResourceException.class, () -> accountService.getAccountDtoByUsername("newuser"));
     }
 
     // 10- get account by existed email will success
     @Test
-    public void givenExistedEmail_whenGetAccountByEmail_thenSuccess() {
+    public void givenExistedEmail_whenGetAccountByIdDtoByEmail_thenSuccess() {
         when(accountRepo.findByEmail("test@example.com")).thenReturn(Optional.of(account));
 
-        AccountDto result = accountService.getAccountByEmail("test@example.com");
+        AccountDto result = accountService.getAccountDtoByEmail("test@example.com");
         Assertions.assertEquals("test@example.com", result.getEmail());
     }
 
     // 11- get account by new email will empty (throws exception)
     @Test
-    public void givenNewEmail_whenGetAccountByEmail_thenThrowException() {
+    public void givenNewEmail_whenGetAccountByIdDtoByEmail_thenThrowException() {
         when(accountRepo.findByEmail("new@example.com")).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundResourceException.class, () -> accountService.getAccountByEmail("new@example.com"));
+        Assertions.assertThrows(NotFoundResourceException.class, () -> accountService.getAccountDtoByEmail("new@example.com"));
     }
 
     // 12- get users with pagination(page, size) will success

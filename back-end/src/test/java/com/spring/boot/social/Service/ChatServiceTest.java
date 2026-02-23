@@ -78,7 +78,7 @@ public class ChatServiceTest {
         MessageRequestVm messageRequestVm = MessageRequestVm.builder().text("hello").receiverId(2L).build();
         MessageDto responseMessageDto = MessageDto.builder().id(1L).text("hello").build();
         when(accountService.getCurrentAccount()).thenReturn(sender);
-        when(accountService.getAccount(2L)).thenReturn(receiver);
+        when(accountService.getAccountById(2L)).thenReturn(receiver);
         when(messageRepo.save(any(Message.class))).thenReturn(message);
         when(chatRepo.save(any(Chat.class))).thenReturn(chat);
         MessageDto messageSavedResponse = chatService.sendMessage(messageRequestVm);
@@ -91,7 +91,7 @@ public class ChatServiceTest {
         ChatParticipant chatParticipant1 = ChatParticipant.builder().account(sender).build();
         chat.setChatParticipants(List.of(chatParticipant1, chatParticipant1));
         when(accountService.getCurrentAccount()).thenReturn(sender);
-        when(accountService.getAccount(1L)).thenReturn(sender);
+        when(accountService.getAccountById(1L)).thenReturn(sender);
         Assertions.assertThrows(NotFoundResourceException.class, () -> chatService.sendMessage(messageRequestVm));
     }
 
@@ -101,7 +101,7 @@ public class ChatServiceTest {
         chat.setMessages(List.of(message1, message));
         MessageRequestVm messageRequestVm = MessageRequestVm.builder().text("hello").receiverId(2L).build();
         when(accountService.getCurrentAccount()).thenReturn(sender);
-        when(accountService.getAccount(2L)).thenReturn(receiver);
+        when(accountService.getAccountById(2L)).thenReturn(receiver);
         when(messageRepo.save(any(Message.class))).thenReturn(message);
         when(chatRepo.save(any(Chat.class))).thenReturn(chat);
         when(chatRepo.findById(1L)).thenReturn(Optional.of(chat));
