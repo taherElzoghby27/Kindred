@@ -30,8 +30,8 @@ public class ActivityController {
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "activities retrieved successfully", content = @Content(schema = @Schema(implementation = CommentResponseVm.class))), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "activities not found")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping
-    public SuccessDto<ResponseEntity<List<ActivityDto>>> getActivities() {
-        return new SuccessDto<>(ResponseEntity.ok(activityService.getAllActivities()));
+    public ResponseEntity<SuccessDto<List<ActivityDto>>> getActivities() {
+        return ResponseEntity.ok(new SuccessDto<>(activityService.getAllActivities()));
     }
 
 }

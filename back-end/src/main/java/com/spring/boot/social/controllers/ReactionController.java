@@ -29,7 +29,7 @@ public class ReactionController {
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Reaction added successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PostMapping("/reaction-request")
     @PreAuthorize("isAuthenticated()")
-    public SuccessDto<ResponseEntity<PostReactionAccountVm>> reactionRequest(@Valid @RequestBody ReactionRequestVm reactionRequestVm) {
+    public ResponseEntity<SuccessDto<PostReactionAccountVm>> reactionRequest(@Valid @RequestBody ReactionRequestVm reactionRequestVm) {
         PostReactionAccountVm result = reactionPostService.reactionRequest(reactionRequestVm);
         //listen for /notification/react
         // Send to specific user (post owner)
@@ -41,15 +41,15 @@ public class ReactionController {
                     result
             );
         }
-        return new SuccessDto<>(ResponseEntity.ok(result));
+        return ResponseEntity.ok(new SuccessDto<>(result));
     }
 
     @Operation(summary = "Remove Reaction", description = "Remove a reaction from a post")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Reaction removed successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Reaction not found")})
     @DeleteMapping("/delete")
     @PreAuthorize("isAuthenticated()")
-    public SuccessDto<ResponseEntity<String>> deleteReact(@Valid @RequestParam("post_id") Long postId) {
+    public ResponseEntity<SuccessDto<String>> deleteReact(@Valid @RequestParam("post_id") Long postId) {
         reactionPostService.removeReaction(postId);
-        return new SuccessDto<>(ResponseEntity.ok("Success"));
+        return ResponseEntity.ok(new SuccessDto<>("Success"));
     }
 }

@@ -10,11 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -29,7 +28,7 @@ public class FriendShipController {
     @Operation(summary = "Create Friendship", description = "Create a new friendship request")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Friendship created successfully", content = @Content(schema = @Schema(implementation = FriendshipStatusDto.class))), @ApiResponse(responseCode = "400", description = "Invalid friendship ID"), @ApiResponse(responseCode = "409", description = "Friendship already exists")})
     @PostMapping
-    public SuccessDto<ResponseEntity<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendId) {
+    public ResponseEntity<SuccessDto<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendId) {
         FriendshipStatusDto result = friendshipService.createFriendShipStatus(friendId);
         if (result.getFriendship() != null && result.getFriendship().getAccount() != null && result.getFriendship().getFriend() != null) {
             //send with socket
@@ -39,29 +38,29 @@ public class FriendShipController {
                     result
             );
         }
-        return new SuccessDto<>(ResponseEntity.created(URI.create("/create-friendship")).body(result));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessDto<>(result));
     }
 
     @Operation(summary = "Update Friendship", description = "Update friendship status")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Friendship updated successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "404", description = "Friendship not found")})
     @PutMapping
-    public SuccessDto<ResponseEntity<String>> updateFriendship(@RequestParam("friendship_id") Long id, @RequestParam String status) {
+    public ResponseEntity<SuccessDto<String>> updateFriendship(@RequestParam("friendship_id") Long id, @RequestParam String status) {
         friendshipService.updateFriendshipStatus(id, status);
-        return new SuccessDto<>(ResponseEntity.ok("Friendship updated successfully"));
+        return ResponseEntity.ok(new SuccessDto<>("Friendship updated successfully"));
     }
 
     @Operation(summary = "Remove Friendship", description = "Remove a friendship by ID")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Friendship removed successfully"), @ApiResponse(responseCode = "400", description = "Invalid friendship ID"), @ApiResponse(responseCode = "404", description = "Friendship not found")})
     @DeleteMapping
-    public SuccessDto<ResponseEntity<String>> removeFriendship(@RequestParam("friend_id") Long friendId) {
+    public ResponseEntity<SuccessDto<String>> removeFriendship(@RequestParam("friend_id") Long friendId) {
         friendshipService.removeFriendShipStatusByFriendId(friendId);
-        return new SuccessDto<>(ResponseEntity.ok("Successfully Deleted"));
+        return ResponseEntity.ok(new SuccessDto<>("Successfully Deleted"));
     }
 
     @Operation(summary = "Get Friendships by Status", description = "Retrieve friendships by status")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Friendships retrieved successfully", content = @Content(schema = @Schema(implementation = FriendshipStatusDto.class))), @ApiResponse(responseCode = "400", description = "Invalid status parameter")})
     @GetMapping("/{status}")
-    public SuccessDto<ResponseEntity<List<FriendshipStatusDto>>> getFriendshipStatusByStatus(@PathVariable String status) {
-        return new SuccessDto<>(ResponseEntity.ok(friendshipService.getFriendshipStatusByStatus(status)));
+    public ResponseEntity<SuccessDto<List<FriendshipStatusDto>>> getFriendshipStatusByStatus(@PathVariable String status) {
+        return ResponseEntity.ok(new SuccessDto<>(friendshipService.getFriendshipStatusByStatus(status)));
     }
 }

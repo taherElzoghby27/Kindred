@@ -13,10 +13,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
@@ -34,40 +36,40 @@ public class CommentController {
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Comment created successfully", content = @Content(schema = @Schema(implementation = CommentResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
-    public SuccessDto<ResponseEntity<CommentResponseVm>> createComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
-        CommentResponseVm result = commentService.createComment(commentRequestVm);
-        if (result.getPost() != null && result.getPost().getAccount() != null) {
+    public ResponseEntity<SuccessDto<CommentResponseVm>> createComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
+        CommentResponseVm commentCreated = commentService.createComment(commentRequestVm);
+        if (commentCreated.getPost() != null && commentCreated.getPost().getAccount() != null) {
             simpMessagingTemplate.convertAndSendToUser(
-                    result.getPost().getAccount().getUsername(),
+                    commentCreated.getPost().getAccount().getUsername(),
                     "/listener/notification",
-                    result
+                    commentCreated
             );
         }
-        return new SuccessDto<>(ResponseEntity.created(URI.create("/create-comment")).body(result));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessDto<>(commentCreated));
     }
 
     @Operation(summary = "Update Comment", description = "Update an existing comment")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Comment updated successfully", content = @Content(schema = @Schema(implementation = CommentResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Comment not found")})
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/update")
-    public SuccessDto<ResponseEntity<CommentResponseVm>> updateComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
-        return new SuccessDto<>(ResponseEntity.ok(commentService.updateComment(commentRequestVm)));
+    public ResponseEntity<SuccessDto<CommentResponseVm>> updateComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
+        return ResponseEntity.ok(new SuccessDto<>(commentService.updateComment(commentRequestVm)));
     }
 
     @Operation(summary = "Delete Comment", description = "Delete a comment by ID")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Comment deleted successfully"), @ApiResponse(responseCode = "400", description = "Invalid comment ID"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Comment not found")})
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/delete")
-    public SuccessDto<ResponseEntity<String>> deleteComment(@Valid @RequestParam("comment_id") Long commentId) {
+    public ResponseEntity<SuccessDto<String>> deleteComment(@Valid @RequestParam("comment_id") Long commentId) {
         commentService.deleteComment(commentId);
-        return new SuccessDto<>(ResponseEntity.ok("Successfully Deleted"));
+        return ResponseEntity.ok(new SuccessDto<>("Successfully Deleted"));
     }
 
     @Operation(summary = "Get Comments by Post", description = "Retrieve all comments for a specific post")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Comments retrieved successfully", content = @Content(schema = @Schema(implementation = CommentResponseVm.class))), @ApiResponse(responseCode = "400", description = "Invalid post ID"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/all-comments")
-    public SuccessDto<ResponseEntity<GeneralResponseVm<CommentResponseVm>>> getComments(@Valid @RequestParam("post_id") Long postId, @RequestParam int page, @RequestParam("page_size") int pageSize) {
-        return new SuccessDto<>(ResponseEntity.ok(commentService.getCommentsByPostId(postId, page, pageSize)));
+    public ResponseEntity<SuccessDto<GeneralResponseVm<CommentResponseVm>>> getComments(@Valid @RequestParam("post_id") Long postId, @RequestParam int page, @RequestParam("page_size") int pageSize) {
+        return ResponseEntity.ok(new SuccessDto<>(commentService.getCommentsByPostId(postId, page, pageSize)));
     }
 }

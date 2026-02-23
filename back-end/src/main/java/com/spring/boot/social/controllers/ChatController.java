@@ -1,6 +1,7 @@
 package com.spring.boot.social.controllers;
 
 import com.spring.boot.social.dto.chat.MessageDto;
+import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.chat.ChatService;
 import com.spring.boot.social.vm.chat.ChatResponseVm;
 import com.spring.boot.social.vm.chat.MessageRequestVm;
@@ -20,7 +21,7 @@ public class ChatController {
 
     //@MessageMapping("/message")
     @PatchMapping
-    public ResponseEntity<MessageDto> sendMessage(@Valid @RequestBody MessageRequestVm messageRequestVm) {
+    public ResponseEntity<SuccessDto<MessageDto>> sendMessage(@Valid @RequestBody MessageRequestVm messageRequestVm) {
         MessageDto result = chatService.sendMessage(messageRequestVm);
         if (result.getAccount() != null && result.getAccount().getUsername() != null) {
             // Notify Sender
@@ -31,11 +32,11 @@ public class ChatController {
                 simpMessagingTemplate.convertAndSendToUser(result.getReceiver().getUsername(), "/listener/chat", result);
             }
         }
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new SuccessDto<>(result));
     }
 
     @GetMapping
-    public ResponseEntity<ChatResponseVm> getChat(@RequestParam(value = "chat_id") Long chatId) {
-        return ResponseEntity.ok(chatService.getChat(chatId));
+    public ResponseEntity<SuccessDto<ChatResponseVm>> getChat(@RequestParam(value = "chat_id") Long chatId) {
+        return ResponseEntity.ok(new SuccessDto<>(chatService.getChat(chatId)));
     }
 }

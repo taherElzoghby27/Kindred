@@ -54,28 +54,23 @@ public class AuthController {
             }
     )
     @PostMapping("/sign-up")
-    @ResponseStatus(HttpStatus.CREATED)
-    public SuccessDto<ResponseEntity<AccountResponseVm>> signUp(@Valid @RequestBody AccountDto accountDto) {
+    public ResponseEntity<SuccessDto<AccountResponseVm>> signUp(@Valid @RequestBody AccountDto accountDto) {
         AccountResponseVm accountCreated = authService.signup(accountDto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(accountCreated.getId())
-                .toUri();
-        return new SuccessDto<>(ResponseEntity.created(location).body(accountCreated));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessDto<>(accountCreated));
     }
 
     @Operation(summary = "User Login", description = "Authenticate user and get access token")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Login successful", content = @Content(schema = @Schema(implementation = AccountResponseVm.class))), @ApiResponse(responseCode = "401", description = "Invalid credentials"), @ApiResponse(responseCode = "400", description = "Invalid input data")})
     @PostMapping("/login")
-    public SuccessDto<ResponseEntity<AccountResponseVm>> login(@Valid @RequestBody LoginRequestVm loginRequestVm) {
-        return new SuccessDto<>(ResponseEntity.ok(authService.login(loginRequestVm)));
+    public ResponseEntity<SuccessDto<AccountResponseVm>> login(@Valid @RequestBody LoginRequestVm loginRequestVm) {
+        return ResponseEntity.ok(new SuccessDto<>(authService.login(loginRequestVm)));
     }
 
 
     @Operation(summary = "get all accounts", description = "get all accounts with relationships")
     @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "get accounts successfully", content = @Content(schema = @Schema(implementation = AccountDto.class))), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "404", description = "Account not found")})
     @GetMapping
-    public SuccessDto<ResponseEntity<GeneralResponseVm<AccountFriendshipVm>>> getUsers(@RequestParam int page, @RequestParam int size) {
-        return new SuccessDto<>(ResponseEntity.ok(accountService.getUsers(page, size)));
+    public ResponseEntity<SuccessDto<GeneralResponseVm<AccountFriendshipVm>>> getUsers(@RequestParam int page, @RequestParam int size) {
+        return ResponseEntity.ok(new SuccessDto<>(accountService.getUsers(page, size)));
     }
 }
