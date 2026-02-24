@@ -29,7 +29,7 @@ public class ProfileController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping
     public ResponseEntity<SuccessDto<ProfileResponseVm>> getProfile() {
-        return ResponseEntity.ok(new SuccessDto<>(profileService.getProfile()));
+        return ResponseEntity.ok(new SuccessDto<>(profileService.getProfileResponseVm()));
     }
 
     @Operation(summary = "Update Profile", description = "Update existing user account information")

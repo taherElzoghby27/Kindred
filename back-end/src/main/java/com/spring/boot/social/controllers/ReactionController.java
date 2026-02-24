@@ -11,11 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.net.URI;
 
 @RequestMapping("/reaction")
 @RestController
@@ -23,25 +20,14 @@ import java.net.URI;
 @Tag(name = "Reactions", description = "Post reaction management APIs")
 public class ReactionController {
     private final ReactionPostService reactionPostService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+
 
     @Operation(summary = "Add Reaction", description = "Add a reaction to a post")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Reaction added successfully"), @ApiResponse(responseCode = "400", description = "Invalid input data"), @ApiResponse(responseCode = "401", description = "Unauthorized"), @ApiResponse(responseCode = "404", description = "Post not found")})
     @PostMapping("/reaction-request")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<SuccessDto<PostReactionAccountVm>> reactionRequest(@Valid @RequestBody ReactionRequestVm reactionRequestVm) {
-        PostReactionAccountVm result = reactionPostService.reactionRequest(reactionRequestVm);
-        //listen for /notification/react
-        // Send to specific user (post owner)
-        if (result.getPost() != null && result.getPost().getAccount() != null) {
-            System.out.println("receiver: "+result.getPost().getAccount().getUsername());
-            simpMessagingTemplate.convertAndSendToUser(
-                    result.getPost().getAccount().getUsername(),
-                    "/listener/notification",
-                    result
-            );
-        }
-        return ResponseEntity.ok(new SuccessDto<>(result));
+        return ResponseEntity.ok(new SuccessDto<>(reactionPostService.reactionRequest(reactionRequestVm)));
     }
 
     @Operation(summary = "Remove Reaction", description = "Remove a reaction from a post")

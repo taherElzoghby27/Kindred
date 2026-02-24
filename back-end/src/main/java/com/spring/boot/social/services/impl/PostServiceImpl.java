@@ -47,13 +47,18 @@ public class PostServiceImpl implements PostService {
         if (Objects.nonNull(account.getUsername())) {
             account = accountService.getAccountByUsername(account.getUsername());
         }
+        Post post = savePost(postRequestVm, account);
+        //add log
+        activityService.logActivity(new RequestActivityVm("Created post " + post.getContent(), ActivityType.POST_CREATED));
+    }
+
+    private Post savePost(PostRequestVm postRequestVm, Account account) {
         Post post = PostMapper.POST_INSTANCE.toPost(postRequestVm);
         //set account to post
         post.setAccount(account);
         //save post in db
         post = postRepo.save(post);
-        //add log
-        activityService.logActivity(new RequestActivityVm("Created post " + post.getContent(), ActivityType.POST_CREATED));
+        return post;
     }
 
 
@@ -117,7 +122,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto getPostByCurrentAccount(Long id) {
+    public PostDto getPostDtoByCurrentAccount(Long id) {
         if (Objects.isNull(id)) {
             throw new BadRequestException("required.id");
         }
@@ -129,7 +134,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto getPost(Long id) {
+    public PostDto getPostDto(Long id) {
         if (Objects.isNull(id)) {
             throw new BadRequestException("required.id");
         }
@@ -149,15 +154,19 @@ public class PostServiceImpl implements PostService {
             throw new BadRequestException("required.id");
         }
         Post post = getPostBasedOnCurrentAccount(postRequestVm.getId());
+        validationForUpdatePost(postRequestVm, post);
+        post.setContent(postRequestVm.getContent());
+        post = postRepo.save(post);
+        return PostMapper.POST_INSTANCE.toPostDto(post);
+    }
+
+    private static void validationForUpdatePost(PostRequestVm postRequestVm, Post post) {
         if (Objects.isNull(post)) {
             throw new BadRequestException("post.not.found");
         }
         if (postRequestVm.getContent().equals(post.getContent()) && post.getMedia().equals(postRequestVm.getMedia())) {
             throw new BadRequestException("no.changes");
         }
-        post.setContent(postRequestVm.getContent());
-        post = postRepo.save(post);
-        return PostMapper.POST_INSTANCE.toPostDto(post);
     }
 
     @Override

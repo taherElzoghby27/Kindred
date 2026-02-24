@@ -20,7 +20,7 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReactionRepo reactionRepo;
 
     @Override
-    public ReactionDto getReaction(ReactionType type) {
+    public ReactionDto getReactionDto(ReactionType type) {
         if (Objects.isNull(type)) {
             throw new BadRequestException("type.not.null");
         }

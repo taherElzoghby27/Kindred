@@ -17,6 +17,7 @@ import com.spring.boot.social.services.chat.ChatService;
 import com.spring.boot.social.vm.chat.ChatResponseVm;
 import com.spring.boot.social.vm.chat.MessageRequestVm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,9 +33,10 @@ public class ChatServiceImpl implements ChatService {
     private final ChatParticipantRepo chatParticipantRepo;
     private final AccountService accountService;
     private final MessageRepo messageRepo;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
-    public ChatResponseVm getChat(Long chatId) {
+    public ChatResponseVm getChatResponseVm(Long chatId) {
         if (Objects.isNull(chatId)) {
             throw new NotFoundResourceException("chat_id_must_be_not_null");
         }
@@ -52,6 +54,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
+    //@MessageMapping("/message")
     public MessageDto sendMessage(MessageRequestVm messageRequestVm) {
         //sender
         Account senderAccount = accountService.getCurrentAccount();
@@ -66,7 +69,21 @@ public class ChatServiceImpl implements ChatService {
         chatRepo.save(chat);
         MessageDto messageDto = MessageMapper.INSTANCE.toMessageDto(message);
         messageDto.setReceiver(AccountMapper.ACCOUNT_MAPPER.toAccountVm(receiverAccount));
+        //send to sender and receiver
+        sendWithSocket(messageDto);
         return messageDto;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    private void sendWithSocket(MessageDto messageDto) {
+        if (messageDto.getAccount() != null && messageDto.getAccount().getUsername() != null) {
+            // Notify Sender
+            simpMessagingTemplate.convertAndSendToUser(messageDto.getAccount().getUsername(), "/listener/chat", messageDto);
+            // Notify Receiver
+            if (messageDto.getReceiver() != null) {
+                simpMessagingTemplate.convertAndSendToUser(messageDto.getReceiver().getUsername(), "/listener/chat", messageDto);
+            }
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

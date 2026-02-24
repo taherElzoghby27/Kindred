@@ -4,7 +4,7 @@ import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.vm.auth.ProfileResponseVm;
 
 public interface ProfileService {
-    ProfileResponseVm getProfile();
+    ProfileResponseVm getProfileResponseVm();
 
     AccountDto updateProfile(AccountDto accountDto);
 }

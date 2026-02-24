@@ -24,6 +24,7 @@ import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,7 @@ public class CommentServiceImpl implements CommentService {
     private final PostService postService;
     private final AccountService accountService;
     private final ActivityService activityService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     @Transactional
@@ -47,12 +49,9 @@ public class CommentServiceImpl implements CommentService {
             throw new BadRequestException("id.comment.null");
         }
         Account account = accountService.getCurrentAccount();
-        PostDto postDto = postService.getPost(commentRequestVm.getPostId());
+        PostDto postDto = postService.getPostDto(commentRequestVm.getPostId());
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
-        Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
-        comment.setPost(post);
-        comment.setAccount(account);
-        comment = commentRepo.save(comment);
+        Comment comment = saveComment(commentRequestVm, post, account);
         //increment commentsCount num in post
         postService.incrementCommentCount(post.getId());
         //add log
@@ -62,7 +61,27 @@ public class CommentServiceImpl implements CommentService {
                         ActivityType.COMMENT_CREATED
                 )
         );
-        return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
+        CommentResponseVm commentResponseVm = CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
+        notifyPostOwner(commentResponseVm);
+        return commentResponseVm;
+    }
+
+    private Comment saveComment(CommentRequestVm commentRequestVm, Post post, Account account) {
+        Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
+        comment.setPost(post);
+        comment.setAccount(account);
+        comment = commentRepo.save(comment);
+        return comment;
+    }
+
+    private void notifyPostOwner(CommentResponseVm commentResponseVm) {
+        if (commentResponseVm.getPost() != null && commentResponseVm.getPost().getAccount() != null) {
+            simpMessagingTemplate.convertAndSendToUser(
+                    commentResponseVm.getPost().getAccount().getUsername(),
+                    "/listener/notification",
+                    commentResponseVm
+            );
+        }
     }
 
     @Override
@@ -70,27 +89,32 @@ public class CommentServiceImpl implements CommentService {
         if (Objects.isNull(commentRequestVm.getId())) {
             throw new BadRequestException("id.comment.not_null");
         }
-        CommentDto oldCommentDto = getCommentByIdAndPostId(commentRequestVm.getId(), commentRequestVm.getPostId());
+        CommentDto oldCommentDto = getCommentDtoByIdAndPostId(commentRequestVm.getId(), commentRequestVm.getPostId());
         if (oldCommentDto.getContent().equals(commentRequestVm.getContent())) {
             throw new BadRequestException("no.changes");
         }
         oldCommentDto.setContent(commentRequestVm.getContent());
         Post post = PostMapper.POST_INSTANCE.toPost(oldCommentDto.getPost());
+        Comment comment = saveComment(commentRequestVm, oldCommentDto, post);
+        return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
+    }
+
+    private Comment saveComment(CommentRequestVm commentRequestVm, CommentDto oldCommentDto, Post post) {
         Comment comment = CommentMapper.COMMENT_MAPPER.toComment(commentRequestVm);
         Account account = AccountMapper.ACCOUNT_MAPPER.toAccount(oldCommentDto.getAccount());
         comment.setPost(post);
         comment.setAccount(account);
         comment = commentRepo.save(comment);
-        return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
+        return comment;
     }
 
     @Transactional
     @Override
-    public void deleteComment(Long commentId) {
+    public void deleteCommentBasedOnAccount(Long commentId) {
         if (Objects.isNull(commentId)) {
             throw new BadRequestException("id.comment.not_null");
         }
-        CommentResponseVm commentResponseVm = getCommentByIdBasedOnAccount(commentId);
+        CommentResponseVm commentResponseVm = getCommentResponseVmByIdBasedOnAccount(commentId);
         commentRepo.deleteByCommentId(commentId);
         //decrement commentsCount num in post
         postService.decrementCommentCount(commentResponseVm.getPost().getId());
@@ -111,13 +135,8 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto getCommentByIdAndPostId(Long commentId, Long postId) {
-        if (Objects.isNull(commentId)) {
-            throw new BadRequestException("id.comment.not_null");
-        }
-        if (Objects.isNull(postId)) {
-            throw new BadRequestException("post_id.comment.not_null");
-        }
+    public CommentDto getCommentDtoByIdAndPostId(Long commentId, Long postId) {
+        validateForGetCommentsByPostIdAndCommentId(commentId, postId);
         Optional<Comment> result = commentRepo.findByIdAndPostId(commentId, postId);
         if (result.isEmpty()) {
             throw new NotFoundResourceException("comment.not.found");
@@ -125,8 +144,17 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.COMMENT_MAPPER.toCommentDto(result.get());
     }
 
+    private static void validateForGetCommentsByPostIdAndCommentId(Long commentId, Long postId) {
+        if (Objects.isNull(commentId)) {
+            throw new BadRequestException("id.comment.not_null");
+        }
+        if (Objects.isNull(postId)) {
+            throw new BadRequestException("post_id.comment.not_null");
+        }
+    }
+
     @Override
-    public CommentResponseVm getCommentByIdBasedOnAccount(Long commentId) {
+    public CommentResponseVm getCommentResponseVmByIdBasedOnAccount(Long commentId) {
         if (Objects.isNull(commentId)) {
             throw new BadRequestException("id.comment.not_null");
         }

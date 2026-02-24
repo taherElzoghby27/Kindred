@@ -1,4 +1,4 @@
-package com.spring.boot.social.services.impl.friendship;
+package com.spring.boot.social.services.friendship.impl;
 
 import com.spring.boot.social.dto.friendship.FriendStatusDto;
 import com.spring.boot.social.exceptions.BadRequestException;

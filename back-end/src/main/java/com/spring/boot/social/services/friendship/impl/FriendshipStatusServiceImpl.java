@@ -1,4 +1,4 @@
-package com.spring.boot.social.services.impl.friendship;
+package com.spring.boot.social.services.friendship.impl;
 
 import com.spring.boot.social.dto.friendship.FriendShipDto;
 import com.spring.boot.social.dto.friendship.FriendStatusDto;
@@ -22,6 +22,7 @@ import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.utils.enums.FriendStatusEnum;
 import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +39,7 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
     private final FriendshipService friendshipService;
     private final AccountService accountService;
     private final ActivityService activityService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
     @Transactional
@@ -49,13 +51,40 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
         FriendStatusDto friendStatusDto = friendStatusService.getStatus(FriendStatusEnum.PENDING);
         FriendStatus status = FriendStatusMapper.INSTANCE.toFriendStatus(friendStatusDto);
         //create relation between friends with status
+        FriendshipStatus friendshipStatus = saveFriendShip(friendship, status);
+        //add log
+        activityService.logActivity(
+                new RequestActivityVm(
+                        "sent friend request to " + friendShipDto.getFriend().getUsername(),
+                        ActivityType.FRIENDSHIP_REQUEST_SENT
+                )
+        );
+        FriendshipStatusDto friendshipStatusDto = FriendshipStatusMapper.INSTANCE.toFriendshipStatusDto(friendshipStatus);
+        //notify other user
+        notifyOtherUser(friendshipStatusDto);
+        return friendshipStatusDto;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    private FriendshipStatus saveFriendShip(Friendship friendship, FriendStatus status) {
         FriendshipStatus friendshipStatus = new FriendshipStatus();
         friendshipStatus.setFriendship(friendship);
         friendshipStatus.setStatus(status);
         friendshipStatus = friendshipStatusRepo.save(friendshipStatus);
-        //add log
-        activityService.logActivity(new RequestActivityVm("sent friend request to " + friendShipDto.getFriend().getUsername(), ActivityType.FRIENDSHIP_REQUEST_SENT));
-        return FriendshipStatusMapper.INSTANCE.toFriendshipStatusDto(friendshipStatus);
+        return friendshipStatus;
+    }
+
+    private void notifyOtherUser(FriendshipStatusDto friendshipStatusDto) {
+        if (friendshipStatusDto.getFriendship() != null &&
+                friendshipStatusDto.getFriendship().getAccount() != null &&
+                friendshipStatusDto.getFriendship().getFriend() != null) {
+            //send with socket
+            simpMessagingTemplate.convertAndSendToUser(
+                    friendshipStatusDto.getFriendship().getFriend().getUsername(),
+                    "/listener/notification",
+                    friendshipStatusDto
+            );
+        }
     }
 
     @Transactional(readOnly = true)
@@ -65,7 +94,7 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
             throw new BadRequestException("empty.account_id");
         }
         //get friendship
-        FriendShipDto friendShipDto = friendshipService.getFriendShip(friendId);
+        FriendShipDto friendShipDto = friendshipService.getFriendShipDto(friendId);
         Optional<FriendshipStatus> result = friendshipStatusRepo.findByFriendshipId(friendShipDto.getId());
         if (result.isEmpty()) {
             throw new NotFoundResourceException("friendship.not.exist");
@@ -120,6 +149,10 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
         if (status.equals(friendshipStatusDto.getStatus().getStatus().name())) {
             return;
         }
+        takeActionBasedOnStatus(friendStatusDto, statusFriendship, newStatusFriend);
+    }
+
+    private void takeActionBasedOnStatus(FriendStatusDto friendStatusDto, FriendshipStatus statusFriendship, FriendStatus newStatusFriend) {
         switch (friendStatusDto.getStatus()) {
             case ACCEPTED:
             case BLOCKED:
@@ -153,6 +186,10 @@ public class FriendshipStatusServiceImpl implements FriendshipStatusService {
         statusFriendship.setStatus(statusFriend);
         friendshipStatusRepo.save(statusFriendship);
         //add log
+        logsForUpdateFriendShip(statusFriendship, statusFriend);
+    }
+
+    private void logsForUpdateFriendShip(FriendshipStatus statusFriendship, FriendStatus statusFriend) {
         switch (statusFriend.getStatus()) {
             case ACCEPTED:
                 activityService.logActivity(new RequestActivityVm("Accepted friend request with " + statusFriendship.getFriendship().getAccount().getUsername(), ActivityType.FRIENDSHIP_ACCEPTED));

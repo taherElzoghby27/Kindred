@@ -17,6 +17,7 @@ import com.spring.boot.social.vm.PostReactionAccountVm;
 import com.spring.boot.social.vm.ReactionRequestVm;
 import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,7 @@ public class ReactionPostServiceImpl implements ReactionPostService {
     private final AccountService accountService;
     private final PostService postService;
     private final ActivityService activityService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Transactional
     @Override
@@ -39,24 +41,40 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         //get account
         Account account = accountService.getCurrentAccount();
         //get post
-        PostDto postDto = postService.getPost(reactionRequestVm.getPostId());
+        PostDto postDto = postService.getPostDto(reactionRequestVm.getPostId());
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
         //get react
-        ReactionDto reactionDto = reactionService.getReaction(reactionRequestVm.getReactionType());
+        ReactionDto reactionDto = reactionService.getReactionDto(reactionRequestVm.getReactionType());
         Reaction reaction = ReactionMapper.INSTANCE.toReaction(reactionDto);
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction
         postReactionAccount = result.map(
-                reactionAccount -> updateReaction(reactionAccount, reaction)
+                        reactionAccount -> updateReaction(reactionAccount, reaction)
                 )
                 .orElseGet(() -> createNewReactionWithPost(account, post, reaction));
         postReactionAccount = reactionPostRepo.save(postReactionAccount);
         //add log
         activityService.logActivity(new RequestActivityVm("react on " + post.getContent(), ActivityType.REACTION_ADDED));
-        return ReactionMapper.INSTANCE.toPostReactionAccountVm(postReactionAccount);
+        PostReactionAccountVm postReactionAccountVm = ReactionMapper.INSTANCE.toPostReactionAccountVm(postReactionAccount);
+        //listen for /notification/react
+        // Send to specific user (post owner)
+        notifyPostOwner(postReactionAccountVm);
+        return postReactionAccountVm;
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
+    private void notifyPostOwner(PostReactionAccountVm postReactionAccountVm) {
+        if (postReactionAccountVm.getPost() != null && postReactionAccountVm.getPost().getAccount() != null) {
+            simpMessagingTemplate.convertAndSendToUser(
+                    postReactionAccountVm.getPost().getAccount().getUsername(),
+                    "/listener/notification",
+                    postReactionAccountVm
+            );
+        }
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
     protected PostReactionAccount updateReaction(PostReactionAccount postReactionAccount, Reaction reaction) {
         postReactionAccount.setReaction(reaction);
         return postReactionAccount;

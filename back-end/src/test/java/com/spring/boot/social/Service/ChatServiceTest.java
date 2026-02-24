@@ -64,13 +64,13 @@ public class ChatServiceTest {
         ChatResponseVm chatResponse = ChatResponseVm.builder().id(1L).build();
         when(chatRepo.findById(1L)).thenReturn(Optional.of(chat));
         when(accountService.getCurrentAccount()).thenReturn(sender);
-        Assertions.assertEquals(chatResponse.getId(), chatService.getChat(1L).getId());
+        Assertions.assertEquals(chatResponse.getId(), chatService.getChatResponseVm(1L).getId());
     }
 
     @Test
     public void givenChatId_whenGetChat_thenGetNull() {
         when(chatRepo.findById(1L)).thenReturn(Optional.empty());
-        Assertions.assertThrows(NotFoundResourceException.class, () -> chatService.getChat(1L), "not found chat");
+        Assertions.assertThrows(NotFoundResourceException.class, () -> chatService.getChatResponseVm(1L), "not found chat");
     }
 
     @Test
@@ -106,7 +106,7 @@ public class ChatServiceTest {
         when(chatRepo.save(any(Chat.class))).thenReturn(chat);
         when(chatRepo.findById(1L)).thenReturn(Optional.of(chat));
         chatService.sendMessage(messageRequestVm);
-        ChatResponseVm chatResult = chatService.getChat(1L);
+        ChatResponseVm chatResult = chatService.getChatResponseVm(1L);
         Assertions.assertEquals(2, chatResult.getMessages().size());
     }
 }

@@ -1,4 +1,4 @@
-package com.spring.boot.social.services.impl.friendship;
+package com.spring.boot.social.services.friendship.impl;
 
 import com.spring.boot.social.dto.friendship.FriendShipDto;
 import com.spring.boot.social.exceptions.BadRequestException;
@@ -51,7 +51,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Override
     @Transactional(readOnly = true)
-    public FriendShipDto getFriendShip(Long friendId) {
+    public FriendShipDto getFriendShipDto(Long friendId) {
         //current account
         Account account = accountService.getCurrentAccount();
         if (Objects.isNull(friendId)) {
@@ -69,7 +69,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public void removeFriendShip(Long friendId) {
-        FriendShipDto friendShipDto = getFriendShip(friendId);
+        FriendShipDto friendShipDto = getFriendShipDto(friendId);
         friendshipRepo.deleteFriendShipById(friendShipDto.getId());
     }
 }

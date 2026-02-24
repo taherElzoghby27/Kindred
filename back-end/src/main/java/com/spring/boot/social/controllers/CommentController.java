@@ -15,12 +15,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 @RestController
 @RequestMapping("/comments")
@@ -29,7 +25,6 @@ import java.net.URI;
 public class CommentController {
 
     private final CommentService commentService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
 
 
     @Operation(summary = "Create Comment", description = "Create a new comment on a post")
@@ -37,15 +32,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public ResponseEntity<SuccessDto<CommentResponseVm>> createComment(@Valid @RequestBody CommentRequestVm commentRequestVm) {
-        CommentResponseVm commentCreated = commentService.createComment(commentRequestVm);
-        if (commentCreated.getPost() != null && commentCreated.getPost().getAccount() != null) {
-            simpMessagingTemplate.convertAndSendToUser(
-                    commentCreated.getPost().getAccount().getUsername(),
-                    "/listener/notification",
-                    commentCreated
-            );
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessDto<>(commentCreated));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessDto<>(commentService.createComment(commentRequestVm)));
     }
 
     @Operation(summary = "Update Comment", description = "Update an existing comment")
@@ -61,7 +48,7 @@ public class CommentController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/delete")
     public ResponseEntity<SuccessDto<String>> deleteComment(@Valid @RequestParam("comment_id") Long commentId) {
-        commentService.deleteComment(commentId);
+        commentService.deleteCommentBasedOnAccount(commentId);
         return ResponseEntity.ok(new SuccessDto<>("Successfully Deleted"));
     }
 

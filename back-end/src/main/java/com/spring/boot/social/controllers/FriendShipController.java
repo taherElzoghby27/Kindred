@@ -12,8 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -23,22 +23,13 @@ import java.util.List;
 public class FriendShipController {
 
     private final FriendshipStatusService friendshipService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+
 
     @Operation(summary = "Create Friendship", description = "Create a new friendship request")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Friendship created successfully", content = @Content(schema = @Schema(implementation = FriendshipStatusDto.class))), @ApiResponse(responseCode = "400", description = "Invalid friendship ID"), @ApiResponse(responseCode = "409", description = "Friendship already exists")})
     @PostMapping
     public ResponseEntity<SuccessDto<FriendshipStatusDto>> createFriendship(@RequestParam("friend_id") Long friendId) {
-        FriendshipStatusDto result = friendshipService.createFriendShipStatus(friendId);
-        if (result.getFriendship() != null && result.getFriendship().getAccount() != null && result.getFriendship().getFriend() != null) {
-            //send with socket
-            simpMessagingTemplate.convertAndSendToUser(
-                    result.getFriendship().getFriend().getUsername(),
-                    "/listener/notification",
-                    result
-            );
-        }
-        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessDto<>(result));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new SuccessDto<>(friendshipService.createFriendShipStatus(friendId)));
     }
 
     @Operation(summary = "Update Friendship", description = "Update friendship status")

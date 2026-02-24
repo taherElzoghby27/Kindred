@@ -21,7 +21,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final AccountService accountService;
 
     @Override
-    public ProfileResponseVm getProfile() {
+    public ProfileResponseVm getProfileResponseVm() {
         Account account = accountService.getCurrentAccount();
         Optional<Account> acc = profileRepo.findById(account.getId());
         if (acc.isEmpty()) {

@@ -10,11 +10,11 @@ public interface CommentService {
 
     CommentResponseVm updateComment(CommentRequestVm commentRequestVm);
 
-    void deleteComment(Long commentId);
+    void deleteCommentBasedOnAccount(Long commentId);
 
     GeneralResponseVm<CommentResponseVm> getCommentsByPostId(Long postId, int page, int size);
 
-    CommentDto getCommentByIdAndPostId(Long commentId, Long postId);
+    CommentDto getCommentDtoByIdAndPostId(Long commentId, Long postId);
 
-    CommentResponseVm getCommentByIdBasedOnAccount(Long commentId);
+    CommentResponseVm getCommentResponseVmByIdBasedOnAccount(Long commentId);
 }
