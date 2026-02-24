@@ -243,6 +243,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
           postFounded.liked = 1;
           if (!postFounded.reactionsCount) postFounded.reactionsCount = 0;
           postFounded.reactionsCount++;
+          this.cdr.detectChanges();
         }
       },
       error: errors => {
@@ -259,6 +260,7 @@ export class MainPageComponent implements OnInit, OnDestroy {
           postFounded.liked = 0;
           if (!postFounded.reactionsCount) postFounded.reactionsCount = 0;
           postFounded.reactionsCount--;
+          this.cdr.detectChanges();
         }
       },
       error: errors => {

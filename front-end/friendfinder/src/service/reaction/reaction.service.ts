@@ -24,7 +24,7 @@ export class ReactionService {
   }
 
   removeReact(postId: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}`, {
+    return this.http.delete<any>(`${this.baseUrl}/delete`, {
       params: {
         post_id: postId.toString()
       }

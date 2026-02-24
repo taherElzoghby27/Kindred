@@ -1,0 +1,1 @@
+{"ast":null,"code":"export class CommentRequestVm {\n  constructor(content, post_id, id) {\n    this.id = id;\n    this.content = content;\n    this.post_id = post_id;\n  }\n}","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}
