@@ -22,13 +22,13 @@ export class CommentService {
       content: commentRequestVm.content,
       post_id: commentRequestVm.postId,
     };
-    return this.http.post<any>(`${this.baseUrl}`, body).pipe(
+    return this.http.post<any>(`${this.baseUrl}/create`, body).pipe(
       map(response => response.data)
     );
   }
 
   getComments(postId: number, page: number, pageSize: number): Observable<GeneralResponse<CommentResponseVm>> {
-    return this.http.get<any>(`${this.baseUrl}`, {
+    return this.http.get<any>(`${this.baseUrl}/all-comments`, {
       params: {
         page: page.toString(),
         page_size: pageSize.toString(),
@@ -40,7 +40,7 @@ export class CommentService {
   }
 
   deleteComment(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}`, {
+    return this.http.delete<any>(`${this.baseUrl}/delete`, {
       params: {
         comment_id: id.toString()
       }
@@ -61,7 +61,7 @@ export class CommentService {
       content: commentRequestVm.content,
       post_id: commentRequestVm.postId,
     };
-    return this.http.put<any>(`${this.baseUrl}`, body).pipe(
+    return this.http.put<any>(`${this.baseUrl}/update`, body).pipe(
       map(response => response)
     );
   }

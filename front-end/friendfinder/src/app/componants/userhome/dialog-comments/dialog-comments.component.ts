@@ -1,21 +1,22 @@
-import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { CommentService } from '../../../../service/comment/comment.service';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { GeneralResponse } from '../../../../model/general-response';
-import { CommentResponseVm } from '../../../../model/comment-response-vm';
-import { AuthService } from '../../../../service/auth/auth.service';
-import { ActivatedRoute } from '@angular/router';
-import { CommentRequestVm } from '../../../../model/comment-request-vm';
-import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { snakeToCamel } from 'src/utils/data-mapper';
+import {Component, Inject, OnInit, ChangeDetectorRef} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
+import {CommentService} from '../../../../service/comment/comment.service';
+import {MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {GeneralResponse} from '../../../../model/general-response';
+import {CommentResponseVm} from '../../../../model/comment-response-vm';
+import {AuthService} from '../../../../service/auth/auth.service';
+import {ActivatedRoute} from '@angular/router';
+import {CommentRequestVm} from '../../../../model/comment-request-vm';
+import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {snakeToCamel} from 'src/utils/data-mapper';
+import {Comment} from "../comment/comment";
+import {InfiniteScrollDirective} from "ngx-infinite-scroll";
 
 
 // @ts-ignore
@@ -29,7 +30,8 @@ import { snakeToCamel } from 'src/utils/data-mapper';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    InfiniteScrollModule
+    Comment,
+    InfiniteScrollDirective
   ],
   selector: 'app-dialog-comments',
   templateUrl: './dialog-comments.component.html',
@@ -47,12 +49,12 @@ export class DialogCommentsComponent implements OnInit {
   limit = 10;
 
   constructor(private commentService: CommentService,
-    public dialogRef: MatDialogRef<DialogCommentsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private authService: AuthService,
-    private activatedRoute: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private cdr: ChangeDetectorRef) {
+              public dialogRef: MatDialogRef<DialogCommentsComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private authService: AuthService,
+              private activatedRoute: ActivatedRoute,
+              private snackBar: MatSnackBar,
+              private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -72,7 +74,6 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   getAllComments(): void {
-    console.log('DialogComments: Fetching comments for post:', this.data.post_id);
     this.commentService.getComments(this.data.post_id, this.page, this.limit).subscribe({
       next: comments => {
         comments = snakeToCamel(comments);
@@ -87,7 +88,6 @@ export class DialogCommentsComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: errors => {
-        console.error('DialogComments: Error fetching comments:', errors);
       }
     });
   }
@@ -109,6 +109,7 @@ export class DialogCommentsComponent implements OnInit {
           this.comments.data.push(response);
           this.newComment = '';
           this.countComments++;
+          this.cdr.detectChanges();
         },
         error: errors => {
           this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
@@ -129,6 +130,7 @@ export class DialogCommentsComponent implements OnInit {
           (c: any) => c.id !== commentId
         );
         this.countComments--;
+        this.cdr.detectChanges();
       },
       error: (errors) => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
@@ -154,15 +156,17 @@ export class DialogCommentsComponent implements OnInit {
   }
 
   saveEdit(commentResponse: CommentResponseVm): void {
+    console.log(commentResponse);
     const comment = new CommentRequestVm(
       commentResponse.content,
-      commentResponse.postId,
+      commentResponse.post?.id,
       commentResponse.id,
     );
     this.commentService.updateComment(comment).subscribe({
       next: response => {
         this.processComment(commentResponse);
         this.cancelEdit();
+        this.cdr.detectChanges();
       },
       error: errors => {
         this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);

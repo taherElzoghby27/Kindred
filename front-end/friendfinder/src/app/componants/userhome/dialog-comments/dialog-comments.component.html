@@ -13,65 +13,21 @@
   <div class="comments-container space-y-4">
 
     <!-- Single Comment -->
-    <div *ngFor="let comment of comments?.data"
-      class="comment-item p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition">
+    @for (comment of comments?.data; track $index) {
+    <app-comment [unKnownImage]="unKnownImage" [comment]="comment" [currentUser]="getCurrentUser()"
+      [timeAgo]="getTimeAgo(comment.createdDate)" [isCurrentUserComment]="isCurrentUserComment(comment)"
+      (startEdit)="startEdit(comment)" (cancelEdit)="cancelEdit()" [editingCommentId]="editingCommentId"
+      (confirmDelete)="confirmDelete(comment.id)" (saveEdit)="saveEdit(comment)"></app-comment>
+    }
 
-      <!-- Header -->
-      <div class="comment-header flex justify-between items-start mb-2">
-        <div class="flex items-center space-x-3">
-          <img [src]="unKnownImage" [alt]="comment.account?.firstName || 'User avatar'"
-            class="avatar w-10 h-10 rounded-full object-cover" />
-          <div class="comment-info">
-            <span class="author-name font-medium" *ngIf="comment.account != null">
-              {{ comment.account?.firstName }} {{ comment.account?.lastName }}
-            </span>
-            <span class="author-name font-medium" *ngIf="comment.account == null">
-              {{ getCurrentUser() }}
-            </span>
-            <span class="timestamp text-sm text-gray-500 ml-2">
-              {{ getTimeAgo(comment.createdDate) }}
-            </span>
-          </div>
-        </div>
-        <!-- 🗑️ Delete Button (only for current user's comments) -->
-        <!-- Edit Button -->
-        <button *ngIf="isCurrentUserComment(comment)" mat-icon-button color="primary" (click)="startEdit(comment)"
-          [disabled]="editingCommentId === comment.id" aria-label="Edit comment">
-          <mat-icon>edit</mat-icon>
-        </button>
-
-        <!-- Delete Button -->
-        <button *ngIf="isCurrentUserComment(comment)" mat-icon-button color="warn" (click)="confirmDelete(comment.id)"
-          aria-label="Delete comment">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-
-      <!-- Content -->
-      <div class="comment-content text-gray-800 whitespace-pre-line"
-        *ngIf="editingCommentId==null||editingCommentId!==comment.id">
-        {{ comment.content }}
-      </div>
-      <div class="post-text" *ngIf="editingCommentId!=null&&editingCommentId===comment.id">
-        <textarea [(ngModel)]="comment.content" class="edit-textarea"
-          [placeholder]="comment.content==null?'what\'s in your mind':comment.content" rows="4">
-              </textarea>
-        <div class="edit-actions">
-          <button class="btn-cancel" (click)="cancelEdit()">
-            Cancel
-          </button>
-          <button class="btn-save" (click)="saveEdit(comment)">
-            Save Changes
-          </button>
-        </div>
-      </div>
-    </div>
   </div>
   <!-- Empty State -->
-  <div *ngIf="!comments?.data?.length" class="empty-state flex flex-col items-center text-gray-500 py-6">
+  @if (!comments?.data?.length) {
+  <div class="empty-state flex flex-col items-center text-gray-500 py-6">
     <mat-icon class="text-5xl mb-2">comment</mat-icon>
     <p>No comments yet. Be the first to comment!</p>
   </div>
+  }
 </mat-dialog-content>
 
 <!-- 🟨 Dialog Footer: Add Comment -->

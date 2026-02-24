@@ -1,9 +1,10 @@
 import { AccountVm } from './account-vm';
+import {PostResponse} from "./post-response";
 
 export class CommentResponseVm {
   id?: number;
   content?: string;
-  postId?: number;
+  post?: PostResponse;
   createdBy?: string;
   updatedDate?: Date;
   createdDate?: Date;
@@ -16,7 +17,7 @@ export class CommentResponseVm {
   constructor(
     id?: number,
     content?: string,
-    postId?: number,
+    post?: PostResponse,
     createdBy?: string,
     updatedDate?: Date,
     createdDate?: Date,
@@ -24,7 +25,7 @@ export class CommentResponseVm {
   ) {
     this.id = id;
     this.content = content;
-    this.postId = postId;
+    this.post = post;
     this.createdBy = createdBy;
     this.updatedDate = updatedDate;
     this.createdDate = createdDate;
