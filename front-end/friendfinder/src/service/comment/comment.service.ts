@@ -23,7 +23,7 @@ export class CommentService {
       post_id: commentRequestVm.postId,
     };
     return this.http.post<any>(`${this.baseUrl}`, body).pipe(
-      map(response => response.data.body)
+      map(response => response.data)
     );
   }
 
@@ -35,7 +35,7 @@ export class CommentService {
         post_id: postId.toString()
       }
     }).pipe(
-      map(response => response.data.body)
+      map(response => response.data)
     );
   }
 

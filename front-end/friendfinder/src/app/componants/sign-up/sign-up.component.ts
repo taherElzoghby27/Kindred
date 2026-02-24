@@ -52,9 +52,9 @@ export class SignUpComponent {
       next: response => {
         this.errorBackend = false;
         this.resetErrorFields();
-        sessionStorage.setItem('account_id', response.data.body.id);
-        sessionStorage.setItem('token', response.data.body.token);
-        sessionStorage.setItem('userName', response.data.body.username);
+        sessionStorage.setItem('account_id', response.data.id);
+        sessionStorage.setItem('token', response.data.token);
+        sessionStorage.setItem('userName', response.data.username);
         this.router.navigateByUrl('mainpage');
       }, error: errors => {
         this.errorBackend = true;

@@ -1,11 +1,11 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {RequestSignUp} from '../../model/request-sign-up';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {RequestLogin} from '../../model/request-login';
-import {AccountFriendshipVm} from '../../model/account-friendship-vm';
-import {GeneralResponse} from '../../model/general-response';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { RequestSignUp } from '../../model/request-sign-up';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { RequestLogin } from '../../model/request-login';
+import { AccountFriendshipVm } from '../../model/account-friendship-vm';
+import { GeneralResponse } from '../../model/general-response';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +53,7 @@ export class AuthService {
         size: size.toString(),
       }
     }).pipe(
-      map(response => response.data.body)
+      map(response => response.data)
     );
   }
 
