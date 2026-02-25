@@ -1,62 +1,52 @@
-<div class="comment-item p-3 rounded-md bg-gray-50 hover:bg-gray-100 transition">
+<div class="fb-comment-wrapper">
 
-  <!-- Header -->
-  <div class="comment-header flex justify-between items-start mb-2">
-    <div class="flex items-center space-x-3">
-      <img [ngSrc]="unKnownImage" [alt]="comment.account?.firstName || 'User avatar'" width="40" height="40"
-        class="avatar w-10 h-10 rounded-full object-cover" />
-      <div class="comment-info">
+  <!-- Avatar -->
+  <img [ngSrc]="unKnownImage" [alt]="comment.account?.firstName || 'User avatar'" width="36" height="36"
+    class="fb-avatar" />
+
+  <!-- Main Content Area -->
+  <div class="fb-comment-body">
+    <!-- Bubble -->
+    @if (editingCommentId == null || editingCommentId !== comment.id) {
+    <div class="fb-comment-bubble">
+      <div class="fb-author-name">
         @if (comment.account != null) {
-        <span class="author-name font-medium">
-          {{ comment.account?.firstName }} {{ comment.account?.lastName }}
-        </span>
+        {{ comment.account?.firstName }} {{ comment.account?.lastName }}
         }
         @if (comment.account == null) {
-        <span class="author-name font-medium">{{ currentUser }}</span>
+        {{ currentUser }}
         }
-
-        <span class="timestamp text-sm text-gray-500 ml-2">{{ timeAgo }}</span>
+      </div>
+      <div class="fb-comment-text">
+        {{ comment.content }}
       </div>
     </div>
-    <!-- 🗑️ Delete Button (only for current user's comments) -->
-    <!-- Edit Button -->
-    @if (isCurrentUserComment) {
-    <button mat-icon-button color="primary" (click)="startEditClick(comment)"
-      [disabled]="editingCommentId === comment.id" aria-label="Edit comment">
-      <mat-icon>edit</mat-icon>
-    </button>
     }
 
-
-    <!-- Delete Button -->
-    @if (isCurrentUserComment) {
-    <button mat-icon-button color="warn" (click)="confirmDeleteClick(comment.id)" aria-label="Delete comment">
-      <mat-icon>delete</mat-icon>
-    </button>
-    }
-
-  </div>
-
-  <!-- Content -->
-  @if (editingCommentId == null || editingCommentId !== comment.id) {
-  <div class="comment-content text-gray-800 whitespace-pre-line">
-    {{ comment.content }}
-  </div>
-  }
-
-  @if (editingCommentId != null && editingCommentId === comment.id) {
-  <div class="post-text">
-    <textarea [(ngModel)]="comment.content" class="edit-textarea"
-      [placeholder]="comment.content==null?'what\'s in your mind':comment.content" rows="4">
-              </textarea>
-    <div class="edit-actions">
-      <button class="btn-cancel" (click)="cancelEditClick()">
-        Cancel
-      </button>
-      <button class="btn-save" (click)="saveEditClick(comment)">
-        Save Changes
-      </button>
+    <!-- Edit Mode -->
+    @if (editingCommentId != null && editingCommentId === comment.id) {
+    <div class="fb-edit-container">
+      <textarea [(ngModel)]="comment.content" class="fb-edit-textarea"
+        [placeholder]="comment.content==null?'Write a comment...':comment.content" rows="2"
+        (keydown.escape)="cancelEditClick()">
+      </textarea>
+      <div class="fb-edit-actions">
+        <span>Press Esc to <span class="cancel-link" (click)="cancelEditClick()">cancel</span>.</span>
+        <button class="fb-save-btn" (click)="saveEditClick(comment)">Save</button>
+      </div>
     </div>
+    }
+
+    <!-- Actions Below Bubble -->
+    @if (editingCommentId == null || editingCommentId !== comment.id) {
+    <div class="fb-comment-actions">
+      <span class="fb-timestamp">{{ timeAgo }}</span>
+      @if (isCurrentUserComment) {
+      <button class="fb-action-btn" (click)="startEditClick(comment)">Edit</button>
+      <button class="fb-action-btn" (click)="confirmDeleteClick(comment.id)">Delete</button>
+      }
+    </div>
+    }
   </div>
-  }
+
 </div>

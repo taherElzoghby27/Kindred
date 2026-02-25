@@ -1,6 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatIcon } from "@angular/material/icon";
-import { MatIconButton } from "@angular/material/button";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommentResponseVm } from "../../../../model/comment-response-vm";
 import {NgOptimizedImage} from "@angular/common";
@@ -8,8 +6,6 @@ import {NgOptimizedImage} from "@angular/common";
 @Component({
   selector: 'app-comment',
   imports: [
-    MatIcon,
-    MatIconButton,
     ReactiveFormsModule,
     FormsModule,
     NgOptimizedImage

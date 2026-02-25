@@ -1,17 +1,16 @@
-<!-- 🟦 Dialog Header -->
-<div class="dialog-header flex justify-between items-center border-b pb-2 mb-3">
-  <h2 mat-dialog-title class="text-lg font-semibold m-0">Comments</h2>
-  <button mat-icon-button (click)="onClose()" aria-label="Close comments dialog">
-    <mat-icon>close</mat-icon>
-  </button>
+<div class="fb-dialog-header">
+  <h2 mat-dialog-title>Comments</h2>
+  <div class="fb-header-actions">
+    <button mat-icon-button (click)="onClose()" aria-label="Close comments dialog" class="fb-close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 </div>
 
-<!-- 🟩 Dialog Content -->
-<mat-dialog-content class="dialog-content max-h-[60vh] overflow-y-auto" infiniteScroll [infiniteScrollDistance]="2"
-  [infiniteScrollThrottle]="300" [scrollWindow]="false" (scrolled)="onScroll()">
+<mat-dialog-content class="fb-dialog-content" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="300"
+  [scrollWindow]="false" (scrolled)="onScroll()" #scrollContainer>
 
-  <div class="comments-container space-y-4">
-
+  <div class="fb-comments-list">
     <!-- Single Comment -->
     @for (comment of comments?.data; track $index) {
     <app-comment [unKnownImage]="unKnownImage" [comment]="comment" [currentUser]="getCurrentUser()"
@@ -19,34 +18,30 @@
       (startEdit)="startEdit(comment)" (cancelEdit)="cancelEdit()" [editingCommentId]="editingCommentId"
       (confirmDelete)="confirmDelete(comment.id)" (saveEdit)="saveEdit(comment)"></app-comment>
     }
-
   </div>
+
   <!-- Empty State -->
   @if (!comments?.data?.length) {
-  <div class="empty-state flex flex-col items-center text-gray-500 py-6">
-    <mat-icon class="text-5xl mb-2">comment</mat-icon>
-    <p>No comments yet. Be the first to comment!</p>
+  <div class="fb-empty-state">
+    <mat-icon>chat_bubble_outline</mat-icon>
+    <p>No comments yet</p>
+    <span class="sub-text">Be the first to comment.</span>
   </div>
   }
+
 </mat-dialog-content>
 
-<!-- 🟨 Dialog Footer: Add Comment -->
-<mat-dialog-actions class="dialog-actions flex items-start gap-3 pt-3 border-t mt-3">
-
+<div class="fb-dialog-footer">
   <!-- Avatar -->
-  <img [src]="unKnownImage" [alt]="getCurrentUser()" class="avatar-small w-9 h-9 rounded-full object-cover mt-1" />
+  <img [src]="unKnownImage" [alt]="getCurrentUser()" class="fb-footer-avatar" />
 
-  <!-- Input -->
-  <mat-form-field appearance="outline" class="comment-input flex-1">
-    <mat-label>Write a comment...</mat-label>
-    <textarea matInput [(ngModel)]="newComment" rows="2" (keydown.enter)="$event.ctrlKey && addComment()"
-      placeholder="Press Ctrl + Enter to post"></textarea>
-  </mat-form-field>
-
-  <!-- Post Button -->
-  <button mat-raised-button color="primary" (click)="addComment()" [disabled]="!newComment?.trim()"
-    class="post-button h-fit mt-1">
-    Post
-  </button>
-
-</mat-dialog-actions>
+  <!-- Input Area -->
+  <div class="fb-input-wrapper">
+    <textarea [(ngModel)]="newComment" rows="1" (keydown.enter)="$event.ctrlKey && addComment()"
+      placeholder="Write a comment..." class="fb-comment-input"></textarea>
+    <button mat-icon-button color="primary" (click)="addComment()" [disabled]="!newComment?.trim()"
+      class="fb-send-button">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+</div>

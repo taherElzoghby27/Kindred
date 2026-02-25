@@ -1,22 +1,22 @@
-import {Component, Inject, OnInit, ChangeDetectorRef} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
-import {CommentService} from '../../../../service/comment/comment.service';
-import {MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatIconModule} from '@angular/material/icon';
-import {GeneralResponse} from '../../../../model/general-response';
-import {CommentResponseVm} from '../../../../model/comment-response-vm';
-import {AuthService} from '../../../../service/auth/auth.service';
-import {ActivatedRoute} from '@angular/router';
-import {CommentRequestVm} from '../../../../model/comment-request-vm';
-import {SnackbarPanelClass} from '../../../../enum/snackbar-panel-class.enum';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {snakeToCamel} from 'src/utils/data-mapper';
-import {Comment} from "../comment/comment";
-import {InfiniteScrollDirective} from "ngx-infinite-scroll";
+import { Component, Inject, OnInit, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CommentService } from '../../../../service/comment/comment.service';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { GeneralResponse } from '../../../../model/general-response';
+import { CommentResponseVm } from '../../../../model/comment-response-vm';
+import { AuthService } from '../../../../service/auth/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { CommentRequestVm } from '../../../../model/comment-request-vm';
+import { SnackbarPanelClass } from '../../../../enum/snackbar-panel-class.enum';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { snakeToCamel } from 'src/utils/data-mapper';
+import { Comment } from "../comment/comment";
+import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 
 
 // @ts-ignore
@@ -42,6 +42,7 @@ export class DialogCommentsComponent implements OnInit {
   unKnownImage = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcgO0A7rA9MJx0DQn3Vk_kgso2c_Na-J56yA&s';
   newComment: string | null = null;
   countComments = 0;
+  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
   // Edit state
   editingCommentId: number | null = null;
   editedContent = '';
@@ -49,12 +50,12 @@ export class DialogCommentsComponent implements OnInit {
   limit = 10;
 
   constructor(private commentService: CommentService,
-              public dialogRef: MatDialogRef<DialogCommentsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private authService: AuthService,
-              private activatedRoute: ActivatedRoute,
-              private snackBar: MatSnackBar,
-              private cdr: ChangeDetectorRef) {
+    public dialogRef: MatDialogRef<DialogCommentsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private authService: AuthService,
+    private activatedRoute: ActivatedRoute,
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -110,6 +111,7 @@ export class DialogCommentsComponent implements OnInit {
           this.newComment = '';
           this.countComments++;
           this.cdr.detectChanges();
+          this.scrollToBottom();
         },
         error: errors => {
           this.showSnackBar(errors.error.bundleMessage.message_en, SnackbarPanelClass.Error);
@@ -120,6 +122,16 @@ export class DialogCommentsComponent implements OnInit {
 
   isCurrentUserComment(comment: any): boolean {
     return comment.account?.id.toString() === this.authService.getAccountId();
+  }
+
+  private scrollToBottom(): void {
+    try {
+      setTimeout(() => {
+        if (this.scrollContainer) {
+          this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+        }
+      }, 100);
+    } catch (err) { }
   }
 
   confirmDelete(commentId: number): void {

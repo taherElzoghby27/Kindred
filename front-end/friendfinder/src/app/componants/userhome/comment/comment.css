@@ -1,0 +1,135 @@
+.fb-comment-wrapper {
+  display: flex;
+  margin-bottom: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  padding: 0 16px;
+}
+
+.fb-avatar {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  object-fit: cover;
+  margin-right: 8px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.fb-comment-body {
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100% - 44px);
+  width: fit-content;
+}
+
+.fb-comment-bubble {
+  background-color: #f0f2f5;
+  border-radius: 18px;
+  padding: 8px 12px;
+  display: inline-block;
+  width: fit-content;
+  word-wrap: break-word;
+}
+
+.fb-author-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #050505;
+  cursor: pointer;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.fb-author-name:hover {
+  text-decoration: underline;
+}
+
+.fb-comment-text {
+  font-size: 15px;
+  color: #050505;
+  line-height: 1.3333;
+  white-space: pre-line;
+}
+
+.fb-comment-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+  margin-left: 12px;
+  font-size: 12px;
+  color: #65676b;
+  font-weight: 600;
+  gap: 12px;
+}
+
+.fb-timestamp {
+  font-weight: 400;
+}
+
+.fb-timestamp:hover,
+.fb-action-btn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.fb-action-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #65676b;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Edit Mode styling */
+.fb-edit-container {
+  width: 100%;
+  min-width: 250px;
+}
+
+.fb-edit-textarea {
+  width: 100%;
+  background-color: #f0f2f5;
+  border: none;
+  border-radius: 18px;
+  padding: 8px 12px;
+  font-size: 15px;
+  outline: none;
+  font-family: inherit;
+  resize: none;
+  color: #050505;
+}
+
+.fb-edit-actions {
+  margin-left: 12px;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #65676b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cancel-link {
+  color: #1877f2;
+  cursor: pointer;
+}
+
+.cancel-link:hover {
+  text-decoration: underline;
+}
+
+.fb-save-btn {
+  background-color: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fb-save-btn:hover {
+  background-color: #166fe5;
+}
