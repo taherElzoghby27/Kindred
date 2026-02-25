@@ -1,6 +1,6 @@
 package com.spring.boot.social.repositories;
 
-import com.spring.boot.social.entity.PostReactionAccount;
+import com.spring.boot.social.entity.post.PostReactionAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

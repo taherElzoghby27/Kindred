@@ -1,6 +1,10 @@
 package com.spring.boot.social.entity;
 
 import com.spring.boot.social.entity.chat.ChatParticipant;
+import com.spring.boot.social.entity.comment.Comment;
+import com.spring.boot.social.entity.comment.CommentReactionAccount;
+import com.spring.boot.social.entity.post.Post;
+import com.spring.boot.social.entity.post.PostReactionAccount;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
@@ -54,6 +58,8 @@ public class Account extends BaseEntity<String> {
     private List<Activity> activities;
     @OneToMany(mappedBy = "account")
     private List<PostReactionAccount> postsReactionsAccounts;
+    @OneToMany(mappedBy = "account")
+    private List<CommentReactionAccount> commentsReactionAccounts;
     @OneToMany(mappedBy = "recipient")
     private List<Notification> notifications;
     @OneToMany(mappedBy = "account")

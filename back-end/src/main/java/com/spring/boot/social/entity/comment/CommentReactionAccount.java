@@ -1,5 +1,8 @@
-package com.spring.boot.social.entity;
+package com.spring.boot.social.entity.comment;
 
+import com.spring.boot.social.entity.Account;
+import com.spring.boot.social.entity.BaseEntity;
+import com.spring.boot.social.entity.Reaction;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +14,7 @@ import lombok.Setter;
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {
                         "account_id",
-                        "post_id"
+                        "comment_id"
                 }
         )
 )
@@ -19,10 +22,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class PostReactionAccount extends BaseEntity<String> {
+public class CommentReactionAccount extends BaseEntity<String> {
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @JoinColumn(name = "comment_id", nullable = false)
+    private Comment comment;
     @ManyToOne
     @JoinColumn(name = "reaction_id", nullable = false)
     private Reaction reaction;

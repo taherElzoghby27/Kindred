@@ -1,7 +1,7 @@
 package com.spring.boot.social.mappers;
 
 import com.spring.boot.social.dto.ReactionDto;
-import com.spring.boot.social.entity.PostReactionAccount;
+import com.spring.boot.social.entity.post.PostReactionAccount;
 import com.spring.boot.social.entity.Reaction;
 import com.spring.boot.social.vm.PostReactionAccountVm;
 import org.mapstruct.Mapper;
