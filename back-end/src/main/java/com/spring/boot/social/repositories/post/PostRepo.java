@@ -1,4 +1,4 @@
-package com.spring.boot.social.repositories;
+package com.spring.boot.social.repositories.post;
 
 import com.spring.boot.social.entity.post.Post;
 import org.springframework.data.domain.Page;

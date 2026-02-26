@@ -1,9 +1,6 @@
 package com.spring.boot.social.services.impl;
-
-import com.spring.boot.social.dto.ReactionDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
-import com.spring.boot.social.mappers.ReactionMapper;
 import com.spring.boot.social.entity.Reaction;
 import com.spring.boot.social.repositories.ReactionRepo;
 import com.spring.boot.social.services.ReactionService;
@@ -20,7 +17,7 @@ public class ReactionServiceImpl implements ReactionService {
     private final ReactionRepo reactionRepo;
 
     @Override
-    public ReactionDto getReactionDto(ReactionType type) {
+    public Reaction getReaction(ReactionType type) {
         if (Objects.isNull(type)) {
             throw new BadRequestException("type.not.null");
         }
@@ -28,6 +25,6 @@ public class ReactionServiceImpl implements ReactionService {
         if (result.isEmpty()) {
             throw new NotFoundResourceException("reaction.not.found");
         }
-        return ReactionMapper.INSTANCE.toReactionDto(result.get());
+        return result.get();
     }
 }

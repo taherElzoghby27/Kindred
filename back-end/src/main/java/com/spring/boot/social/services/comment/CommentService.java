@@ -1,8 +1,9 @@
-package com.spring.boot.social.services;
+package com.spring.boot.social.services.comment;
 
 import com.spring.boot.social.dto.CommentDto;
-import com.spring.boot.social.vm.CommentRequestVm;
-import com.spring.boot.social.vm.CommentResponseVm;
+import com.spring.boot.social.entity.comment.Comment;
+import com.spring.boot.social.vm.comment.CommentRequestVm;
+import com.spring.boot.social.vm.comment.CommentResponseVm;
 import com.spring.boot.social.vm.GeneralResponseVm;
 
 public interface CommentService {
@@ -17,4 +18,10 @@ public interface CommentService {
     CommentDto getCommentDtoByIdAndPostId(Long commentId, Long postId);
 
     CommentResponseVm getCommentResponseVmByIdBasedOnAccount(Long commentId);
+
+    Comment getCommentById(Long id);
+
+    void increaseReactionsCount(Long commentId);
+
+    void decreaseReactionsCount(Long commentId);
 }

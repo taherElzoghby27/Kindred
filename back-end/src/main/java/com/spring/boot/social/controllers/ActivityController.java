@@ -3,7 +3,7 @@ package com.spring.boot.social.controllers;
 import com.spring.boot.social.dto.ActivityDto;
 import com.spring.boot.social.dto.SuccessDto;
 import com.spring.boot.social.services.ActivityService;
-import com.spring.boot.social.vm.CommentResponseVm;
+import com.spring.boot.social.vm.comment.CommentResponseVm;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

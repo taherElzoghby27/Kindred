@@ -1,4 +1,4 @@
-package com.spring.boot.social.services.impl;
+package com.spring.boot.social.services.post.impl;
 
 import com.spring.boot.social.dto.AccountDto;
 import com.spring.boot.social.dto.PostDto;
@@ -7,11 +7,11 @@ import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.PostMapper;
 import com.spring.boot.social.entity.post.Post;
 import com.spring.boot.social.entity.Account;
-import com.spring.boot.social.repositories.PostRepo;
-import com.spring.boot.social.repositories.ReactionPostRepo;
+import com.spring.boot.social.repositories.post.PostRepo;
+import com.spring.boot.social.repositories.post.ReactionPostRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
-import com.spring.boot.social.services.PostService;
+import com.spring.boot.social.services.post.PostService;
 import com.spring.boot.social.utils.PaginationHelper;
 import com.spring.boot.social.utils.SecurityUtils;
 import com.spring.boot.social.utils.enums.ActivityType;

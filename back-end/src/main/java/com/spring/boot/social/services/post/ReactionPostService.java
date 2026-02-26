@@ -1,4 +1,4 @@
-package com.spring.boot.social.services;
+package com.spring.boot.social.services.post;
 
 import com.spring.boot.social.vm.PostReactionAccountVm;
 import com.spring.boot.social.vm.ReactionRequestVm;

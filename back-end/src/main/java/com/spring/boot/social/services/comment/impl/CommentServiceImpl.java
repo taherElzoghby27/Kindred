@@ -1,4 +1,4 @@
-package com.spring.boot.social.services.impl;
+package com.spring.boot.social.services.comment.impl;
 
 import com.spring.boot.social.dto.CommentDto;
 import com.spring.boot.social.dto.PostDto;
@@ -10,15 +10,15 @@ import com.spring.boot.social.mappers.PostMapper;
 import com.spring.boot.social.entity.comment.Comment;
 import com.spring.boot.social.entity.post.Post;
 import com.spring.boot.social.entity.Account;
-import com.spring.boot.social.repositories.CommentRepo;
+import com.spring.boot.social.repositories.comment.CommentRepo;
 import com.spring.boot.social.services.AccountService;
 import com.spring.boot.social.services.ActivityService;
-import com.spring.boot.social.services.CommentService;
-import com.spring.boot.social.services.PostService;
+import com.spring.boot.social.services.comment.CommentService;
+import com.spring.boot.social.services.post.PostService;
 import com.spring.boot.social.utils.PaginationHelper;
 import com.spring.boot.social.utils.enums.ActivityType;
-import com.spring.boot.social.vm.CommentRequestVm;
-import com.spring.boot.social.vm.CommentResponseVm;
+import com.spring.boot.social.vm.comment.CommentRequestVm;
+import com.spring.boot.social.vm.comment.CommentResponseVm;
 import com.spring.boot.social.vm.GeneralResponseVm;
 import com.spring.boot.social.vm.RequestActivityVm;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -55,12 +56,7 @@ public class CommentServiceImpl implements CommentService {
         //increment commentsCount num in post
         postService.incrementCommentCount(post.getId());
         //add log
-        activityService.logActivity(
-                new RequestActivityVm(
-                        "Created comment " + comment.getContent() + " on post " + post.getAccount().getUsername(),
-                        ActivityType.COMMENT_CREATED
-                )
-        );
+        activityService.logActivity(new RequestActivityVm("Created comment " + comment.getContent() + " on post " + post.getAccount().getUsername(), ActivityType.COMMENT_CREATED));
         CommentResponseVm commentResponseVm = CommentMapper.COMMENT_MAPPER.toCommentResponseVm(comment);
         notifyPostOwner(commentResponseVm);
         return commentResponseVm;
@@ -76,11 +72,7 @@ public class CommentServiceImpl implements CommentService {
 
     private void notifyPostOwner(CommentResponseVm commentResponseVm) {
         if (commentResponseVm.getPost() != null && commentResponseVm.getPost().getAccount() != null) {
-            simpMessagingTemplate.convertAndSendToUser(
-                    commentResponseVm.getPost().getAccount().getUsername(),
-                    "/listener/notification",
-                    commentResponseVm
-            );
+            simpMessagingTemplate.convertAndSendToUser(commentResponseVm.getPost().getAccount().getUsername(), "/listener/notification", commentResponseVm);
         }
     }
 
@@ -166,4 +158,23 @@ public class CommentServiceImpl implements CommentService {
         return CommentMapper.COMMENT_MAPPER.toCommentResponseVm(result.get());
     }
 
+    @Override
+    public Comment getCommentById(Long id) {
+        if (Objects.isNull(id)) {
+            throw new BadRequestException("id.comment.not_null");
+        }
+        return commentRepo.findById(id).orElseThrow(() -> new NotFoundResourceException("comment.not.found"));
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void increaseReactionsCount(Long commentId) {
+        commentRepo.increaseReactionCount(commentId);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void decreaseReactionsCount(Long commentId) {
+        commentRepo.decreaseReactionCount(commentId);
+    }
 }

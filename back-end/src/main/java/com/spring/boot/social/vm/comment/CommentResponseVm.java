@@ -1,4 +1,4 @@
-package com.spring.boot.social.vm;
+package com.spring.boot.social.vm.comment;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spring.boot.social.dto.PostDto;

@@ -1,7 +1,7 @@
 package com.spring.boot.social.controllers;
 
 import com.spring.boot.social.dto.SuccessDto;
-import com.spring.boot.social.services.ReactionPostService;
+import com.spring.boot.social.services.post.ReactionPostService;
 import com.spring.boot.social.vm.PostReactionAccountVm;
 import com.spring.boot.social.vm.ReactionRequestVm;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,11 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/reaction")
+@RequestMapping("/reaction-post")
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Reactions", description = "Post reaction management APIs")
-public class ReactionController {
+@Tag(name = "Post Reactions", description = "Post reaction management APIs")
+public class ReactionPostController {
     private final ReactionPostService reactionPostService;
 
 

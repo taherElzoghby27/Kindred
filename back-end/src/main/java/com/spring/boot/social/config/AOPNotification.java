@@ -17,7 +17,7 @@ public class AOPNotification {
     private final NotificationService notificationService;
 
     //for book logging (add, remove, update)
-    @AfterReturning(pointcut = "execution(* com.spring.boot.social.services.impl.ReactionPostServiceImpl.reactionRequest(..))", returning = "result")
+    @AfterReturning(pointcut = "execution(* com.spring.boot.social.services.post.impl.ReactionPostServiceImpl.reactionRequest(..))", returning = "result")
     public void afterReaction(JoinPoint joinPoint, Object result) {
         PostReactionAccountVm postReactionAccountVm = (PostReactionAccountVm) result;
         //notification

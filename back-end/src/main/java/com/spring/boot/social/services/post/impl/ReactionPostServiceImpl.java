@@ -1,7 +1,6 @@
-package com.spring.boot.social.services.impl;
+package com.spring.boot.social.services.post.impl;
 
 import com.spring.boot.social.dto.PostDto;
-import com.spring.boot.social.dto.ReactionDto;
 import com.spring.boot.social.exceptions.BadRequestException;
 import com.spring.boot.social.exceptions.NotFoundResourceException;
 import com.spring.boot.social.mappers.PostMapper;
@@ -10,8 +9,10 @@ import com.spring.boot.social.entity.post.Post;
 import com.spring.boot.social.entity.post.PostReactionAccount;
 import com.spring.boot.social.entity.Reaction;
 import com.spring.boot.social.entity.Account;
-import com.spring.boot.social.repositories.ReactionPostRepo;
+import com.spring.boot.social.repositories.post.ReactionPostRepo;
 import com.spring.boot.social.services.*;
+import com.spring.boot.social.services.post.PostService;
+import com.spring.boot.social.services.post.ReactionPostService;
 import com.spring.boot.social.utils.enums.ActivityType;
 import com.spring.boot.social.vm.PostReactionAccountVm;
 import com.spring.boot.social.vm.ReactionRequestVm;
@@ -44,8 +45,7 @@ public class ReactionPostServiceImpl implements ReactionPostService {
         PostDto postDto = postService.getPostDto(reactionRequestVm.getPostId());
         Post post = PostMapper.POST_INSTANCE.toPost(postDto);
         //get react
-        ReactionDto reactionDto = reactionService.getReactionDto(reactionRequestVm.getReactionType());
-        Reaction reaction = ReactionMapper.INSTANCE.toReaction(reactionDto);
+        Reaction reaction = reactionService.getReaction(reactionRequestVm.getReactionType());
         Optional<PostReactionAccount> result = reactionPostRepo.findByPostIdAndAccountId(post.getId(), account.getId());
         PostReactionAccount postReactionAccount;
         //create reaction with post if not exist else update reaction

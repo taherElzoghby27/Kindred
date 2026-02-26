@@ -2,7 +2,7 @@ package com.spring.boot.social.controllers;
 
 import com.spring.boot.social.dto.PostDto;
 import com.spring.boot.social.dto.SuccessDto;
-import com.spring.boot.social.services.PostService;
+import com.spring.boot.social.services.post.PostService;
 import com.spring.boot.social.vm.PostRequestVm;
 import com.spring.boot.social.vm.GeneralResponseVm;
 import io.swagger.v3.oas.annotations.Operation;

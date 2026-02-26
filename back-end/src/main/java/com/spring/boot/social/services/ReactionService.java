@@ -1,8 +1,11 @@
 package com.spring.boot.social.services;
 
 import com.spring.boot.social.dto.ReactionDto;
+import com.spring.boot.social.entity.Reaction;
 import com.spring.boot.social.utils.enums.ReactionType;
 
 public interface ReactionService {
-    ReactionDto getReactionDto(ReactionType type);
+    //ReactionDto getReactionDto(ReactionType type);
+
+    Reaction getReaction(ReactionType type);
 }

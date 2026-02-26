@@ -21,6 +21,7 @@ import java.util.List;
 public class Comment extends BaseEntity<String> {
     @NotEmpty
     private String content;
+    private Long reactionsCount = 0L;
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Post post;
